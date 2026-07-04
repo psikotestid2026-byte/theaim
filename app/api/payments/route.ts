@@ -27,8 +27,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ payment_code: paymentCode, id: payment.id }, { status: 201 });
   } catch (err) {
     if (err instanceof z.ZodError) {
-      const zodErr = err as z.ZodError<any>;
-      return NextResponse.json({ error: zodErr.errors }, { status: 400 });
+      return NextResponse.json({ error: err.flatten().fieldErrors }, { status: 400 });
     }
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }

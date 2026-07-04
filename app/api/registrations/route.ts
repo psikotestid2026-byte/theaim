@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ registration_code: code, id: registration.id }, { status: 201 });
   } catch (err) {
     if (err instanceof z.ZodError) {
-      return NextResponse.json({ error: err.errors }, { status: 400 });
+      return NextResponse.json({ error: err.flatten().fieldErrors }, { status: 400 });
     }
     console.error("POST /api/registrations error:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
