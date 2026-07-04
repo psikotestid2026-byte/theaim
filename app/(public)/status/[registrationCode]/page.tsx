@@ -1,5 +1,5 @@
 import { getRegistrationByCode } from "@/lib/queries/registrations";
-import { getPaymentByRegistration } from "@/lib/queries/payments";
+import { getPaymentsByRegistration } from "@/lib/queries/payments";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { formatIDR } from "@/lib/utils";
@@ -10,7 +10,8 @@ export default async function RegistrationStatusPage({ params }: { params: Promi
   
   if (!registration) return notFound();
 
-  const payment = await getPaymentByRegistration(registration.id).catch(() => null);
+  const payments = await getPaymentsByRegistration(registration.id).catch(() => []);
+  const payment = payments.length > 0 ? payments[0] : null;
 
   return (
     <section className="py-20 px-4 bg-slate-50 min-h-[80vh] flex items-center justify-center">
