@@ -54,11 +54,6 @@ export default async function KarirDetailPage({ params }: { params: Promise<{ sl
             <h2 className="text-2xl font-bold text-slate-900 mb-4">Persyaratan (Requirements)</h2>
             <div className="prose prose-slate prose-li:text-slate-600 prose-ul:list-disc" dangerouslySetInnerHTML={{ __html: job.requirements || "-" }} />
           </section>
-
-          <section>
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">Benefit & Kompensasi</h2>
-            <div className="prose prose-slate prose-li:text-slate-600 prose-ul:list-disc" dangerouslySetInnerHTML={{ __html: job.benefits || "-" }} />
-          </section>
         </div>
 
       </div>

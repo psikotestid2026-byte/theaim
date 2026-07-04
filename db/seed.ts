@@ -159,8 +159,7 @@ async function main() {
       location: "Jakarta (Hybrid)",
       description: "Kami mencari Digital Marketing Specialist yang kreatif...",
       requirements: "<ul><li>Minimal 2 tahun pengalaman</li><li>Menguasai FB/IG Ads</li></ul>",
-      benefits: "<ul><li>Asuransi kesehatan</li><li>Akses layanan psikologi</li></ul>",
-      is_active: true,
+      status: "open",
     },
     {
       title: "Psikolog Klinis Part-Time",
@@ -170,8 +169,7 @@ async function main() {
       location: "Remote",
       description: "Bergabung sebagai mitra konselor TheAIM...",
       requirements: "<ul><li>SIPP Aktif</li><li>Pengalaman min. 1 tahun</li></ul>",
-      benefits: "<ul><li>Waktu fleksibel</li><li>Bagi hasil menarik</li></ul>",
-      is_active: true,
+      status: "open",
     }
   ]).onConflictDoNothing();
 
