@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karir di TheAIM - Tumbuh Bersama & Memberi Dampak Nyata</title>
+    <meta name="description"
+        content="Gabung bersama tim PT Abadi Insan Manfaat (TheAIM). Temukan lowongan kerja di bidang B2B Marketing, Psikologi, HR, dan lainnya. Tumbuh dalam ekosistem kerja yang suportif dan penuh makna.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626',   // TheAIM Red
+                        secondary: '#fbbf24', // TheAIM Yellow
+                        dark: '#0f172a',      // Slate-900
+                        darker: '#020617',    // Slate-950
+                        light: '#ffffff',
+                        cream: '#faf8f5',     // Warm cream background
+                        beige: '#fcfaf6',     // Card background
+                    },
+                    fontFamily: {
+                        sans: ['Lexend', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #faf8f5;
+            overflow-x: hidden;
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .job-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #f1ece4;
+            background-color: #fcfaf7;
+        }
+
+        .job-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px -5px rgba(220, 38, 38, 0.05);
+            border-color: #e6dec9;
+        }
+
+        .value-card {
+            transition: all 0.3s ease;
+        }
+
+        .value-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.05);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+
+<body class="font-sans text-dark flex flex-col min-h-screen">
+
+    <!-- ╔══════════════════════════════╗ -->
+    <!-- ║         NAVIGATION           ║ -->
+    <!-- ╚══════════════════════════════╝ -->
+    <nav class="sticky top-0 z-50 w-full glass-nav flex items-center px-4 py-4 lg:px-8 border-b border-gray-100">
+        <div class="max-w-[1400px] mx-auto w-full flex justify-between items-center">
+
+            <a href="../index.html" class="text-2xl font-bold tracking-tight flex items-center gap-2">
+                <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM" class="h-14 md:h-16 w-auto">
+            </a>
+
+            <div class="hidden lg:flex items-center space-x-2 font-medium text-[15px] text-gray-700">
+                <a href="../index.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Beranda</a>
+
+                <!-- Layanan Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg group-hover:bg-slate-100 transition-colors focus:outline-none">
+                        Layanan <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-60 bg-white rounded-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)] border border-slate-100 py-2 flex flex-col">
+                            <!-- Assessment -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Assessment <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Talents Mapping</a>
+                                        <a href="mockup_layanan_mental_health.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Mental Health Check Up</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Konsultasi -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Konsultasi <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_konseling.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konseling dengan Psikolog</a>
+                                        <a href="mockup_layanan_coaching.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Life Coaching</a>
+                                        <a href="mockup_layanan_visual_coaching.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Visual Coaching</a>
+                                        <a href="mockup_layanan_consultation.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konsultasi Keuangan</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Digital Product -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Digital Product <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-72 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_ecourse.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">E-Course Life Reset: 7 Days Re-Discover Yourself</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Regular Items -->
+                            <a href="mockup_layanan_relaksasi.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors text-primary font-bold">Therapy (SEFT)</a>
+                            <a href="mockup_layanan_workshop.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Workshop & Training</a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="mockup_perusahaan.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Untuk Perusahaan</a>
+                <a href="mockup_artikel.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Artikel & Aktivitas</a>
+                <a href="mockup_career.html" class="px-4 py-2 rounded-lg bg-red-50 text-primary font-bold border-b-2 border-primary transition-colors">Karir</a>
+
+                <!-- Tentang Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg group-hover:bg-slate-100 transition-colors focus:outline-none">
+                        Tentang Kami <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute right-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-56 bg-white rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-gray-100 py-3 overflow-hidden flex flex-col">
+                            <a href="mockup_tentang_theaim.html" class="px-6 py-3 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Tentang TheAIM</a>
+                            <a href="mockup_tentang_ecosystem.html" class="px-6 py-3 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">TheAIM Ecosystem</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <a href="#" class="border-2 border-dark text-dark hover:bg-dark hover:text-white transition-all px-7 py-2.5 rounded-full font-semibold text-sm hidden md:block tracking-wide">
+                Masuk
+            </a>
+            <button class="md:hidden text-2xl text-dark" onclick="toggleMobileMenu()"><i class="fa-solid fa-bars" id="menu-icon"></i></button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-white border-b border-slate-100 shadow-lg px-6 py-6 flex flex-col space-y-4 lg:hidden z-40">
+            <a href="../index.html" class="font-semibold text-slate-600 hover:text-primary">Beranda</a>
+            <hr class="border-slate-100">
+            <div>
+                <p class="font-bold text-xs uppercase tracking-widest text-slate-400 mb-2">Layanan</p>
+                <div class="grid grid-cols-2 gap-2 text-sm">
+                    <a href="mockup_layanan_assessment.html" class="text-slate-600 hover:text-primary">Talents Mapping</a>
+                    <a href="mockup_layanan_mental_health.html" class="text-slate-600 hover:text-primary">Mental Health</a>
+                    <a href="mockup_layanan_konseling.html" class="text-slate-600 hover:text-primary">Konseling</a>
+                    <a href="mockup_layanan_coaching.html" class="text-slate-600 hover:text-primary">Life Coaching</a>
+                    <a href="mockup_layanan_visual_coaching.html" class="text-slate-600 hover:text-primary">Visual Coaching</a>
+                    <a href="mockup_layanan_consultation.html" class="text-slate-600 hover:text-primary">Konsultasi Keuangan</a>
+                    <a href="mockup_layanan_relaksasi.html" class="text-slate-600 hover:text-primary font-bold text-primary">Therapy (SEFT)</a>
+                    <a href="mockup_layanan_workshop.html" class="text-slate-600 hover:text-primary">Workshop & Training</a>
+                </div>
+            </div>
+            <hr class="border-slate-100">
+            <a href="mockup_perusahaan.html" class="font-semibold text-slate-600 hover:text-primary">Untuk Perusahaan</a>
+            <a href="mockup_artikel.html" class="font-semibold text-slate-600 hover:text-primary">Artikel & Aktivitas</a>
+            <a href="mockup_career.html" class="font-bold text-primary">Karir</a>
+            <hr class="border-slate-100">
+            <div>
+                <p class="font-bold text-xs uppercase tracking-widest text-slate-400 mb-2">Tentang Kami</p>
+                <div class="flex flex-col space-y-2 text-sm">
+                    <a href="mockup_tentang_theaim.html" class="text-slate-600 hover:text-primary">Tentang TheAIM</a>
+                    <a href="mockup_tentang_ecosystem.html" class="text-slate-600 hover:text-primary">TheAIM Ecosystem</a>
+                </div>
+            </div>
+            <hr class="border-slate-100">
+            <a href="#" class="btn-corp py-3 rounded-full font-semibold text-sm text-center">Masuk</a>
+        </div>
+    </nav>
+
+    <main class="flex-grow">
+        <!-- ╔══════════════════════════════╗ -->
+        <!-- ║           HERO               ║ -->
+        <!-- ╚══════════════════════════════╝ -->
+        <section class="relative pt-16 pb-20 lg:pt-24 lg:pb-28 px-4 overflow-hidden bg-white">
+            <div class="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-red-50/40 to-transparent z-0 pointer-events-none rounded-bl-full"></div>
+            <div class="absolute bottom-0 left-0 w-80 h-80 bg-yellow-50 rounded-full blur-[100px] opacity-40 z-0 pointer-events-none"></div>
+
+            <div class="max-w-[1300px] mx-auto grid lg:grid-cols-12 gap-12 items-center relative z-10 w-full">
+                <!-- Text Content -->
+                <div class="lg:col-span-7 text-center lg:text-left flex flex-col">
+                    <div class="inline-flex items-center justify-center lg:justify-start gap-2 text-xs font-bold w-fit mx-auto lg:mx-0 mb-6 uppercase tracking-widest text-slate-500">
+                        <span class="w-8 h-[2px] bg-primary rounded-full"></span>
+                        Karir di PT Abadi Insan Manfaat
+                    </div>
+
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-black leading-[1.12] text-dark mb-6 tracking-tight gradient-text">
+                        Temukan Potensi <br> Terbaikmu, Bertumbuh <br> Bersama Kami.
+                    </h1>
+
+                    <p class="text-base md:text-lg text-slate-500 leading-relaxed mb-8 max-w-2xl mx-auto lg:mx-0 font-medium">
+                        Di TheAIM, kami percaya bahwa lingkungan kerja yang sehat, aman, dan kolaboratif adalah kunci untuk melahirkan dampak nyata bagi sesama. Mari berkontribusi dalam memetakan potensi bakat dan menjaga kesehatan mental Indonesia.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
+                        <a href="#lowongan" class="btn-primary px-8 py-4 rounded-full font-bold text-[15px] shadow-lg shadow-red-200 flex items-center justify-center gap-2">
+                            Lihat Lowongan Aktif <i class="fa-solid fa-arrow-down text-xs"></i>
+                        </a>
+                        <a href="#kultur" class="btn-corp px-8 py-4 rounded-full font-bold text-[15px] flex items-center justify-center gap-2">
+                            Mengenal Kultur Kami
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Side: Graphic Representation -->
+                <div class="lg:col-span-5 flex justify-center relative px-4 lg:px-0">
+                    <div class="relative w-full max-w-[400px] aspect-[4/5] flex items-end justify-center">
+                        <!-- Background Shapes -->
+                        <div class="absolute w-[85%] h-[75%] bottom-0 bg-slate-900 rounded-[3rem] z-0 overflow-hidden shadow-2xl">
+                            <!-- Abstract grid overlay -->
+                            <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(circle at 1px 1px, #dc2626 1px, transparent 0); background-size: 20px 20px;"></div>
+                        </div>
+                        <div class="absolute w-[95%] h-[80%] bottom-4 border-2 border-dashed border-secondary rounded-[3.5rem] z-0 opacity-60"></div>
+
+                        <!-- Illustrated Working Environment Badge / Graphic representation -->
+                        <div class="w-[85%] h-[90%] z-10 relative flex flex-col justify-between p-8 text-white">
+                            <div>
+                                <i class="fa-solid fa-quote-left text-3xl text-secondary mb-4"></i>
+                                <p class="text-sm font-medium italic leading-relaxed text-slate-200">
+                                    "Bekerja di TheAIM memberikan saya ruang untuk berekspresi, berinovasi tanpa rasa takut, dan yang terpenting: menemukan tujuan karir yang selaras dengan nilai hidup saya."
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-4 mt-6 border-t border-slate-800 pt-4">
+                                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center font-bold text-white text-xs">TS</div>
+                                <div>
+                                    <p class="font-bold text-xs text-white">Tim TheAIM</p>
+                                    <p class="text-[10px] text-slate-400">Corporate BD & Marketing Lead</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Overlay Badge 1 -->
+                        <div class="absolute top-[15%] -left-6 bg-white/95 backdrop-blur-md px-4 py-3 rounded-2xl z-20 flex items-center gap-3 shadow-xl border border-slate-100">
+                            <div class="w-8 h-8 rounded-lg bg-red-50 text-primary flex items-center justify-center text-md shrink-0">
+                                <i class="fa-solid fa-heart-pulse"></i>
+                            </div>
+                            <div>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Mental Health Support</p>
+                                <p class="font-bold text-dark text-xs leading-none">Free Therapy & Coaching</p>
+                            </div>
+                        </div>
+
+                        <!-- Overlay Badge 2 -->
+                        <div class="absolute bottom-[15%] -right-6 bg-white/95 backdrop-blur-md px-4 py-3 rounded-2xl z-20 flex items-center gap-3 shadow-xl border border-slate-100">
+                            <div class="w-8 h-8 rounded-lg bg-yellow-50 text-secondary flex items-center justify-center text-md shrink-0">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                            </div>
+                            <div>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Personal Development</p>
+                                <p class="font-bold text-dark text-xs leading-none">Learning Budget</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ╔══════════════════════════════╗ -->
+        <!-- ║      CULTURE & BENEFITS      ║ -->
+        <!-- ╚══════════════════════════════╝ -->
+        <section id="kultur" class="py-20 px-4 bg-white border-y border-slate-100/80">
+            <div class="max-w-[1200px] mx-auto">
+                <div class="text-center mb-16">
+                    <span class="text-primary font-black tracking-widest text-xs uppercase mb-3 block">Mengapa Bergabung dengan Kami?</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-dark tracking-tight">Budaya Kerja yang Mendukung Potensi Maksimalmu</h2>
+                    <p class="text-slate-500 font-medium text-sm mt-4 max-w-2xl mx-auto">Di PT Abadi Insan Manfaat (TheAIM), kami tidak hanya bekerja untuk mencapai target, tapi juga untuk merawat kesejahteraan jasmani dan rohani setiap anggota tim.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Value 1 -->
+                    <div class="value-card bg-white rounded-3xl p-6 border border-slate-200/60 shadow-sm">
+                        <div class="w-12 h-12 rounded-2xl bg-red-50 text-primary border border-red-100 flex items-center justify-center text-xl mb-6">
+                            <i class="fa-solid fa-shield-heart"></i>
+                        </div>
+                        <h3 class="text-base font-bold text-dark mb-2">Safe Space & Empati</h3>
+                        <p class="text-slate-500 text-xs leading-relaxed">Kami menciptakan lingkungan kerja yang inklusif, saling percaya, aman secara psikologis untuk berpendapat dan melakukan kesalahan.</p>
+                    </div>
+
+                    <!-- Value 2 -->
+                    <div class="value-card bg-white rounded-3xl p-6 border border-slate-200/60 shadow-sm">
+                        <div class="w-12 h-12 rounded-2xl bg-yellow-50 text-secondary border border-yellow-100 flex items-center justify-center text-xl mb-6">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <h3 class="text-base font-bold text-dark mb-2">Tumbuh Tanpa Batas</h3>
+                        <p class="text-slate-500 text-xs leading-relaxed">Tunjangan pembelajaran tahunan untuk kursus, buku, seminar, atau pelatihan profesional guna menunjang skill barumu.</p>
+                    </div>
+
+                    <!-- Value 3 -->
+                    <div class="value-card bg-white rounded-3xl p-6 border border-slate-200/60 shadow-sm">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center text-xl mb-6">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                        <h3 class="text-base font-bold text-dark mb-2">Keseimbangan Kerja (WLB)</h3>
+                        <p class="text-slate-500 text-xs leading-relaxed">Jam kerja fleksibel dengan opsi Hybrid (WFH & WFO) untuk membantu menyeimbangkan urusan personal dan profesional.</p>
+                    </div>
+
+                    <!-- Value 4 -->
+                    <div class="value-card bg-white rounded-3xl p-6 border border-slate-200/60 shadow-sm">
+                        <div class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center text-xl mb-6">
+                            <i class="fa-solid fa-staff-aesculapian"></i>
+                        </div>
+                        <h3 class="text-base font-bold text-dark mb-2">Mental Health Benefits</h3>
+                        <p class="text-slate-500 text-xs leading-relaxed">Akses gratis tak terbatas untuk layanan psikolog klinis, terapi emosi (SEFT), dan visual coaching internal di TheAIM.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ╔══════════════════════════════╗ -->
+        <!-- ║          JOB BOARD           ║ -->
+        <!-- ╚══════════════════════════════╝ -->
+        <section id="lowongan" class="py-24 px-4 bg-slate-50/50">
+            <div class="max-w-[1100px] mx-auto">
+                <div class="text-center mb-12">
+                    <span class="text-primary font-black tracking-widest text-xs uppercase mb-3 block">Lowongan Kerja Aktif</span>
+                    <h2 class="text-3xl font-extrabold text-dark tracking-tight">Bergabunglah dalam Misi Kami</h2>
+                    <p class="text-slate-500 font-medium text-sm mt-3">Filter lowongan berdasarkan departemen atau jenis pekerjaan untuk menemukan kecocokan terbaik Anda.</p>
+                </div>
+
+                <!-- Job Filter UI -->
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                    <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+                        <button onclick="filterJobs('dept', 'all')" id="btn-dept-all" class="filter-btn active-filter px-4 py-1.5 rounded-full text-xs font-semibold bg-primary text-white border border-transparent transition-all">Semua Departemen</button>
+                        <button onclick="filterJobs('dept', 'marketing')" id="btn-dept-marketing" class="filter-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:border-slate-300 transition-all">Marketing & Partnership</button>
+                        <button onclick="filterJobs('dept', 'psy')" id="btn-dept-psy" class="filter-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:border-slate-300 transition-all">HR & Psikologi</button>
+                        <button onclick="filterJobs('dept', 'tech')" id="btn-dept-tech" class="filter-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:border-slate-300 transition-all">Tech & Creative</button>
+                    </div>
+
+                    <div class="w-full sm:w-auto flex gap-2">
+                        <select onchange="filterJobs('type', this.value)" class="w-full sm:w-40 bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-medium focus:outline-none focus:border-primary text-slate-600">
+                            <option value="all">Semua Tipe Kerja</option>
+                            <option value="Full-Time">Full-Time</option>
+                            <option value="Part-Time">Part-Time</option>
+                            <option value="Internship">Internship</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Job List Container - Grid of Cards as user requested -->
+                <div id="job-list-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Dynamic rendering via Javascript (Structured cards like ACF Eduhub mockup) -->
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty-state" class="hidden text-center py-16 border-2 border-dashed border-slate-200/80 rounded-3xl mt-4 bg-white">
+                    <i class="fa-solid fa-folder-open text-slate-300 text-4xl mb-4"></i>
+                    <h3 class="text-sm font-bold text-slate-500 mb-1">Tidak ada lowongan aktif</h3>
+                    <p class="text-slate-400 text-xs">Coba pilih filter lain atau kunjungi kembali beberapa saat lagi.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER (Synced & General B2C/B2B Layout) -->
+    <footer class="bg-dark pt-16 border-t border-slate-800 text-slate-400 mt-16 shrink-0">
+        <div class="max-w-[1200px] mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+            <!-- Kolom 1 -->
+            <div class="pr-4">
+                <a href="../index.html" class="text-2xl font-bold tracking-tight flex items-center gap-2 mb-8 text-white">
+                    <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM Logo" class="h-14 md:h-16 w-auto">
+                </a>
+                <p class="text-sm leading-relaxed mb-6">Mitra strategis Anda dalam pemetaan potensi diri, konsultasi profesional, dan pemeliharaan kesehatan mental terpadu.</p>
+            </div>
+
+            <!-- Kolom 2 -->
+            <div>
+                <h4 class="font-extrabold text-white text-lg mb-6 tracking-tight">Layanan Utama</h4>
+                <ul class="space-y-3 font-medium text-sm border-l-2 border-slate-700 pl-4">
+                    <li><a href="../index.html#layanan-individu" class="hover:text-primary transition-colors">Asesmen & Talents Mapping</a></li>
+                    <li><a href="../index.html#layanan-individu" class="hover:text-primary transition-colors">Konseling Psikolog & Terapi</a></li>
+                    <li><a href="../index.html#layanan-individu" class="hover:text-primary transition-colors">Visual Coaching & Finansial</a></li>
+                    <li><a href="../index.html#layanan-individu" class="hover:text-primary transition-colors">Webinar & E-Course Reset</a></li>
+                    <li><a href="mockup_perusahaan.html" class="hover:text-primary transition-colors">Solusi Manajemen SDM B2B</a></li>
+                </ul>
+            </div>
+
+            <!-- Kolom 3 -->
+            <div>
+                <h4 class="font-extrabold text-white text-lg mb-6 tracking-tight">Perusahaan</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li><a href="mockup_tentang_theaim.html" class="hover:text-white transition-colors">Tentang TheAIM</a></li>
+                    <li><a href="../index.html" class="hover:text-white transition-colors">Untuk Individu / B2C</a></li>
+                    <li><a href="mockup_artikel.html" class="hover:text-white transition-colors">Update Artikel</a></li>
+                    <li><a href="mockup_career.html" class="hover:text-white text-primary transition-colors">Karir</a></li>
+                </ul>
+            </div>
+
+            <!-- Kolom 4 -->
+            <div>
+                <h4 class="font-extrabold text-white text-lg mb-6 tracking-tight">Hubungi Kami</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li class="flex items-center gap-3">
+                        <i class="fa-solid fa-headset text-slate-600 border border-slate-700 p-2 rounded-md"></i>
+                        <a href="https://wa.me/6281999554599" target="_blank" class="hover:text-white transition-colors text-white font-bold">0819-9955-4599</a>
+                    </li>
+                    <li class="flex items-center gap-3 mt-4">
+                        <i class="fa-solid fa-building text-slate-600 border border-slate-700 p-2 rounded-md"></i>
+                        <span>PT Abadi Insan Manfaat<br>Bandung, Indonesia</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="bg-darker py-6 px-4 border-t border-slate-800">
+            <div class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-center items-center gap-6 text-xs text-slate-500 font-medium">
+                <p>&copy; 2026 PT Abadi Insan Manfaat. All rights reserved.</p>
+                <div class="hidden sm:block">|</div>
+                <div class="space-x-4">
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ╔══════════════════════════════╗ -->
+    <!-- ║         JAVASCRIPT           ║ -->
+    <!-- ╚══════════════════════════════╝ -->
+    <script>
+        // Lowongan Database
+        const jobs = [
+            {
+                id: "job-marketing-1",
+                title: "B2B Corporate Marketing Specialist",
+                dept: "marketing",
+                deptLabel: "Marketing & Partnership",
+                loc: "Bandung / Hybrid",
+                type: "Full-Time",
+                isHot: true,
+                isNew: true,
+                posted: "3 Juni 2026",
+                deadline: "31 Juli 2026",
+                exp: "1-3 Tahun",
+                descRole: "Mendorong ekspansi ekosistem B2B TheAIM dengan melakukan pendekatan ke berbagai instansi/perusahaan, menyusun proposal kerjasama kustom, dan melakukan presentasi profesional ke tingkat direksi & divisi HRD.",
+            },
+            {
+                id: "job-psy-1",
+                title: "Associate Clinical Psychologist",
+                dept: "psy",
+                deptLabel: "HR & Psikologi",
+                loc: "Remote / Hybrid",
+                type: "Part-Time",
+                isHot: false,
+                isNew: true,
+                posted: "1 Juni 2026",
+                deadline: "30 Juni 2026",
+                exp: "Min. 2 Tahun Praktek",
+                descRole: "Mendampingi klien B2C maupun karyawan korporasi B2B melalui sesi konseling psikologis tatap muka maupun online secara profesional & konfidensial.",
+            },
+            {
+                id: "job-psy-2",
+                title: "HR & Organizational Development Specialist",
+                dept: "psy",
+                deptLabel: "HR & Psikologi",
+                loc: "Bandung (WFO)",
+                type: "Full-Time",
+                isHot: false,
+                isNew: false,
+                posted: "28 Mei 2026",
+                deadline: "30 Juni 2026",
+                exp: "2-3 Tahun",
+                descRole: "Merancang matriks kompetensi karyawan, mengevaluasi KPIs, merumuskan program pelatihan internal, serta memastikan kultur kerja positif (safe space) di TheAIM berjalan dengan baik.",
+            },
+            {
+                id: "job-tech-1",
+                title: "UI/UX & Creative Content Creator",
+                dept: "tech",
+                deptLabel: "Tech & Creative",
+                loc: "Bandung / Hybrid",
+                type: "Internship",
+                isHot: false,
+                isNew: false,
+                posted: "25 Mei 2026",
+                deadline: "20 Juni 2026",
+                exp: "Portofolio Aktif",
+                descRole: "Merancang antarmuka (UI/UX) web asesmen bakat digital TheAIM serta membuat materi konten media sosial interaktif yang memikat bagi milenial & gen-z.",
+            }
+        ];
+
+        // Current Active Filters
+        let activeDept = "all";
+        let activeType = "all";
+
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('menu-icon');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                icon.classList.replace('fa-bars', 'fa-xmark');
+            } else {
+                menu.classList.add('hidden');
+                icon.classList.replace('fa-xmark', 'fa-bars');
+            }
+        }
+
+        // Render Jobs dynamically in Card-Style matching user screenshot
+        function renderJobs() {
+            const container = document.getElementById('job-list-container');
+            const emptyState = document.getElementById('empty-state');
+            container.innerHTML = "";
+
+            const filteredJobs = jobs.filter(job => {
+                const matchDept = (activeDept === "all" || job.dept === activeDept);
+                const matchType = (activeType === "all" || job.type === activeType);
+                return matchDept && matchType;
+            });
+
+            if (filteredJobs.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+
+            filteredJobs.forEach(job => {
+                const card = document.createElement('div');
+                card.className = "relative bg-beige rounded-[2rem] p-6 border border-[#f1ece4] hover:shadow-xl hover:shadow-red-500/5 transition-all duration-300 flex flex-col justify-between overflow-hidden";
+                
+                // Construct check for "New" (Baru) tag
+                const newBadge = job.isNew 
+                    ? `<div class="absolute top-0 right-0 bg-primary text-white text-[10px] font-black tracking-widest px-4 py-1.5 rounded-bl-xl uppercase shadow-sm">Baru</div>` 
+                    : ``;
+
+                // Set different route links
+                let targetUrl = `mockup_apply.html?job=${encodeURIComponent(job.title)}`;
+                if (job.id === 'job-marketing-1') {
+                    targetUrl = 'mockup_career_detail_marketing.html';
+                }
+
+                card.innerHTML = `
+                    ${newBadge}
+                    <div class="mb-6">
+                        <!-- Top Row: Logo & Subtitle -->
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-primary text-white flex justify-center items-center rounded-lg shadow-sm">
+                                <i class="fa-solid fa-puzzle-piece text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-black text-slate-400 tracking-wider uppercase leading-none">PT Abadi Insan Manfaat</p>
+                                <p class="text-[9px] font-semibold text-primary mt-1">${job.deptLabel}</p>
+                            </div>
+                        </div>
+
+                        <!-- Job Title -->
+                        <h3 class="text-base font-extrabold text-dark mb-3 pr-10">${job.title}</h3>
+                        
+                        <!-- Snippet description -->
+                        <p class="text-slate-500 text-xs leading-relaxed line-clamp-3 mb-5">
+                            ${job.descRole}
+                        </p>
+
+                        <!-- Metadata Badges with Icons (Location, Type, Deadline) -->
+                        <div class="flex flex-wrap items-center gap-2 text-[10px] font-bold text-slate-500">
+                            <span class="flex items-center gap-1 bg-white border border-slate-200/60 px-3 py-1.5 rounded-xl">
+                                <i class="fa-solid fa-map-location-dot text-primary text-[10px]"></i> ${job.loc.split('/')[0].trim()}
+                            </span>
+                            <span class="flex items-center gap-1 bg-white border border-slate-200/60 px-3 py-1.5 rounded-xl">
+                                <i class="fa-solid fa-briefcase text-secondary text-[10px]"></i> ${job.type}
+                            </span>
+                            <span class="flex items-center gap-1 bg-white border border-slate-200/60 px-3 py-1.5 rounded-xl">
+                                <i class="fa-solid fa-calendar-times text-slate-400 text-[10px]"></i> DL: ${job.deadline.split(' ')[0]} ${job.deadline.split(' ')[1]}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Footer Action Button inside card -->
+                    <div class="pt-4 border-t border-[#f1ece4] mt-2">
+                        <a href="${targetUrl}" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-5 py-3 rounded-xl transition-all text-center flex items-center justify-center gap-2">
+                            Lamar Sekarang <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </a>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Handle filtering
+        function filterJobs(filterType, value) {
+            if (filterType === 'dept') {
+                activeDept = value;
+                // Update active button state
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active-filter', 'bg-primary', 'text-white', 'border-transparent');
+                    btn.classList.add('bg-white', 'text-slate-600', 'border-slate-200');
+                });
+                const activeBtn = document.getElementById(`btn-dept-${value}`);
+                activeBtn.classList.add('active-filter', 'bg-primary', 'text-white', 'border-transparent');
+                activeBtn.classList.remove('bg-white', 'text-slate-600', 'border-slate-200');
+            } else if (filterType === 'type') {
+                activeType = value;
+            }
+            renderJobs();
+        }
+
+        // Initialize on load
+        window.onload = () => {
+            renderJobs();
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unduh Proposal - TheAIM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626',   // TheAIM Red
+                        secondary: '#fbbf24', // TheAIM Yellow
+                        dark: '#0f172a',      // Slate-900 (Corporate Navy/Dark)
+                        darker: '#020617',    // Slate-950
+                        light: '#ffffff',
+                        corplight: '#f8fafc', // Slate-50
+                    },
+                    fontFamily: {
+                        sans: ['Lexend', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f8fafc; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(15, 23, 42, 0.08);
+        }
+    </style>
+</head>
+<body class="font-sans text-dark flex flex-col min-h-screen justify-between bg-slate-50 relative overflow-x-hidden">
+
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(circle at 1px 1px, #dc2626 1px, transparent 0); background-size: 32px 32px; z-index: 0;"></div>
+
+    <!-- Navigation Header -->
+    <header class="w-full py-6 px-6 lg:px-12 border-b border-slate-200/50 bg-white relative z-10">
+        <div class="max-w-[1200px] mx-auto flex justify-between items-center">
+            <a href="mockup_perusahaan.html" class="text-2xl font-bold tracking-tight flex items-center gap-2">
+                <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM" class="h-14 md:h-16 w-auto">
+            </a>
+            <a href="mockup_perusahaan.html" class="text-sm font-semibold text-slate-500 hover:text-primary transition-colors flex items-center gap-2">
+                <i class="fa-solid fa-arrow-left"></i> Kembali ke Solusi Korporasi
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow flex items-center justify-center px-4 py-12 relative z-10">
+        <div class="w-full max-w-[550px]">
+            
+            <!-- Card Wrapper -->
+            <div id="form-card" class="glass-card rounded-[2.5rem] p-8 md:p-10 shadow-2xl transition-all duration-500">
+                
+                <!-- Dynamic Header -->
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 rounded-2xl bg-red-50 text-primary border border-red-100 flex items-center justify-center text-2xl mx-auto mb-4">
+                        <i class="fa-solid fa-file-pdf"></i>
+                    </div>
+                    <span class="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary font-bold text-[10px] tracking-wider uppercase mb-3">Unduh Proposal B2B</span>
+                    <h1 id="proposal-title" class="text-xl md:text-2xl font-black tracking-tight text-dark leading-tight">
+                        Unduh Proposal Layanan
+                    </h1>
+                    <p class="text-slate-500 text-xs mt-2 font-medium">Lengkapi 4 data singkat berikut untuk memulai pengunduhan dokumen secara instan.</p>
+                </div>
+
+                <!-- Simplified Form -->
+                <form id="proposal-form" class="space-y-4" onsubmit="handleFormSubmit(event)">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Nama Lengkap Anda *</label>
+                        <input type="text" id="fullname" placeholder="Ketikkan nama lengkap Anda" required 
+                               class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-primary transition-colors bg-white shadow-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Nomor WhatsApp Aktif *</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-400 font-semibold">+62</span>
+                            <input type="tel" id="whatsapp" placeholder="8123456789" required 
+                                   class="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-primary transition-colors bg-white shadow-sm">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Nama Perusahaan / Organisasi *</label>
+                            <input type="text" id="company" placeholder="CV / PT / Organisasi" required 
+                                   class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-primary transition-colors bg-white shadow-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Profesi / Jabatan Anda *</label>
+                            <input type="text" id="position" placeholder="CEO / HRD / Manager" required 
+                                   class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-primary transition-colors bg-white shadow-sm">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full py-4 mt-6 rounded-xl bg-primary text-white font-bold text-sm hover:bg-red-700 transition-all shadow-lg shadow-red-200 hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-download"></i> Unduh Proposal Sekarang
+                    </button>
+                </form>
+
+            </div>
+
+            <!-- Success State (Hidden initially) -->
+            <div id="success-card" class="hidden glass-card rounded-[2.5rem] p-8 md:p-10 shadow-2xl text-center transition-all duration-500">
+                <div class="w-20 h-20 rounded-full bg-green-50 text-green-600 border border-green-100 flex items-center justify-center text-4xl mx-auto mb-6 shadow-inner animate-bounce">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <h2 class="text-2xl font-black text-dark mb-2">Permintaan Berhasil!</h2>
+                <p class="text-slate-600 text-sm leading-relaxed mb-6">Terima kasih atas minat Anda pada layanan B2B kami. Proposal Anda sedang diunduh secara otomatis.</p>
+                
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 mb-6 text-left">
+                    <p class="text-xs text-slate-400 font-bold uppercase mb-1">Status Unduhan</p>
+                    <p class="text-xs text-slate-500 leading-relaxed">Jika proses unduhan belum berjalan dalam 3 detik, Anda dapat menekan tombol unduh manual di bawah ini:</p>
+                    <a id="fallback-download" href="#" download class="inline-flex items-center gap-2 text-primary hover:text-red-700 font-bold text-xs mt-3 transition-colors">
+                        <i class="fa-solid fa-file-arrow-down text-sm"></i> Unduh Manual Disini
+                    </a>
+                </div>
+
+                <div class="flex flex-col gap-3">
+                    <a id="whatsapp-admin-link" href="https://wa.me/6281999554599" target="_blank" class="w-full py-3.5 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-slate-800 transition-colors flex items-center justify-center gap-2">
+                        <i class="fa-brands fa-whatsapp text-green-400 text-sm"></i> Diskusi Lebih Lanjut via WhatsApp
+                    </a>
+                    <a href="mockup_perusahaan.html" class="text-slate-400 hover:text-dark text-xs font-semibold mt-2 transition-colors">
+                        Kembali ke Solusi Korporasi
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer Copyright -->
+    <footer class="w-full py-6 text-center border-t border-slate-200/50 bg-white relative z-10 text-xs text-slate-400 font-medium">
+        <p>&copy; 2026 PT Abadi Insan Manfaat. Bandung, Indonesia.</p>
+    </footer>
+
+    <!-- JavaScript to Handle Query Parameters and Auto-download -->
+    <script>
+        // Database of proposal files matching the B2B Solutions cards
+        const proposalData = {
+            'assessment': {
+                name: 'Hiring, Tes Psikologi & Seleksi Karyawan',
+                file: '../assets/proposal-assessment.pdf'
+            },
+            'school': {
+                name: 'Talents Mapping for School',
+                file: '../assets/proposal-school.pdf'
+            },
+            'training': {
+                name: 'In-House Training & Workshop',
+                file: '../assets/proposal-training.pdf'
+            },
+            'outbound': {
+                name: 'Outbound & Fun Learning',
+                file: '../assets/proposal-outbound.pdf'
+            },
+            'mentalhealth': {
+                name: 'Mental Health Check-up & EAP (Employee Assistance Program)',
+                file: '../assets/proposal-mentalhealth.pdf'
+            },
+            'consulting': {
+                name: 'HR & Organization Consulting',
+                file: '../assets/proposal-consulting.pdf'
+            },
+            'hris': {
+                name: 'HRIS (Human Resource Information System)',
+                file: '../assets/proposal-hris.pdf'
+            }
+        };
+
+        // Extract "service" parameter from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const serviceKey = urlParams.get('service') || 'assessment'; // Default fallback
+        const selectedProposal = proposalData[serviceKey] || proposalData['assessment'];
+
+        // Populate titles & links dynamically
+        document.addEventListener('DOMContentLoaded', () => {
+            const titleEl = document.getElementById('proposal-title');
+            if (titleEl) {
+                titleEl.textContent = selectedProposal.name;
+            }
+            
+            // Set dynamic page title
+            document.title = `Unduh Proposal: ${selectedProposal.name} - TheAIM`;
+        });
+
+        // Form submission & automated download logic
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            
+            // Collect form data (for potential CRM integration or tracking console)
+            const fullname = document.getElementById('fullname').value;
+            const whatsapp = document.getElementById('whatsapp').value;
+            const company = document.getElementById('company').value;
+            const position = document.getElementById('position').value;
+            
+            console.log('Lead Captured:', { fullname, whatsapp, company, position, service: selectedProposal.name });
+            
+            // Switch UI states
+            document.getElementById('form-card').classList.add('hidden');
+            document.getElementById('success-card').classList.remove('hidden');
+
+            // Configure manual/fallback download button link
+            const fallbackBtn = document.getElementById('fallback-download');
+            fallbackBtn.href = selectedProposal.file;
+            
+            // Configure WhatsApp chat pre-fill for B2B consultation
+            const waLink = document.getElementById('whatsapp-admin-link');
+            const message = encodeURIComponent(`Halo Admin B2B TheAIM, saya ${fullname} (${position} dari ${company}). Saya tertarik untuk berkonsultasi lebih lanjut mengenai proposal ${selectedProposal.name} yang baru saya unduh.`);
+            waLink.href = `https://wa.me/6281999554599?text=${message}`;
+
+            // Trigger Automatic PDF Download after a short visual delay
+            setTimeout(() => {
+                const link = document.createElement('a');
+                link.href = selectedProposal.file;
+                link.download = selectedProposal.file.split('/').pop();
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

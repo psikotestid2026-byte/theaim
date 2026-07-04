@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Therapy SEFT - TheAIM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626',   // TheAIM Red
+                        secondary: '#fbbf24', // TheAIM Yellow
+                        dark: '#18181b',      // Black
+                        light: '#ffffff',     // White
+                        healing: '#0f766e',   // Calming Teal untuk Tema SEFT
+                        healinglight: '#ccfbf1',
+                    },
+                    fontFamily: {
+                        sans: ['Lexend', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #ffffff; overflow-x: hidden; }
+        
+        .btn-healing {
+            background-color: #0f766e;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-healing:hover {
+            background-color: #0b5e58;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(15, 118, 110, 0.3);
+        }
+        
+        .btn-outline-healing {
+            border: 2px solid #0f766e;
+            color: #0f766e;
+            transition: all 0.3s ease;
+            background-color: transparent;
+        }
+        .btn-outline-healing:hover {
+            background-color: #0f766e;
+            color: white;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-shadow {
+            box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .seft-card {
+            transition: all 0.4s ease;
+        }
+        .seft-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px -12px rgba(15, 118, 110, 0.15);
+        }
+
+        .custom-checklist-icon {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            background: #fbbf24;
+            color: white;
+            border-radius: 4px;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body class="font-sans text-dark flex flex-col min-h-screen">
+    
+    <!-- NAVIGATION -->
+    <nav class="sticky top-0 z-50 w-full glass-panel flex items-center px-4 py-4 lg:px-8 border-b border-gray-100">
+        <div class="max-w-[1400px] mx-auto w-full flex justify-between items-center">
+            
+            <a href="../index.html" class="text-2xl font-bold tracking-tight flex items-center gap-2">
+                <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM" class="h-14 md:h-16 w-auto">
+            </a>
+            
+            <div class="hidden lg:flex items-center space-x-2 font-medium text-[15px] text-gray-700">
+                <a href="../index.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Beranda</a>
+                
+                <!-- Layanan Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg group-hover:bg-slate-100 transition-colors focus:outline-none">
+                        Layanan <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-64 bg-white rounded-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)] border border-slate-100 py-2 flex flex-col">
+                            <!-- Assessment -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Assessment <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Talents Mapping</a>
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Tes Psikologi (Psikotes)</a>
+                                        <a href="mockup_layanan_mental_health.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Mental Health Check Up</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Konsultasi & Coaching -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Konsultasi & Coaching <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_konseling.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konseling dengan Psikolog</a>
+                                        <a href="mockup_layanan_relaksasi.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Therapy (SEFT)</a>
+                                        <a href="mockup_layanan_visual_coaching.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Visual Coaching</a>
+                                        <a href="mockup_layanan_consultation.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konsultasi Keuangan</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Digital Product -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Digital Product <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-72 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_ecourse.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">E-Course Life Reset: 7 Days Re-Discover Yourself</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Webinar & Workshop -->
+                            <a href="mockup_layanan_workshop.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Webinar & Workshop</a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="mockup_perusahaan.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Untuk Perusahaan</a>
+                <a href="mockup_artikel.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Artikel & Aktivitas</a>
+                <a href="mockup_career.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Karir</a>
+                
+                <!-- Tentang Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg group-hover:bg-gray-100 transition-colors focus:outline-none">
+                        Tentang Kami <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute right-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-56 bg-white rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-gray-100 py-3 overflow-hidden flex flex-col">
+                            <a href="mockup_tentang_theaim.html" class="px-6 py-3 text-sm text-gray-500 hover:bg-gray-50 hover:text-primary transition-colors">Tentang TheAIM</a>
+                            <a href="mockup_tentang_ecosystem.html" class="px-6 py-3 text-sm text-gray-500 hover:bg-gray-50 hover:text-primary transition-colors">TheAIM Ecosystem</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <a href="#" class="btn-outline px-7 py-2.5 rounded-full font-semibold text-sm hidden md:block tracking-wide border-2 border-dark text-dark hover:bg-dark hover:text-white">
+                Masuk
+            </a>
+            
+            <button class="md:hidden text-2xl text-dark">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 1. HERO SECTION (Calming & Transformative) -->
+    <section class="relative pt-24 pb-20 lg:pt-32 lg:pb-28 px-4 overflow-hidden bg-gradient-to-b from-[#e6fcf5] to-white">
+        <!-- Abstract Shapes -->
+        <div class="absolute top-0 right-0 w-full h-full overflow-hidden z-0">
+            <div class="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-healing/10 blur-[80px]"></div>
+            <div class="absolute top-40 -left-20 w-[400px] h-[400px] rounded-full bg-primary/5 blur-[80px]"></div>
+        </div>
+
+        <div class="max-w-[1250px] mx-auto grid lg:grid-cols-2 gap-12 lg:gap-8 items-center relative z-10">
+            <!-- Teks Kiri -->
+            <div class="order-2 lg:order-1 text-center lg:text-left flex flex-col">
+                <div class="inline-flex items-center gap-2 px-4 py-2 bg-white text-healing rounded-full text-sm font-bold w-fit mx-auto lg:mx-0 mb-6 uppercase tracking-wider shadow-sm border border-healinglight">
+                    <i class="fa-solid fa-hands-holding-circle"></i> SEFT Therapy 
+                </div>
+
+                <h1 class="text-4xl md:text-5xl lg:text-[3.5rem] font-black leading-[1.15] text-dark mb-6 tracking-tight">
+                    Khusyuk, Ikhlas, Pasrah. <br>
+                    <span class="text-healing">Kesembuhan Dimulai dari Sini.</span>
+                </h1>
+                
+                <p class="text-base md:text-lg text-gray-600 leading-relaxed mb-10 max-w-xl mx-auto lg:mx-0 font-medium">
+                    Kami memadukan kekuatan <i>Energi Psikologi</i> (melalui ketukan lembut di titik meridian) dengan kedalaman <i>kekuatan doa</i> untuk mencabut penderitaan dari akarnya. Bebaskan diri dari belenggu emosional dan fisik sekarang juga.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 mb-2">
+                    <a href="#masalah-teratasi" class="btn-healing px-8 py-4 rounded-full font-bold text-[15px] shadow-lg flex items-center justify-center gap-2">
+                        Lihat Apa Saja yang Bisa Diatasi <i class="fa-solid fa-arrow-down text-sm"></i>
+                    </a>
+                    <a href="#pilihan-sesi" class="btn-outline-healing px-8 py-4 rounded-full font-bold text-[15px] flex items-center justify-center gap-2">
+                        Pesan Layanan
+                    </a>
+                </div>
+            </div>
+
+            <!-- Visual Kanan (Combination of Calm and Tapping) -->
+            <div class="order-1 lg:order-2 flex justify-center relative px-4 lg:px-0 h-[450px]">
+                <div class="relative w-full max-w-[500px] h-full">
+                    <!-- Image 1: Calm/Relief (Pasrah) -->
+                    <img src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?q=80&w=800&auto=format&fit=crop" 
+                         class="absolute top-0 right-0 w-[70%] h-[70%] object-cover rounded-[2rem] shadow-2xl z-10 border-4 border-white" 
+                         alt="Person feeling calm and relieved">
+                    
+                    <!-- Image 2: Tapping/Therapy Action -->
+                    <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=800&auto=format&fit=crop" 
+                         class="absolute bottom-6 left-0 w-[60%] h-[60%] object-cover rounded-[2rem] shadow-2xl z-20 border-4 border-white" 
+                         alt="Therapist doing healing/tapping">
+                    
+                    <!-- Decorative Badge -->
+                    <div class="absolute top-[40%] -left-8 bg-white py-3 px-6 rounded-2xl shadow-xl z-30 flex items-center gap-3">
+                        <div class="w-10 h-10 bg-healinglight text-healing rounded-full flex items-center justify-center text-lg"><i class="fa-solid fa-leaf"></i></div>
+                        <div>
+                            <p class="text-xs text-gray-500 font-bold uppercase">Metode Teruji</p>
+                            <p class="text-dark font-black text-sm">Instant Healing</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. APA ITU SEFT (Sinergi Psikologi & Spiritual) -->
+    <section class="py-24 px-4 bg-white relative">
+        <!-- SVG Tapping Path representation decoration -->
+        <div class="absolute left-0 top-0 bottom-0 w-24 opacity-5 pointer-events-none">
+            <svg viewBox="0 0 100 1000" preserveAspectRatio="none"><path d="M50 0 C20 100 80 200 50 300 C20 400 80 500 50 600 C20 700 80 800 50 900 C20 1000 80 1000 50 1000" stroke="#0f766e" stroke-width="4" fill="none" stroke-dasharray="10, 10" /></svg>
+        </div>
+
+        <div class="max-w-[1000px] mx-auto text-center relative z-10">
+            <span class="text-healing font-black tracking-widest text-sm uppercase mb-4 block">Holistic Therapy</span>
+            <h2 class="text-3xl md:text-4xl font-extrabold text-dark tracking-tight mb-8">
+                Apa itu SEFT?
+            </h2>
+            <p class="text-lg text-gray-600 leading-relaxed font-medium mb-12 max-w-3xl mx-auto">
+                <strong>SEFT (Spiritual Emotional Freedom Technique)</strong> adalah metode terapi yang menggabungkan prinsip akupunktur (menggunakan ketukan lembut tanpa jarum di titik-titik meridian) dengan rasa pasrah dan ikhlas melalui doa kepada Tuhan.
+            </p>
+
+            <div class="grid md:grid-cols-3 gap-6 text-left">
+                <!-- Set-Up -->
+                <div class="bg-healinglight/30 p-8 rounded-3xl border border-healinglight relative overflow-hidden group">
+                    <div class="absolute -right-6 -bottom-6 text-8xl text-healinglight opacity-50 font-black group-hover:scale-110 transition-transform">1</div>
+                    <h3 class="font-bold text-xl text-dark mb-3 relative z-10">Set-Up</h3>
+                    <p class="text-sm text-gray-600 leading-relaxed relative z-10">Mengenali masalah secara spesifik dan menetralisir perlawanan bawah sadar (<i>Psychological Reversal</i>) dengan doa kepasrahan.</p>
+                </div>
+                <!-- Tune-In -->
+                <div class="bg-healinglight/30 p-8 rounded-3xl border border-healinglight relative overflow-hidden group">
+                    <div class="absolute -right-6 -bottom-6 text-8xl text-healinglight opacity-50 font-black group-hover:scale-110 transition-transform">2</div>
+                    <h3 class="font-bold text-xl text-dark mb-3 relative z-10">Tune-In</h3>
+                    <p class="text-sm text-gray-600 leading-relaxed relative z-10">Menghadirkan emosi negatif atau rasa sakit di tubuh, merasakannya sepenuhnya sambil menjaga pikiran tetap fokus dan khusyuk.</p>
+                </div>
+                <!-- Tapping -->
+                <div class="bg-healinglight/30 p-8 rounded-3xl border border-healinglight relative overflow-hidden group">
+                    <div class="absolute -right-6 -bottom-6 text-8xl text-healinglight opacity-50 font-black group-hover:scale-110 transition-transform">3</div>
+                    <h3 class="font-bold text-xl text-dark mb-3 relative z-10">Tapping</h3>
+                    <p class="text-sm text-gray-600 leading-relaxed relative z-10">Ketukan ringan menggunakan dua ujung jari pada titik meridian tertentu untuk menetralisir sumbatan emosi dan memulihkan energi.</p>
+                </div>
+            </div>
+
+            <!-- Jaminan Kerahasiaan & Disclaimer -->
+            <div class="mt-16 p-6 rounded-2xl bg-healing/5 border border-healing/20 flex flex-col md:flex-row items-start gap-4 text-left max-w-3xl mx-auto shadow-sm">
+                <div class="w-12 h-12 rounded-full bg-healing/10 text-healing flex items-center justify-center text-xl flex-shrink-0">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-dark text-base mb-1">Jaminan Kerahasiaan (Confidentiality Guarantee)</h4>
+                    <p class="text-xs md:text-sm text-gray-500 leading-relaxed font-medium mb-3">
+                        Kami memahami bahwa kenyamanan adalah kunci utama pemulihan. Seluruh informasi pribadi, keluhan, dan dinamika proses terapi Anda dijamin kerahasiaannya 100% serta berada dalam lingkungan yang aman.
+                    </p>
+                    <p class="text-xs text-gray-500 leading-relaxed font-medium border-t border-healinglight/30 pt-2 italic">
+                        *Catatan: Kami meyakini sepenuhnya bahwa kesembuhan hakiki berada di tangan Tuhan Yang Maha Kuasa. Terapi ini bersifat universal dan dapat dilakukan oleh pemeluk agama apa pun. Dengan senantiasa memelihara keyakinan bahwa kesembuhan itu akan datang, Anda dapat membantu mempercepat proses pemulihan alami tubuh.*
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. YANG BISA DIATASI (3 Kolom berdasar gambar user) -->
+    <section id="masalah-teratasi" class="py-24 px-4 bg-gray-50 border-y border-gray-200">
+        <div class="max-w-[1250px] mx-auto">
+            <div class="text-center mb-16 max-w-2xl mx-auto">
+                <h2 class="text-3xl md:text-4xl font-extrabold text-dark tracking-tight mb-4">Solusi Holistik Untuk Berbagai Penderitaan</h2>
+                <p class="text-gray-500 font-medium">Melalui terapi SEFT, kita menaklukkan berbagai dimensi masalah yang mengakar dan membelenggu potensi terbaik Anda.</p>
+            </div>
+
+            <!-- 2 Columns Layout for Physical and Emotional problems -->
+            <div class="grid md:grid-cols-2 gap-6 lg:gap-8 max-w-[950px] mx-auto">
+                
+                <!-- Card 1: Masalah Fisik -->
+                <div class="bg-white rounded-3xl overflow-hidden shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)] flex flex-col h-full border border-gray-100 seft-card">
+                    <div class="h-48 w-full bg-gray-200 relative">
+                        <img src="https://images.unsplash.com/photo-1584515933487-779824d29309?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover" alt="Klinik Fisik">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark/60 to-transparent"></div>
+                    </div>
+                    <div class="p-8 flex-grow flex flex-col">
+                        <h3 class="text-xl lg:text-2xl font-black text-dark leading-tight mb-8">Terbebas dari berbagai masalah fisik</h3>
+                        
+                        <ul class="space-y-6 mt-auto">
+                            <li class="flex items-start gap-4">
+                                <div class="custom-checklist-icon"><i class="fa-solid fa-check"></i></div>
+                                <p class="text-sm text-gray-600 leading-relaxed">Sering pusing, migrain, nyeri menstruasi, maag akut, sesak nafas dan lain-lain</p>
+                            </li>
+                            <li class="flex items-start gap-4">
+                                <div class="custom-checklist-icon"><i class="fa-solid fa-check"></i></div>
+                                <p class="text-sm text-gray-600 leading-relaxed">Atau penyakit kronis seperti jantung, darah tinggi, kencing manis, tumor, kanker atau paska stroke dan lain-lain.</p>
+                            </li>
+                            <li class="flex items-start gap-4">
+                                <div class="custom-checklist-icon"><i class="fa-solid fa-check"></i></div>
+                                <p class="text-sm text-gray-600 leading-relaxed">Atau mungkin mudah lelah, kurang berenergi, susah tidur, disfungsi seksual dan lain-lain</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Card 2: Masalah Emosi -->
+                <div class="bg-white rounded-3xl overflow-hidden shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)] flex flex-col h-full border border-gray-100 seft-card">
+                    <div class="h-48 w-full bg-gray-200 relative">
+                        <img src="https://images.unsplash.com/photo-1541336032412-2048a678540d?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover" alt="Problem Emosi">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark/60 to-transparent"></div>
+                    </div>
+                    <div class="p-8 flex-grow flex flex-col">
+                        <h3 class="text-xl lg:text-2xl font-black text-dark leading-tight mb-8">Merdeka dari berbagai masalah emosi</h3>
+                        
+                        <ul class="space-y-6 mt-auto">
+                            <li class="flex items-start gap-4">
+                                <div class="custom-checklist-icon"><i class="fa-solid fa-check"></i></div>
+                                <p class="text-sm text-gray-600 leading-relaxed">Stress, depresi, mudah cemas atau panik dan lain-lain</p>
+                            </li>
+                            <li class="flex items-start gap-4">
+                                <div class="custom-checklist-icon"><i class="fa-solid fa-check"></i></div>
+                                <p class="text-sm text-gray-600 leading-relaxed">Mudah marah, atau mempunyai dendam dan kesedihan yang nggak hilang-hilang</p>
+                            </li>
+                            <li class="flex items-start gap-4">
+                                <div class="custom-checklist-icon"><i class="fa-solid fa-check"></i></div>
+                                <p class="text-sm text-gray-600 leading-relaxed">Trauma, kecanduan, phobia dan lain-lain.</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- PROFIL TERAPIS UTAMA (Coach Alif) -->
+    <section class="py-24 px-4 bg-white relative overflow-hidden border-t border-gray-100">
+        <div class="max-w-[1000px] mx-auto relative z-10">
+            <div class="text-center mb-16">
+                <span class="text-healing font-black tracking-widest text-sm uppercase mb-3 block">Expert Therapist</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-dark tracking-tight">Mengenal Terapis Anda</h2>
+            </div>
+            
+            <div class="bg-healinglight/10 border border-healinglight/30 rounded-3xl p-8 md:p-12 flex flex-col md:flex-row gap-8 md:gap-12 items-center">
+                <!-- Foto Coach Alif -->
+                <div class="w-full md:w-1/3 aspect-[4/5] rounded-2xl overflow-hidden bg-white shadow-md border border-gray-100 flex-shrink-0 group">
+                    <img src="../Management/Coach%20Alif%20-%20update.png" alt="Coach Alif (Alifya Ihya Muhammad)" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
+                </div>
+                
+                <!-- Deskripsi Coach Alif -->
+                <div class="flex-grow text-left">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-healing text-white rounded-full text-xs font-bold uppercase tracking-wider mb-4">
+                        <i class="fa-solid fa-certificate"></i> Certified SEFT-er
+                    </div>
+                    <h3 class="text-2xl font-black text-dark mb-1">Alifya Ihya Muhammad, S.Psi, M.M.</h3>
+                    <p class="text-healing font-bold text-sm mb-6">Coach Alif · Founder & Lead Therapist</p>
+                    
+                    <p class="text-sm md:text-base text-gray-600 leading-relaxed font-medium mb-6">
+                        Beliau merupakan praktisi dan terapis SEFT (Spiritual Emotional Freedom Technique) tersertifikasi yang memadukan keilmuan Psikologi dengan pendekatan Spiritual-Emotional Healing. Dengan pengalaman lebih dari satu dekade, Coach Alif telah membantu ribuan individu mengatasi hambatan mental, trauma mendalam, phobia, kecemasan akut, hingga keluhan penyakit fisik melalui metode terapi yang ramah, aman, dan menenangkan.
+                    </p>
+                    
+                    <div class="grid grid-cols-2 gap-4 border-t border-healinglight/30 pt-6">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-healinglight text-healing flex items-center justify-center text-sm flex-shrink-0"><i class="fa-solid fa-user-check"></i></div>
+                            <div>
+                                <p class="text-xs text-gray-400 font-bold uppercase">Sertifikasi</p>
+                                <p class="text-dark font-bold text-xs">Certified SEFT Practitioner</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-healinglight text-healing flex items-center justify-center text-sm flex-shrink-0"><i class="fa-solid fa-heart-pulse"></i></div>
+                            <div>
+                                <p class="text-xs text-gray-400 font-bold uppercase">Spesialisasi</p>
+                                <p class="text-dark font-bold text-xs">Trauma & Emotional Healing</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. PILIHAN PAKET & PRICING -->
+    <section id="pilihan-sesi" class="py-24 px-4 bg-gray-50 relative overflow-hidden">
+        <div class="max-w-[1200px] mx-auto relative z-10">
+            <div class="text-center mb-16">
+                <span class="text-healing font-black tracking-widest text-sm uppercase mb-3 block">Investasi Diri</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-dark tracking-tight mb-4">Pilih Perjalanan Kesembuhan Anda</h2>
+                <p class="text-gray-500 font-medium max-w-2xl mx-auto">Kami menyediakan opsi yang transparan dan dapat disesuaikan dengan tingkat kebutuhan Anda, baik sesi tunggal maupun program holistik yang mendalam.</p>
+            </div>
+            
+            <!-- 3 Pricing Cards (Individual) -->
+            <div class="grid lg:grid-cols-3 gap-8 mb-16 items-center">
+                
+                <!-- Card 1: Relief (Single) -->
+                <div class="bg-white rounded-3xl p-8 border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300">
+                    <h3 class="font-bold text-dark text-xl mb-2">Relief Session</h3>
+                    <p class="text-gray-500 text-sm mb-6 h-10">Untuk keluhan ringan atau sekadar ingin mencoba terapi SEFT.</p>
+                    
+                    <div class="mb-6 pb-6 border-b border-gray-100">
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Mulai Dari</p>
+                        <div class="flex items-end gap-1">
+                            <span class="text-2xl font-bold text-dark">Rp</span>
+                            <span class="text-4xl font-black text-dark tracking-tight">149<span class="text-2xl text-gray-400">rb</span></span>
+                        </div>
+                        <div class="mt-3 flex flex-col gap-2 text-sm font-semibold text-gray-700 bg-gray-50 p-3 rounded-xl">
+                            <div class="flex justify-between items-center"><span><i class="fa-solid fa-video text-healing/60 w-5"></i> Online:</span> <span class="text-dark">Rp 149.000</span></div>
+                            <div class="flex justify-between items-center"><span><i class="fa-solid fa-building text-healing/60 w-5"></i> Offline:</span> <span class="text-dark">Rp 199.000</span></div>
+                        </div>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-8 text-sm text-gray-600 font-medium">
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-healing mt-0.5"></i> <span>1x Sesi Terapi (60-90 Menit)</span></li>
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-healing mt-0.5"></i> <span>Asesmen Keluhan Awal</span></li>
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-healing mt-0.5"></i> <span>Privasi terjamin 100%</span></li>
+                    </ul>
+                    
+                    <a href="mockup_pendaftaran.html" class="btn-outline-healing w-full py-3.5 rounded-xl font-bold text-sm text-center block">Pilih Paket</a>
+                </div>
+
+                <!-- Card 2: Deep Healing (Popular) -->
+                <div class="bg-healing rounded-3xl p-8 border border-healing shadow-[0_20px_40px_-10px_rgba(15,118,110,0.3)] transform lg:-translate-y-4 relative">
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-secondary text-dark px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest shadow-md">
+                        Paling Efektif
+                    </div>
+                    <h3 class="font-bold text-white text-xl mb-2">Deep Healing</h3>
+                    <p class="text-healinglight text-sm mb-6 h-10">Penanganan tuntas untuk trauma, phobia, atau keluhan fisik kronis.</p>
+                    
+                    <div class="mb-6 pb-6 border-b border-healinglight/20">
+                        <p class="text-xs font-bold text-healinglight uppercase tracking-wider mb-2">Mulai Dari</p>
+                        <div class="flex items-end gap-1">
+                            <span class="text-2xl font-bold text-white">Rp</span>
+                            <span class="text-4xl font-black text-white tracking-tight">399<span class="text-2xl text-healinglight">rb</span></span>
+                        </div>
+                        <div class="mt-3 flex flex-col gap-2 text-sm font-semibold text-white bg-black/10 p-3 rounded-xl">
+                            <div class="flex justify-between items-center"><span><i class="fa-solid fa-video text-secondary w-5"></i> Online:</span> <span>Rp 399.000</span></div>
+                            <div class="flex justify-between items-center"><span><i class="fa-solid fa-building text-secondary w-5"></i> Offline:</span> <span>Rp 499.000</span></div>
+                        </div>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-8 text-sm text-white font-medium">
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-secondary mt-0.5"></i> <span><strong>3x</strong> Sesi Terapi Intensif</span></li>
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-secondary mt-0.5"></i> <span>Pemantauan / Progress Tracking</span></li>
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-secondary mt-0.5"></i> <span>Panduan Tapping Mandiri di Rumah</span></li>
+                    </ul>
+                    
+                    <a href="mockup_pendaftaran.html" class="bg-secondary text-dark hover:bg-yellow-300 transition-colors w-full py-3.5 rounded-xl font-bold text-sm text-center block shadow-md">Pilih Paket</a>
+                </div>
+
+                <!-- Card 3: Holistic Transformation -->
+                <div class="bg-white rounded-3xl p-8 border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300">
+                    <h3 class="font-bold text-dark text-xl mb-2">Holistic Transform</h3>
+                    <p class="text-gray-500 text-sm mb-6 h-10">Kombinasi pamungkas untuk perombakan mental dan emosional total.</p>
+                    
+                    <div class="mb-6 pb-6 border-b border-gray-100">
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Harga Spesial</p>
+                        <div class="flex items-end gap-1">
+                            <span class="text-2xl font-bold text-dark">Rp</span>
+                            <span class="text-4xl font-black text-dark tracking-tight">999<span class="text-2xl text-gray-400">rb</span></span>
+                        </div>
+                        <div class="mt-3 flex flex-col gap-2 text-sm font-semibold text-gray-700 bg-gray-50 p-3 rounded-xl">
+                            <div class="flex justify-center items-center text-xs text-gray-500 font-medium">Paket All-in (Bisa Online / Offline)</div>
+                        </div>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-8 text-sm text-gray-600 font-medium">
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-healing mt-0.5"></i> <span><strong>1x</strong> Sesi Konseling Psikolog</span></li>
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-healing mt-0.5"></i> <span><strong>3x</strong> Sesi Terapi SEFT</span></li>
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-healing mt-0.5"></i> <span><strong>1x</strong> Sesi Visual Coaching</span></li>
+                    </ul>
+                    
+                    <a href="mockup_pendaftaran.html" class="btn-outline-healing w-full py-3.5 rounded-xl font-bold text-sm text-center block">Pilih Paket</a>
+                </div>
+
+            </div>
+
+            <!-- Group & Corporate Banner -->
+            <div class="bg-gradient-to-r from-dark to-slate-800 rounded-3xl p-8 lg:p-12 text-white flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl relative overflow-hidden">
+                <div class="absolute -right-20 -top-20 opacity-10 text-[200px] pointer-events-none"><i class="fa-solid fa-people-group"></i></div>
+                <div class="relative z-10 md:w-2/3">
+                    <h3 class="text-2xl md:text-3xl font-black mb-3">Group Healing & Corporate</h3>
+                    <p class="text-gray-300 font-medium leading-relaxed mb-4 text-sm md:text-base">
+                        Sembuh bersama-sama. Dirancang untuk keluarga, komunitas, atau tim karyawan di perusahaan untuk mengatasi <i>stress</i>, *burnout*, dan menciptakan *mindfulness*.
+                    </p>
+                    <div class="flex flex-wrap gap-4 text-sm font-semibold text-gray-200">
+                        <div class="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg border border-white/10">
+                            <i class="fa-solid fa-user-group text-secondary"></i> Group (5-10 org): <span class="text-white">Rp 99.000/pax</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg border border-white/10">
+                            <i class="fa-solid fa-building text-secondary"></i> Corporate (>10 org): <span class="text-white">By Quotation</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative z-10 md:w-1/3 flex justify-end w-full">
+                    <a href="mockup_pendaftaran.html" class="bg-white text-dark hover:bg-gray-100 transition-colors px-8 py-4 rounded-xl font-bold text-sm w-full md:w-auto text-center flex justify-center items-center gap-2">
+                        Pesan Sekarang
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-50 pt-16 border-t border-gray-200">
+        <div class="max-w-[1200px] mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 text-[#334155]">
+            <!-- Kolom 1: Profil & Alamat -->
+            <div class="pr-4">
+                <a href="#" class="text-2xl font-bold tracking-tight flex items-center gap-2 mb-8 text-dark">
+                    <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM Logo" class="h-14 md:h-16 w-auto">
+                </a>
+            </div>
+
+            <!-- Kolom 2: Layanan -->
+            <div>
+                <h4 class="font-extrabold text-dark text-lg mb-6 tracking-tight">Layanan</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li><a href="mockup_layanan_assessment.html" class="hover:text-primary transition-colors">Talents Mapping Assesmen</a></li>
+                    <li><a href="mockup_layanan_coaching.html" class="hover:text-primary transition-colors">Coaching</a></li>
+                    <li><a href="mockup_layanan_visual_coaching.html" class="hover:text-primary transition-colors">Visual Coaching</a></li>
+                    <li><a href="mockup_layanan_relaksasi.html" class="text-primary font-bold">Therapy (SEFT)</a></li>
+                    <li><a href="mockup_layanan_workshop.html" class="hover:text-primary transition-colors">Workshop & Training</a></li>
+                </ul>
+            </div>
+
+            <!-- Kolom 3: Tentang Kami -->
+            <div>
+                <h4 class="font-extrabold text-dark text-lg mb-6 tracking-tight">Tentang Kami</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li><a href="mockup_tentang_theaim.html" class="hover:text-primary transition-colors">Tentang TheAIM</a></li>
+                    <li><a href="mockup_tentang_ecosystem.html" class="hover:text-primary transition-colors">Talent Ecosystem</a></li>
+                    <li><a href="mockup_perusahaan.html" class="hover:text-primary transition-colors">Solusi Untuk Perusahaan</a></li>
+                    <li><a href="mockup_artikel.html" class="hover:text-primary transition-colors">Artikel & Aktivitas</a>
+                <a href="mockup_career.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Karir</a></li>
+                </ul>
+            </div>
+
+            <!-- Kolom 4: Kontak -->
+            <div>
+                <h4 class="font-extrabold text-dark text-lg mb-6 tracking-tight">Kontak Kami</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li class="flex items-center gap-3">
+                        <i class="fa-solid fa-phone text-primary"></i>
+                        <a href="#" class="hover:text-primary transition-colors">081999554599</a>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i class="fa-regular fa-envelope text-primary"></i>
+                        <a href="mailto:ptabadiinsanmanfaat@gmail.com" class="hover:text-primary transition-colors">ptabadiinsanmanfaat@gmail.com</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Bottom Bar Footer -->
+        <div class="bg-dark py-6 px-4 text-white">
+            <div class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-center items-center gap-6">
+                <!-- Copyright & Links -->
+                <div class="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 text-xs text-gray-400 font-medium">
+                    <p>&copy; 2026 PT Abadi Insan Manfaat. All right reserved</p>
+                    <div class="hidden sm:block text-gray-600">|</div>
+                    <a href="#" class="hover:text-white transition-colors">Term & Condition</a>
+                    <div class="hidden sm:block text-gray-600">|</div>
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

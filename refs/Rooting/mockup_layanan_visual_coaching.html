@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Coaching - TheAIM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626', // Merah
+                        secondary: '#fbbf24', // Kuning
+                        dark: '#18181b', // Hitam
+                        light: '#ffffff', // Putih
+                        accent: '#fef3c7', // Kuning terang untuk aksen visual coaching
+                    },
+                    fontFamily: {
+                        sans: ['Lexend', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #ffffff; overflow-x: hidden; }
+        
+        .btn-primary {
+            background-color: #dc2626;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(220, 38, 38, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: #fbbf24;
+            color: #18181b;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background-color: #f59e0b;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(251, 191, 36, 0.4);
+        }
+        
+        .btn-outline {
+            border: 2px solid #18181b;
+            color: #18181b;
+            transition: all 0.3s ease;
+        }
+        .btn-outline:hover {
+            background-color: #18181b;
+            color: white;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+        
+        .dashed-card {
+            border: 2px dashed #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        .dashed-card:hover {
+            border-color: #fbbf24;
+            background-color: #fffbeb;
+            transform: translateY(-4px);
+        }
+
+        .card-stack {
+            position: relative;
+        }
+        .card-stack-img {
+            position: absolute;
+            transition: all 0.5s ease;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        .card-stack:hover .card-1 { transform: rotate(-15deg) translate(-20px, -10px); }
+        .card-stack:hover .card-2 { transform: rotate(0deg) translate(0, -20px); z-index: 10; }
+        .card-stack:hover .card-3 { transform: rotate(15deg) translate(20px, -10px); }
+    </style>
+</head>
+<body class="font-sans text-dark flex flex-col min-h-screen">
+    
+    <!-- NAVIGATION -->
+    <nav class="sticky top-0 z-50 w-full glass-panel flex items-center px-4 py-4 lg:px-8 border-b border-gray-100">
+        <div class="max-w-[1400px] mx-auto w-full flex justify-between items-center">
+            
+            <a href="../index.html" class="text-2xl font-bold tracking-tight flex items-center gap-2">
+                <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM" class="h-14 md:h-16 w-auto">
+            </a>
+            
+            <div class="hidden lg:flex items-center space-x-2 font-medium text-[15px] text-gray-700">
+                <a href="../index.html" class="px-4 py-2 rounded-lg text-primary font-semibold transition-colors">Beranda</a>
+                
+                <!-- Layanan Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg group-hover:bg-slate-100 transition-colors focus:outline-none">
+                        Layanan <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-64 bg-white rounded-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)] border border-slate-100 py-2 flex flex-col">
+                            <!-- Assessment -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Assessment <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Talents Mapping</a>
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Tes Psikologi (Psikotes)</a>
+                                        <a href="mockup_layanan_mental_health.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Mental Health Check Up</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Konsultasi & Coaching -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Konsultasi & Coaching <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_konseling.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konseling dengan Psikolog</a>
+                                        <a href="mockup_layanan_relaksasi.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Therapy (SEFT)</a>
+                                        <a href="mockup_layanan_visual_coaching.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Visual Coaching</a>
+                                        <a href="mockup_layanan_consultation.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konsultasi Keuangan</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Digital Product -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Digital Product <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-72 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_ecourse.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">E-Course Life Reset: 7 Days Re-Discover Yourself</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Webinar & Workshop -->
+                            <a href="mockup_layanan_workshop.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Webinar & Workshop</a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="mockup_perusahaan.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Untuk Perusahaan</a>
+                <a href="mockup_artikel.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Artikel & Aktivitas</a>
+                <a href="mockup_career.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Karir</a>
+                
+                <!-- Tentang Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg group-hover:bg-gray-100 transition-colors focus:outline-none">
+                        Tentang Kami <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute right-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-56 bg-white rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-gray-100 py-3 overflow-hidden flex flex-col">
+                            <a href="mockup_tentang_theaim.html" class="px-6 py-3 text-sm text-gray-500 hover:bg-gray-50 hover:text-primary transition-colors">Tentang TheAIM</a>
+                            <a href="mockup_tentang_ecosystem.html" class="px-6 py-3 text-sm text-gray-500 hover:bg-gray-50 hover:text-primary transition-colors">TheAIM Ecosystem</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <a href="#" class="btn-outline px-7 py-2.5 rounded-full font-semibold text-sm hidden md:block tracking-wide">
+                Masuk
+            </a>
+            
+            <button class="md:hidden text-2xl text-dark">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 1. HERO VISUAL COACHING -->
+    <section class="relative pt-20 pb-16 lg:pt-32 lg:pb-24 px-4 overflow-hidden border-b border-gray-50 bg-gradient-to-br from-white to-orange-50">
+        <!-- Abstract Shapes for Creativity -->
+        <div class="absolute top-10 right-20 w-64 h-64 bg-secondary rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
+        <div class="absolute bottom-10 left-10 w-72 h-72 bg-primary rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style="animation-delay: 2s;"></div>
+
+        <div class="max-w-[1250px] mx-auto grid lg:grid-cols-2 gap-12 lg:gap-8 items-center relative z-10">
+            <!-- Teks Kiri -->
+            <div class="order-2 lg:order-1 text-center lg:text-left flex flex-col pt-8 lg:pt-0">
+                <div class="inline-flex items-center gap-2 px-4 py-2 bg-yellow-100 text-yellow-800 rounded-full text-sm font-bold w-fit mx-auto lg:mx-0 mb-6 uppercase tracking-wider relative border border-yellow-200">
+                    <i class="fa-solid fa-lightbulb"></i> Visual Coaching
+                </div>
+
+                <h1 class="text-4xl md:text-5xl lg:text-[4rem] font-black leading-[1.1] text-dark mb-6 tracking-tight drop-shadow-sm">
+                    Saat Kata-Kata <br>Tak Cukup, Mari <br> <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Gambarkan Perasaanmu</span>
+                </h1>
+                
+                <p class="text-base md:text-lg text-gray-600 leading-relaxed mb-10 max-w-xl mx-auto lg:mx-0 font-medium">
+                    Jeda sejenak dari logika yang riuh. Melalui media <span class="font-bold text-dark border-b-2 border-secondary pb-0.5">Photo Cards</span> (kartu gambar asosiatif), kita akan <i>bypass</i> pikiran kritis dan menyelami intuisi terdalam untuk menemukan jawaban yang selama ini kamu cari.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 mb-2">
+                    <a href="#how-it-works" class="btn-primary px-8 py-4 rounded-full font-bold text-[15px] shadow-lg shadow-red-200 flex items-center justify-center gap-2">
+                        Bagaimana Caranya? <i class="fa-solid fa-arrow-down text-sm"></i>
+                    </a>
+                    <a href="#" class="btn-secondary px-8 py-4 rounded-full font-bold text-[15px] flex items-center justify-center gap-2">
+                        Pesan Sesi <i class="fa-solid fa-arrow-right text-sm"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Visual Kanan (Stack of Cards Concept) -->
+            <div class="order-1 lg:order-2 flex justify-center relative px-4 lg:px-0 h-[400px] lg:h-[500px] items-center">
+                <div class="card-stack w-64 h-80 lg:w-72 lg:h-96 relative cursor-pointer group z-20">
+                    <!-- Card 3 (Bottom) -->
+                    <div class="card-stack-img card-3 w-full h-full bg-white rounded-2xl border-4 border-white p-2 transform rotate-12 translate-x-6 z-10 overflow-hidden">
+                        <img src="../Gambar2/kartu%20tiduran.jpg" class="w-full h-4/5 object-cover rounded-xl grayscale group-hover:grayscale-0 transition-all duration-500" alt="Card Image 1">
+                        <div class="h-1/5 flex items-center justify-center font-bold text-xl uppercase tracking-widest text-dark opacity-50">Jeda</div>
+                    </div>
+                    <!-- Card 2 (Middle) -->
+                    <div class="card-stack-img card-2 w-full h-full bg-white rounded-2xl border-4 border-white p-2 transform -rotate-6 -translate-x-4 z-20 overflow-hidden shadow-2xl">
+                        <img src="../Gambar2/Kartu%20serak.jpg" class="w-full h-4/5 object-cover rounded-xl" alt="Card Image 2">
+                        <div class="h-1/5 flex items-center justify-center font-bold text-xl uppercase tracking-widest text-primary">Inspirasi</div>
+                    </div>
+                    <!-- Card 1 (Top) -->
+                    <div class="card-stack-img card-1 w-full h-full bg-white rounded-2xl border-4 border-white p-2 transform rotate-3 z-30 overflow-hidden shadow-xl">
+                        <img src="../Gambar2/kartu%20baris.jpg" class="w-full h-4/5 object-cover rounded-xl grayscale group-hover:grayscale-0 transition-all duration-500" alt="Card Image 3">
+                        <div class="h-1/5 flex items-center justify-center font-bold text-xl uppercase tracking-widest text-dark opacity-50">Fokus</div>
+                    </div>
+                </div>
+
+                <!-- Decorative Elements -->
+                <img src="https://cdn-icons-png.flaticon.com/512/3175/3175249.png" class="absolute top-10 left-10 w-16 opacity-30 animate-bounce delay-700" alt="Idea">
+                <img src="https://cdn-icons-png.flaticon.com/512/10435/10435133.png" class="absolute bottom-20 right-10 w-12 opacity-30 animate-pulse delay-300" alt="Mind">
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. APA ITU VISUAL COACHING (Phototherapy Approach) -->
+    <section id="how-it-works" class="py-24 px-4 bg-white relative">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <!-- Text Area -->
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-dark tracking-tight mb-6">
+                        Menembus Logika, <br><span class="text-primary">Menyentuh Intuisi.</span>
+                    </h2>
+                    <p class="text-gray-500 leading-relaxed mb-6 font-medium text-lg">
+                        Seringkali kita merasa "ruwet" dan <i>overthinking</i> karena terlalu banyak menganalisis masalah dengan logika. <strong>Visual Coaching</strong> adalah pendekatan yang didasarkan pada prinsip <i>Phototherapy</i> dan projective interactions.
+                    </p>
+                    <p class="text-gray-500 leading-relaxed mb-8 font-medium">
+                        Melalui sebuah permainan kartu yang kuat dan alat bantu visual lainnya, kita "membajak" cara otak berpikir. Gambar dan asosiasi kata pada kartu membantu Anda mengeluarkan emosi tak terduga, melonggarkan pertahanan diri, dan akhirnya memudahkan Anda menceritakan cerita yang sebenarnya tanpa merasa sedang "diperiksa".
+                    </p>
+
+                    <div class="bg-yellow-50 border-l-4 border-secondary p-6 rounded-r-xl">
+                        <h4 class="font-bold text-dark text-lg flex items-center gap-2 mb-2">
+                            <i class="fa-solid fa-circle-check text-secondary"></i> Tidak Ada Jawaban yang Salah
+                        </h4>
+                        <p class="text-sm text-gray-600 font-medium leading-relaxed">
+                            Makna dari setiap kartu sepenuhnya milik Anda. Apa yang Anda lihat pada gambar adalah proyeksi dari tantangan, impian, atau kondisi Anda saat ini.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Video / Graphic Area -->
+                <div class="relative w-full aspect-video md:aspect-square lg:aspect-auto h-[400px] lg:h-[500px] rounded-[2.5rem] overflow-hidden shadow-2xl group">
+                    <img src="../Gambar2/kartu%20hadir.jpg" alt="People using cards" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/80 via-dark/20 to-transparent"></div>
+                    <div class="absolute bottom-8 left-8 right-8 text-white text-center">
+                        <h3 class="text-xl font-bold mb-2">Points of You / Visual Cards Approach</h3>
+                        <p class="text-sm font-light text-gray-300">Observasi, Refleksi, dan Temukan Perspektif Baru</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. MEDIA YANG KITA GUNAKAN -->
+    <section class="py-24 px-4 bg-gray-50 border-y border-gray-200 relative overflow-hidden">
+        <!-- SVG Pattern -->
+        <div class="absolute inset-0 opacity-[0.03] z-0" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%2318181b\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+
+        <div class="max-w-[1200px] mx-auto relative z-10">
+            <div class="text-center mb-16 max-w-2xl mx-auto">
+                <span class="text-secondary font-black tracking-widest text-sm uppercase mb-2 block">The Toolkit</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-dark tracking-tight mb-4">Media Eksplorasi Visual</h2>
+                <p class="text-gray-500 font-medium">Bukan sekadar lembar observasi kosong. Kami menyiapkan alat profesional yang telah teruji untuk membangkitkan <i>insight</i> mendalam.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Media 1 -->
+                <div class="bg-white rounded-3xl p-8 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_40px_-15px_rgba(251,191,36,0.2)] transition-all duration-300 group border-t-4 border-primary">
+                    <div class="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center text-primary text-2xl mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all">
+                        <i class="fa-regular fa-images"></i>
+                    </div>
+                    <h3 class="font-bold text-xl text-dark mb-4">65+ Photo Cards</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed font-medium mb-6">
+                        Kartu evokatif dengan fotografi berkualitas tinggi yang disandingkan dengan kata (contoh: "Syukur", "Ketakutan", "Keseimbangan"). Memancing jutaan interpretasi.
+                    </p>
+                    <img src="../Gambar2/kartu%20Family.jpeg" class="w-full h-32 object-cover rounded-xl mt-auto opacity-80 group-hover:opacity-100 transition-opacity" alt="Cards">
+                </div>
+
+                <!-- Media 2 -->
+                <div class="bg-white rounded-3xl p-8 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_40px_-15px_rgba(251,191,36,0.2)] transition-all duration-300 group border-t-4 border-secondary">
+                    <div class="w-14 h-14 bg-yellow-50 rounded-2xl flex items-center justify-center text-secondary text-2xl mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all">
+                        <i class="fa-solid fa-map"></i>
+                    </div>
+                    <h3 class="font-bold text-xl text-dark mb-4">Process Canvas</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed font-medium mb-6">
+                        Papan layout terstruktur (misal: membesarkan sudut pandang masalah, memvisualisasikan masa lalu vs masa depan) yang membimbing alur cerita Anda menjadi utuh.
+                    </p>
+                    <img src="https://images.unsplash.com/photo-1503694978374-8a2fa686963a?q=80&w=400&auto=format&fit=crop" class="w-full h-32 object-cover rounded-xl mt-auto opacity-80 group-hover:opacity-100 transition-opacity" alt="Process Map">
+                </div>
+
+                <!-- Media 3 -->
+                <div class="bg-white rounded-3xl p-8 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_40px_-15px_rgba(251,191,36,0.2)] transition-all duration-300 group border-t-4 border-dark">
+                    <div class="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center text-dark text-2xl mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all">
+                        <i class="fa-solid fa-pen-nib"></i>
+                    </div>
+                    <h3 class="font-bold text-xl text-dark mb-4">Focus Notes & Action</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed font-medium mb-6">
+                        Lembar observasi pribadi. Dari sesi bermain visual yang luas, Anda akan merangkum satu "fokus besar" dan mengubahnya menjadi rencana konkret (Action Plan).
+                    </p>
+                    <img src="https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=400&auto=format&fit=crop" class="w-full h-32 object-cover rounded-xl mt-auto opacity-80 group-hover:opacity-100 transition-opacity" alt="Focus Notes">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. KAPAN KAMU BUTUH INI? (Target Audience) -->
+    <section class="py-24 px-4 bg-dark text-white border-b-8 border-secondary">
+        <div class="max-w-[1200px] mx-auto grid md:grid-cols-2 gap-16 items-center">
+            <div>
+                <h2 class="text-3xl md:text-4xl font-extrabold mb-8 tracking-tight">Menyelesaikan Masalah <br>Utamamu Melalui Visual</h2>
+                <ul class="space-y-6">
+                    <li class="flex items-start gap-4">
+                        <div class="w-8 h-8 rounded-full bg-secondary text-dark flex items-center justify-center font-black text-sm shrink-0 mt-1"><i class="fa-solid fa-check"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-1">Awareness (Kesadaran Terhadap Masalah)</h4>
+                            <p class="text-gray-400 text-sm font-medium leading-relaxed">Membantu Anda menyadari apa yang sebenarnya sedang Anda hadapi. Seringkali masalah di permukaan berbeda dengan akar masalah di alam bawah sadar.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-4">
+                        <div class="w-8 h-8 rounded-full bg-secondary text-dark flex items-center justify-center font-black text-sm shrink-0 mt-1"><i class="fa-solid fa-check"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-1">Relation (Hubungan & Komunikasi)</h4>
+                            <p class="text-gray-400 text-sm font-medium leading-relaxed">Menyelesaikan sumbatan komunikasi atau konflik tersembunyi dengan tim, rekan kerja, partner, maupun keluarga secara netral.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-4">
+                        <div class="w-8 h-8 rounded-full bg-secondary text-dark flex items-center justify-center font-black text-sm shrink-0 mt-1"><i class="fa-solid fa-check"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-1">Decision Making (Pengambilan Keputusan)</h4>
+                            <p class="text-gray-400 text-sm font-medium leading-relaxed">Memecahkan kebuntuan (stuck/analysis paralysis) akibat terlalu banyak menganalisis, membantu Anda membuat keputusan yang mantap berdasarkan intuisi.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-4">
+                        <div class="w-8 h-8 rounded-full bg-secondary text-dark flex items-center justify-center font-black text-sm shrink-0 mt-1"><i class="fa-solid fa-check"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-1">Emotional Expression (Ekspresi Diri)</h4>
+                            <p class="text-gray-400 text-sm font-medium leading-relaxed">Membantu mengekspresikan rasa atau tantangan yang sulit dirangkai lewat kata-kata verbal biasa agar menjadi lebih lega dan terstruktur.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 h-full relative">
+                <!-- Floating decorative element -->
+                <div class="absolute -top-6 -right-6 w-20 h-20 bg-primary/20 backdrop-blur rounded-full flex items-center justify-center z-10 border border-primary/50">
+                    <i class="fa-solid fa-plus text-primary text-2xl"></i>
+                </div>
+                <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=600&auto=format&fit=crop" class="w-full h-48 md:h-full object-cover rounded-3xl" alt="Person thinking">
+                <div class="flex flex-col gap-4">
+                    <img src="../Gambar2/kartu%20cinta.jpg" class="w-full h-32 md:h-[48%] object-cover rounded-3xl" alt="Team meeting">
+                    <div class="w-full flex-grow bg-primary rounded-3xl p-6 flex flex-col justify-center items-start text-white">
+                        <h4 class="font-black text-4xl mb-2">90%</h4>
+                        <p class="text-sm font-medium opacity-90 leading-tight">Orang mendapatkan AHA! moment di 10 menit pertama.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. ALUR MEMULAI SESI (Offline Only) -->
+    <section class="py-24 px-4 bg-white border-t border-gray-100">
+        <div class="max-w-[1100px] mx-auto">
+            <div class="text-center mb-16">
+                <span class="text-primary font-black tracking-widest text-sm uppercase mb-2 block">Alur Sesi Tatap Muka</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-dark tracking-tight mb-4">Bagaimana Cara Mengikuti Sesi?</h2>
+                <p class="text-gray-500 max-w-2xl mx-auto font-medium">Kami menyediakan sesi khusus offline (tatap muka) agar Anda bisa merasakan sentuhan fisik kartu dan mendapatkan pengalaman eksplorasi visual yang maksimal.</p>
+            </div>
+            
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 relative">
+                <!-- Step 1 -->
+                <div class="bg-gray-50 rounded-3xl p-8 relative border border-gray-100 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 rounded-2xl bg-primary text-white flex items-center justify-center font-bold text-lg mb-6 shadow-md shadow-red-200">1</div>
+                    <h3 class="font-bold text-dark text-lg mb-3">Daftar Sesi</h3>
+                    <p class="text-gray-500 text-sm font-medium leading-relaxed">Hubungi admin kami dan isi formulir singkat mengenai fokus atau tantangan yang ingin Anda diskusikan.</p>
+                </div>
+                <!-- Step 2 -->
+                <div class="bg-gray-50 rounded-3xl p-8 relative border border-gray-100 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 rounded-2xl bg-secondary text-dark flex items-center justify-center font-bold text-lg mb-6 shadow-md shadow-amber-200">2</div>
+                    <h3 class="font-bold text-dark text-lg mb-3">Konfirmasi</h3>
+                    <p class="text-gray-500 text-sm font-medium leading-relaxed">Lakukan pembayaran biaya investasi sesi coaching untuk mengonfirmasi pemesanan jadwal Anda.</p>
+                </div>
+                <!-- Step 3 -->
+                <div class="bg-gray-50 rounded-3xl p-8 relative border border-gray-100 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 rounded-2xl bg-dark text-white flex items-center justify-center font-bold text-lg mb-6 shadow-md">3</div>
+                    <h3 class="font-bold text-dark text-lg mb-3">Jadwalkan Waktu & Lokasi</h3>
+                    <p class="text-gray-500 text-sm font-medium leading-relaxed">Pilih jadwal waktu yang cocok dan sepakati lokasi offline tatap muka.</p>
+                </div>
+                <!-- Step 4 -->
+                <div class="bg-gray-50 rounded-3xl p-8 relative border border-gray-100 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 rounded-2xl bg-green-600 text-white flex items-center justify-center font-bold text-lg mb-6 shadow-md shadow-green-200">4</div>
+                    <h3 class="font-bold text-dark text-lg mb-3">Mulai Sesi Coaching</h3>
+                    <p class="text-gray-500 text-sm font-medium leading-relaxed">Hadir tatap muka langsung bersama coach untuk mengurai kebuntuan masalah Anda dan merumuskan rencana aksi nyata.</p>
+                </div>
+            </div>
+            
+            <div class="mt-16 text-center">
+                <a href="mockup_pendaftaran.html?layanan=visual_coaching&paket=standar" class="btn-primary inline-flex items-center gap-2.5 px-10 py-4 rounded-full font-bold text-[15px] shadow-lg shadow-red-200">
+                    <i class="fa-brands fa-whatsapp text-lg"></i> Jadwalkan Sesi Sekarang
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. PAKET HARGA / PRICING -->
+    <section id="harga" class="py-24 px-4 bg-gray-50 border-t border-gray-100 relative overflow-hidden">
+        <!-- Subtle background pattern -->
+        <div class="absolute inset-0 opacity-[0.025] z-0" style="background-image: radial-gradient(circle at 1px 1px, #18181b 1px, transparent 0); background-size: 28px 28px;"></div>
+
+        <div class="max-w-[1200px] mx-auto relative z-10">
+            <!-- Header -->
+            <div class="text-center mb-16 max-w-2xl mx-auto">
+                <span class="text-primary font-black tracking-widest text-sm uppercase mb-3 block">Investasi Terbaik</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-dark tracking-tight mb-4">Pilih Paket Visual Coaching <br>yang Tepat Untukmu</h2>
+                <p class="text-gray-500 font-medium text-sm leading-relaxed">Setiap sesi dipandu langsung oleh fasilitator/coach tersertifikasi. <br>Pilih paket sesuai kebutuhan dan kedalaman eksplorasimu.</p>
+            </div>
+
+            <!-- Pricing Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-start">
+
+                <!-- Paket 1: Explore -->
+                <div class="bg-white rounded-3xl p-8 border border-gray-200 flex flex-col transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:border-gray-300 group">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl mb-6">
+                        <i class="fa-solid fa-binoculars"></i>
+                    </div>
+                    <p class="text-xs font-bold uppercase tracking-widest text-blue-500 mb-1">Explore</p>
+                    <h3 class="text-xl font-extrabold text-dark mb-1">Trial Session</h3>
+                    <p class="text-gray-400 text-xs font-medium mb-6">Cocok untuk yang pertama kali mencoba Visual Coaching</p>
+
+                    <div class="flex items-end gap-1 mb-8">
+                        <span class="text-4xl font-black text-dark">Rp 299</span>
+                        <span class="text-base font-bold text-dark mb-1">rb</span>
+                    </div>
+
+                    <ul class="space-y-3 mb-8 flex-grow">
+                        <li class="flex items-start gap-2.5 text-sm text-gray-600 font-medium">
+                            <i class="fa-solid fa-check text-blue-500 mt-0.5 text-xs shrink-0"></i>
+                            Durasi 30 menit
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-gray-600 font-medium">
+                            <i class="fa-solid fa-check text-blue-500 mt-0.5 text-xs shrink-0"></i>
+                            1 tema eksplorasi pilihan
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-gray-600 font-medium">
+                            <i class="fa-solid fa-check text-blue-500 mt-0.5 text-xs shrink-0"></i>
+                            Sesi offline (tatap muka)
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-gray-600 font-medium">
+                            <i class="fa-solid fa-check text-blue-500 mt-0.5 text-xs shrink-0"></i>
+                            Penggunaan 65+ Photo Cards
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-gray-400 font-medium line-through">
+                            <i class="fa-solid fa-xmark text-gray-300 mt-0.5 text-xs shrink-0"></i>
+                            Action Plan tertulis & Workbook
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-gray-400 font-medium line-through">
+                            <i class="fa-solid fa-xmark text-gray-300 mt-0.5 text-xs shrink-0"></i>
+                            Laporan progress
+                        </li>
+                    </ul>
+
+                    <a href="mockup_pendaftaran.html?layanan=visual_coaching&paket=explore" class="w-full text-center py-3.5 rounded-2xl font-bold text-sm border-2 border-blue-200 text-blue-600 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all duration-300">
+                        Mulai Explore
+                    </a>
+                </div>
+
+                <!-- Paket 2: Clarity (POPULAR) -->
+                <div class="relative bg-dark rounded-3xl p-8 border border-slate-700 flex flex-col transition-all duration-300 hover:shadow-2xl hover:shadow-slate-800/30 hover:-translate-y-2 group lg:-mt-4 lg:pb-12">
+                    <!-- Badge Most Popular -->
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-secondary text-dark text-[11px] font-black uppercase tracking-widest px-5 py-1.5 rounded-full shadow-md shadow-amber-300/50 flex items-center gap-1.5 whitespace-nowrap">
+                        <i class="fa-solid fa-star text-[10px]"></i> Paling Populer
+                    </div>
+
+                    <div class="w-12 h-12 rounded-2xl bg-yellow-500/20 text-secondary flex items-center justify-center text-xl mb-6">
+                        <i class="fa-solid fa-lightbulb"></i>
+                    </div>
+                    <p class="text-xs font-bold uppercase tracking-widest text-secondary mb-1">Clarity</p>
+                    <h3 class="text-xl font-extrabold text-white mb-1">Deep Dive Session</h3>
+                    <p class="text-slate-400 text-xs font-medium mb-6">Sesi penuh untuk eksplorasi mendalam & action plan nyata</p>
+
+                    <div class="flex items-end gap-1 mb-8">
+                        <span class="text-4xl font-black text-white">Rp 349</span>
+                        <span class="text-base font-bold text-white mb-1">rb</span>
+                    </div>
+
+                    <ul class="space-y-3 mb-8 flex-grow">
+                        <li class="flex items-start gap-2.5 text-sm text-slate-200 font-medium">
+                            <i class="fa-solid fa-check text-secondary mt-0.5 text-xs shrink-0"></i>
+                            Durasi 60 menit
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-200 font-medium">
+                            <i class="fa-solid fa-check text-secondary mt-0.5 text-xs shrink-0"></i>
+                            Tema eksplorasi bebas sesuai kebutuhan
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-200 font-medium">
+                            <i class="fa-solid fa-check text-secondary mt-0.5 text-xs shrink-0"></i>
+                            Sesi offline (tatap muka)
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-200 font-medium">
+                            <i class="fa-solid fa-check text-secondary mt-0.5 text-xs shrink-0"></i>
+                            Penggunaan 65+ Photo Cards + Process Canvas
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-200 font-medium">
+                            <i class="fa-solid fa-check text-secondary mt-0.5 text-xs shrink-0"></i>
+                            Action Plan tertulis & Workbook
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-400 font-medium line-through">
+                            <i class="fa-solid fa-xmark text-slate-600 mt-0.5 text-xs shrink-0"></i>
+                            Laporan progress
+                        </li>
+                    </ul>
+
+                    <a href="mockup_pendaftaran.html?layanan=visual_coaching&paket=clarity" class="w-full text-center py-3.5 rounded-2xl font-bold text-sm bg-secondary text-dark hover:bg-yellow-400 transition-all duration-300 shadow-lg shadow-amber-400/20">
+                        Pilih Clarity
+                    </a>
+                </div>
+
+                <!-- Paket 3: Transform -->
+                <div class="bg-white rounded-3xl p-8 border border-gray-200 flex flex-col transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:border-red-100 group">
+                    <!-- Badge -->
+                    <div class="inline-flex items-center gap-1.5 bg-red-50 text-primary text-[11px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full mb-6 w-fit border border-red-100">
+                        <i class="fa-solid fa-fire text-[10px]"></i> Best Value
+                    </div>
+                    <p class="text-xs font-bold uppercase tracking-widest text-primary mb-1">Transform</p>
+                    <h3 class="text-xl font-extrabold text-dark mb-1">Intensive Program</h3>
+                    <p class="text-gray-400 text-xs font-medium mb-6">Paket intensif multi-sesi untuk perubahan nyata & berkelanjutan</p>
+
+                    <div class="flex items-end gap-1 mb-2">
+                        <span class="text-4xl font-black text-dark">Rp 999</span>
+                        <span class="text-base font-bold text-dark mb-1">rb</span>
+                    </div>
+                    <p class="text-xs text-gray-400 font-medium mb-6">3 sesi (setara Rp 333rb/sesi)</p>
+
+                    <ul class="space-y-3 mb-8 flex-grow">
+                        <li class="flex items-start gap-2.5 text-sm text-gray-600 font-medium">
+                            <i class="fa-solid fa-check text-primary mt-0.5 text-xs shrink-0"></i>
+                            3× sesi @ 60 menit
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-gray-600 font-medium">
+                            <i class="fa-solid fa-check text-primary mt-0.5 text-xs shrink-0"></i>
+                            Tema eksplorasi penuh & terarah
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-gray-600 font-medium">
+                            <i class="fa-solid fa-check text-primary mt-0.5 text-xs shrink-0"></i>
+                            Sesi offline (tatap muka)
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-gray-600 font-medium">
+                            <i class="fa-solid fa-check text-primary mt-0.5 text-xs shrink-0"></i>
+                            Full toolkit: Photo Cards + Canvas + Notes
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-gray-600 font-medium">
+                            <i class="fa-solid fa-check text-primary mt-0.5 text-xs shrink-0"></i>
+                            Action Plan tertulis & Workbook
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-gray-600 font-medium">
+                            <i class="fa-solid fa-check text-primary mt-0.5 text-xs shrink-0"></i>
+                            Laporan progress komprehensif
+                        </li>
+                    </ul>
+
+                    <a href="mockup_pendaftaran.html?layanan=visual_coaching&paket=transform" class="w-full text-center py-3.5 rounded-2xl font-bold text-sm bg-primary text-white hover:bg-red-700 transition-all duration-300 shadow-lg shadow-red-200">
+                        Pilih Transform
+                    </a>
+                </div>
+
+                <!-- Paket 4: Team/Group -->
+                <div class="bg-white rounded-3xl p-8 border border-gray-200 flex flex-col transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:border-green-100 group">
+                    <div class="w-12 h-12 rounded-2xl bg-green-50 text-green-600 flex items-center justify-center text-xl mb-6">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <p class="text-xs font-bold uppercase tracking-widest text-green-600 mb-1">Team / Group</p>
+                    <h3 class="text-xl font-extrabold text-dark mb-1">Sesi Tim & Organisasi</h3>
+                    <p class="text-gray-400 text-xs font-medium mb-6">Fasilitasi kolaborasi, komunikasi, & alignment visi untuk tim kamu</p>
+
+                    <div class="flex items-end gap-1 mb-8">
+                        <span class="text-2xl font-black text-dark leading-tight">Harga<br>Kustom</span>
+                    </div>
+
+                    <ul class="space-y-3 mb-8 flex-grow">
+                        <li class="flex items-start gap-2.5 text-sm text-gray-600 font-medium">
+                            <i class="fa-solid fa-check text-green-500 mt-0.5 text-xs shrink-0"></i>
+                            Untuk 3–20 orang (atau lebih)
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-gray-600 font-medium">
+                            <i class="fa-solid fa-check text-green-500 mt-0.5 text-xs shrink-0"></i>
+                            Durasi fleksibel (2–4 jam)
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-gray-600 font-medium">
+                            <i class="fa-solid fa-check text-green-500 mt-0.5 text-xs shrink-0"></i>
+                            Bisa di kantor / lokasi pilihan tim
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-gray-600 font-medium">
+                            <i class="fa-solid fa-check text-green-500 mt-0.5 text-xs shrink-0"></i>
+                            Tema: teamwork, komunikasi, atau visi bersama
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-gray-600 font-medium">
+                            <i class="fa-solid fa-check text-green-500 mt-0.5 text-xs shrink-0"></i>
+                            Full toolkit & Workbook untuk peserta
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-gray-600 font-medium">
+                            <i class="fa-solid fa-check text-green-500 mt-0.5 text-xs shrink-0"></i>
+                            Laporan progress & rekomendasi tim
+                        </li>
+                    </ul>
+
+                    <a href="https://wa.me/6281999554599?text=Halo%20TheAIM%2C%20saya%20ingin%20tanya%20tentang%20paket%20Visual%20Coaching%20untuk%20Tim%2FGroup" target="_blank" class="w-full text-center py-3.5 rounded-2xl font-bold text-sm border-2 border-green-200 text-green-700 hover:bg-green-600 hover:text-white hover:border-green-600 transition-all duration-300">
+                        <i class="fa-brands fa-whatsapp mr-1"></i> Konsultasi Dulu
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- Bottom note -->
+            <p class="text-center text-xs text-gray-400 font-medium mt-10">
+                <i class="fa-solid fa-shield-halved text-primary mr-1"></i>
+                Semua sesi dipandu oleh fasilitator bersertifikat &amp; berpengalaman. Sesi bersifat konfidensial &amp; aman.
+            </p>
+        </div>
+    </section>
+
+    <!-- 7. FINAL CTA BANNER -->
+    <section class="py-20 px-4 bg-white border-t border-gray-100">
+        <div class="max-w-[1200px] mx-auto bg-gradient-to-br from-secondary to-yellow-500 rounded-[2.5rem] overflow-hidden flex flex-col md:flex-row items-center relative shadow-2xl">
+            <!-- Background pattern inside banner -->
+            <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, black 1px, transparent 0); background-size: 24px 24px;"></div>
+            
+            <div class="w-full md:w-5/12 h-[300px] md:h-[400px] relative">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=600&auto=format&fit=crop" alt="Team smiling" class="w-full h-full object-cover mix-blend-multiply opacity-80">
+                <div class="absolute inset-0 bg-gradient-to-r from-transparent to-secondary md:to-transparent"></div>
+            </div>
+
+            <div class="w-full md:w-7/12 p-8 md:p-12 lg:p-16 relative z-10 text-center md:text-left">
+                <h2 class="text-2xl md:text-3xl lg:text-4xl font-black text-dark mb-6 leading-tight drop-shadow-sm">
+                    Gambarkan Ceritamu, Temukan Solusi. Mari Mulai Perjalanan Visual Anda!
+                </h2>
+                <p class="text-dark/80 font-medium mb-8 max-w-lg">Sesi dipandu oleh fasilitator/coach tersertifikasi untuk menggali potensi, melepaskan tekanan, dan menentukan arah langkah konkret.</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                    <a href="#" class="inline-block bg-dark text-white px-8 py-4 rounded-full font-bold hover:bg-gray-800 transition-colors shadow-lg">
+                        Mulai Sesi Personal <i class="fa-solid fa-arrow-right ml-2 text-sm"></i>
+                    </a>
+                    <a href="mockup_perusahaan.html" class="inline-block bg-white text-dark px-8 py-4 rounded-full font-bold hover:bg-gray-100 transition-colors shadow-sm">
+                        Untuk Corporate/Tim
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-50 pt-16 border-t border-gray-200">
+        <div class="max-w-[1200px] mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 text-[#334155]">
+            <!-- Kolom 1: Profil & Alamat -->
+            <div class="pr-4">
+                <a href="#" class="text-2xl font-bold tracking-tight flex items-center gap-2 mb-8 text-dark">
+                    <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM Logo" class="h-14 md:h-16 w-auto">
+                </a>
+            </div>
+
+            <!-- Kolom 2: Layanan -->
+            <div>
+                <h4 class="font-extrabold text-dark text-lg mb-6 tracking-tight">Layanan</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li><a href="#" class="hover:text-primary transition-colors">Talents Mapping Assesmen</a></li>
+                    <li><a href="mockup_layanan_coaching.html" class="hover:text-primary transition-colors">Coaching</a></li>
+                    <li><a href="mockup_layanan_visual_coaching.html" class="text-primary font-bold">Visual Coaching</a></li>
+                    <li><a href="mockup_layanan_konseling.html" class="hover:text-primary transition-colors">Therapy</a></li>
+                    <li><a href="mockup_layanan_workshop.html" class="hover:text-primary transition-colors">Workshop & Training</a></li>
+                </ul>
+            </div>
+
+            <!-- Kolom 3: Tentang Kami -->
+            <div>
+                <h4 class="font-extrabold text-dark text-lg mb-6 tracking-tight">Tentang Kami</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li><a href="mockup_tentang_theaim.html" class="hover:text-primary transition-colors">Tentang TheAIM</a></li>
+                    <li><a href="mockup_tentang_ecosystem.html" class="hover:text-primary transition-colors">Talent Ecosystem</a></li>
+                    <li><a href="mockup_perusahaan.html" class="hover:text-primary transition-colors">Solusi Untuk Perusahaan</a></li>
+                    <li><a href="mockup_artikel.html" class="hover:text-primary transition-colors">Artikel & Aktivitas</a>
+                <a href="mockup_career.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Karir</a></li>
+                </ul>
+            </div>
+
+            <!-- Kolom 4: Kontak -->
+            <div>
+                <h4 class="font-extrabold text-dark text-lg mb-6 tracking-tight">Kontak Kami</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li class="flex items-center gap-3">
+                        <i class="fa-solid fa-phone text-primary"></i>
+                        <a href="#" class="hover:text-primary transition-colors">081999554599</a>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i class="fa-regular fa-envelope text-primary"></i>
+                        <a href="mailto:ptabadiinsanmanfaat@gmail.com" class="hover:text-primary transition-colors">ptabadiinsanmanfaat@gmail.com</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Bottom Bar Footer -->
+        <div class="bg-dark py-6 px-4 text-white">
+            <div class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-center items-center gap-6">
+                <!-- Copyright & Links -->
+                <div class="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 text-xs text-gray-400 font-medium">
+                    <p>&copy; 2026 PT Abadi Insan Manfaat. All right reserved</p>
+                    <div class="hidden sm:block text-gray-600">|</div>
+                    <a href="#" class="hover:text-white transition-colors">Term & Condition</a>
+                    <div class="hidden sm:block text-gray-600">|</div>
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

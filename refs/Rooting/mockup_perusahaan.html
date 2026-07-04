@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corporate Solutions - TheAIM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626',   // TheAIM Red
+                        secondary: '#fbbf24', // TheAIM Yellow
+                        dark: '#0f172a',      // Slate-900 (Corporate Navy/Dark)
+                        darker: '#020617',    // Slate-950
+                        light: '#ffffff',
+                        corpblue: '#1e293b',  // Slate-800
+                        corplight: '#f8fafc', // Slate-50
+                    },
+                    fontFamily: {
+                        sans: ['Lexend', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f8fafc; overflow-x: hidden; }
+        
+        .btn-primary {
+            background-color: #dc2626;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(220, 38, 38, 0.4);
+        }
+        
+        .btn-corp {
+            background-color: #0f172a;
+            color: white;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .btn-corp:hover {
+            background-color: #1e293b;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.4);
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .feature-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e2e8f0;
+        }
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.1);
+            border-color: #cbd5e1;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Marquee Animation for Logos (Synced with Tentang Kami) */
+        .marquee-wrapper {
+            overflow: hidden;
+            position: relative;
+        }
+        .marquee-wrapper::before,
+        .marquee-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 120px;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .marquee-wrapper::before {
+            left: 0;
+            background: linear-gradient(to right, #ffffff, transparent);
+        }
+        .marquee-wrapper::after {
+            right: 0;
+            background: linear-gradient(to left, #ffffff, transparent);
+        }
+        .marquee-track {
+            display: flex;
+            gap: 16px;
+            width: max-content;
+            animation: marquee-scroll 40s linear infinite;
+        }
+        .marquee-track.reverse {
+            animation: marquee-scroll-reverse 45s linear infinite;
+        }
+        .marquee-track:hover {
+            animation-play-state: paused;
+        }
+        @keyframes marquee-scroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        @keyframes marquee-scroll-reverse {
+            0%   { transform: translateX(-50%); }
+            100% { transform: translateX(0); }
+        }
+        .logo-pill {
+            flex-shrink: 0;
+            width: 120px;
+            height: 64px;
+            background: white;
+            border: 1px solid #f1f5f9;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+        }
+        .logo-pill:hover {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+        }
+        .logo-pill img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: grayscale(100%);
+            opacity: 0.55;
+            transition: all 0.3s ease;
+        }
+        .logo-pill:hover img {
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="font-sans text-dark flex flex-col min-h-screen">
+    
+    <!-- NAVIGATION (Synced with other pages) -->
+    <nav class="sticky top-0 z-50 w-full glass-nav flex items-center px-4 py-4 lg:px-8">
+        <div class="max-w-[1400px] mx-auto w-full flex justify-between items-center">
+            
+            <a href="../index.html" class="text-2xl font-bold tracking-tight flex items-center gap-2">
+                <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM" class="h-14 md:h-16 w-auto">
+            </a>
+            
+            <div class="hidden lg:flex items-center space-x-2 font-medium text-[15px] text-gray-600">
+                <a href="../index.html" class="px-4 py-2 rounded-lg hover:bg-slate-100 transition-colors">Beranda</a>
+                
+                <!-- Layanan Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg group-hover:bg-slate-100 transition-colors focus:outline-none">
+                        Layanan <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-64 bg-white rounded-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)] border border-slate-100 py-2 flex flex-col">
+                            <!-- Assessment -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Assessment <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Talents Mapping</a>
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Tes Psikologi (Psikotes)</a>
+                                        <a href="mockup_layanan_mental_health.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Mental Health Check Up</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Konsultasi & Coaching -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Konsultasi & Coaching <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_konseling.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konseling dengan Psikolog</a>
+                                        <a href="mockup_layanan_relaksasi.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Therapy (SEFT)</a>
+                                        <a href="mockup_layanan_visual_coaching.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Visual Coaching</a>
+                                        <a href="mockup_layanan_consultation.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konsultasi Keuangan</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Digital Product -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Digital Product <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-72 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_ecourse.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">E-Course Life Reset: 7 Days Re-Discover Yourself</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Webinar & Workshop -->
+                            <a href="mockup_layanan_workshop.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Webinar & Workshop</a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="mockup_perusahaan.html" class="px-4 py-2 rounded-lg bg-slate-100 text-dark font-bold border-b-2 border-dark transition-colors">Untuk Perusahaan</a>
+                <a href="mockup_artikel.html" class="px-4 py-2 rounded-lg hover:bg-slate-100 transition-colors">Artikel & Aktivitas</a>
+                <a href="mockup_career.html" class="px-4 py-2 rounded-lg hover:bg-slate-100 transition-colors">Karir</a>
+                
+                <!-- Tentang Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg group-hover:bg-slate-100 transition-colors focus:outline-none">
+                        Tentang Kami <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute right-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-56 bg-white rounded-xl shadow-lg border border-slate-100 py-3 overflow-hidden flex flex-col">
+                            <a href="mockup_tentang_theaim.html" class="px-6 py-3 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Tentang TheAIM</a>
+                            <a href="mockup_tentang_ecosystem.html" class="px-6 py-3 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">TheAIM Ecosystem</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <a href="https://wa.me/6281999554599" target="_blank" class="btn-corp px-8 py-2.5 rounded-full font-semibold text-sm hidden md:block tracking-wide flex items-center justify-center gap-2">
+                <i class="fa-brands fa-whatsapp text-green-400"></i> Hubungi CS / Admin
+            </a>
+            
+            <button class="md:hidden text-2xl text-dark">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 1. HERO SECTION (Executive B2B Focus) -->
+    <section class="relative pt-20 pb-24 lg:pt-32 lg:pb-32 px-4 overflow-hidden bg-white">
+        <div class="max-w-[1300px] mx-auto grid lg:grid-cols-2 gap-12 lg:gap-8 items-center relative z-10">
+            <!-- Text Content -->
+            <div class="order-2 lg:order-1 text-center lg:text-left flex flex-col pt-8 lg:pt-0">
+                <div class="inline-flex items-center justify-center lg:justify-start gap-2 text-sm font-bold w-fit mx-auto lg:mx-0 mb-6 uppercase tracking-widest text-slate-500">
+                    <span class="w-8 h-[2px] bg-primary rounded-full"></span> 
+                    B2B & Enterprise Solution
+                </div>
+
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1] text-dark mb-6 tracking-tight gradient-text">
+                    Karyawan Sehat, <br>
+                    Tim Tepat, <br>
+                    Omzet Melesat.
+                </h1>
+                
+                <p class="text-base md:text-lg text-slate-600 leading-relaxed mb-10 max-w-xl mx-auto lg:mx-0 font-medium">
+                    Tingkatkan Return on Investment (ROI) perusahaan Anda dengan solusi <i>Employee Assistance Program</i> (EAP) komprehensif. Mulai dari pemetaan bakat akurat hingga penanganan stres dan <i>burnout</i> oleh Psikolog & Coach berlisensi.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
+                    <a href="#konsultasi" class="btn-primary px-8 py-4 rounded-full font-bold text-[15px] shadow-lg shadow-red-200">
+                        Jadwalkan Konsultasi Gratis
+                    </a>
+                    <a href="#solusi" class="btn-outline px-8 py-4 rounded-full font-bold text-[15px] text-dark border-2 border-slate-200 hover:border-dark hover:bg-dark hover:text-white transition-all">
+                        Eksplorasi Solusi
+                    </a>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="flex items-center justify-center lg:justify-start gap-8 mt-12 border-t border-slate-100 pt-8">
+                    <div>
+                        <h4 class="font-black text-2xl text-dark">50+</h4>
+                        <p class="text-xs text-slate-500 font-bold uppercase mt-1">Mitra Korporasi</p>
+                    </div>
+                    <div class="w-px h-10 bg-slate-200"></div>
+                    <div>
+                        <h4 class="font-black text-2xl text-dark">5.000+</h4>
+                        <p class="text-xs text-slate-500 font-bold uppercase mt-1">Karyawan Terbantu</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visual Content -->
+            <div class="order-1 lg:order-2 flex justify-center relative px-4 lg:px-0">
+                <div class="relative w-full max-w-[550px] aspect-square rounded-[3rem] overflow-hidden shadow-[0_20px_50px_-15px_rgba(15,23,42,0.3)]">
+                    <img src="../Foto2/greeneration.JPG" class="w-full h-full object-cover" alt="Greeneration Team with TheAIM">
+                    
+                    <!-- Overlay Badge -->
+                    <div class="absolute bottom-8 left-8 bg-white/95 backdrop-blur-md p-5 rounded-2xl shadow-xl flex items-center gap-4 max-w-[280px]">
+                        <div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-arrow-trend-up"></i>
+                        </div>
+                        <div>
+                            <p class="text-dark font-black text-sm leading-tight">Produktivitas Meningkat</p>
+                            <p class="text-xs text-slate-500 font-medium mt-1">Hasil pengujian klinis</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Abstract corporate dots -->
+                <img src="https://cdn-icons-png.flaticon.com/512/3204/3204097.png" class="absolute -top-10 -right-10 w-32 opacity-[0.05] z-0 pointer-events-none" alt="Dots">
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. SOCIAL PROOF (Marquee Logo) -->
+    <section class="py-16 bg-white border-y border-slate-100">
+        <div class="max-w-[1400px] mx-auto text-center px-4 mb-8">
+            <p class="text-xs font-bold uppercase tracking-widest text-slate-400">Dipercaya oleh perusahaan inovatif di Indonesia</p>
+        </div>
+        <div class="marquee-wrapper py-4 flex flex-col gap-4">
+            <!-- Track 1 -->
+            <div class="marquee-track">
+                <!-- Set 1 -->
+                <div class="logo-pill"><img src="../Logo2/LOGO%20kgs.png" alt="KGS"></div>
+                <div class="logo-pill"><img src="../Logo2/Logo%20GF.png" alt="GF"></div>
+                <div class="logo-pill"><img src="../Logo2/Logo%20KI.png" alt="KI"></div>
+                <div class="logo-pill"><img src="../Logo2/Logo%20MPR.webp" alt="MPR"></div>
+                <div class="logo-pill"><img src="../Logo2/Logo%20TIG.jpeg" alt="TIG"></div>
+                <div class="logo-pill"><img src="../Logo2/Logo%20disbudpar.png" alt="Disbudpar"></div>
+                <div class="logo-pill"><img src="../Logo2/Logo%20tle.jpeg" alt="TLE"></div>
+                <div class="logo-pill"><img src="../Logo2/Logo%20ybm.png" alt="YBM BRILiaN"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20JJ.jpeg" alt="JJ"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20MAI.png" alt="MAI"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20Mulia%20University%20.png" alt="Mulia University"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20TM.png" alt="Talents Mapping"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20adaide.jpg" alt="Adaide"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20bertumbuh%20.png" alt="Bertumbuh"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20bpm.png" alt="BPM"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20bsk.jpeg" alt="BSK"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20dhs.jpg" alt="DHS"></div>
+                <!-- Set 2 (Duplicate for continuous scroll) -->
+                <div class="logo-pill"><img src="../Logo2/LOGO%20kgs.png" alt="KGS"></div>
+                <div class="logo-pill"><img src="../Logo2/Logo%20GF.png" alt="GF"></div>
+                <div class="logo-pill"><img src="../Logo2/Logo%20KI.png" alt="KI"></div>
+                <div class="logo-pill"><img src="../Logo2/Logo%20MPR.webp" alt="MPR"></div>
+                <div class="logo-pill"><img src="../Logo2/Logo%20TIG.jpeg" alt="TIG"></div>
+                <div class="logo-pill"><img src="../Logo2/Logo%20disbudpar.png" alt="Disbudpar"></div>
+                <div class="logo-pill"><img src="../Logo2/Logo%20tle.jpeg" alt="TLE"></div>
+                <div class="logo-pill"><img src="../Logo2/Logo%20ybm.png" alt="YBM BRILiaN"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20JJ.jpeg" alt="JJ"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20MAI.png" alt="MAI"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20Mulia%20University%20.png" alt="Mulia University"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20TM.png" alt="Talents Mapping"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20adaide.jpg" alt="Adaide"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20bertumbuh%20.png" alt="Bertumbuh"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20bpm.png" alt="BPM"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20bsk.jpeg" alt="BSK"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20dhs.jpg" alt="DHS"></div>
+            </div>
+            <!-- Track 2 (Reverse) -->
+            <div class="marquee-track reverse">
+                <!-- Set 1 -->
+                <div class="logo-pill"><img src="../Logo2/logo%20dyummy.webp" alt="Dyummy"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20funtrip.jpg" alt="Funtrip"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20kmc.jpeg" alt="KMC"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20kopi.png" alt="Kopi"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20lokadesa.png" alt="Lokadesa"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20nikahmudah.jpeg" alt="Nikahmudah"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20qordova.png" alt="Qordova"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20rn.png" alt="RN"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20rwi.png" alt="RWI"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20rz.jpeg" alt="Rumah Zakat"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20sajiwa.jpeg" alt="Sajiwa Foundation"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20smk%20it%20ba.png" alt="SMK IT BA"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20syamil.jpg" alt="Syamil"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20telkomsel.webp" alt="Telkomsel"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20tokped.png" alt="Tokopedia"></div>
+                <div class="logo-pill"><img src="../Logo2/tokoparts%20logo.jpeg" alt="Tokoparts"></div>
+                <!-- Set 2 (Duplicate for continuous scroll) -->
+                <div class="logo-pill"><img src="../Logo2/logo%20dyummy.webp" alt="Dyummy"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20funtrip.jpg" alt="Funtrip"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20kmc.jpeg" alt="KMC"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20kopi.png" alt="Kopi"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20lokadesa.png" alt="Lokadesa"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20nikahmudah.jpeg" alt="Nikahmudah"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20qordova.png" alt="Qordova"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20rn.png" alt="RN"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20rwi.png" alt="RWI"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20rz.jpeg" alt="Rumah Zakat"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20sajiwa.jpeg" alt="Sajiwa Foundation"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20smk%20it%20ba.png" alt="SMK IT BA"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20syamil.jpg" alt="Syamil"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20telkomsel.webp" alt="Telkomsel"></div>
+                <div class="logo-pill"><img src="../Logo2/logo%20tokped.png" alt="Tokopedia"></div>
+                <div class="logo-pill"><img src="../Logo2/tokoparts%20logo.jpeg" alt="Tokoparts"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. THE URGENCY (Corporate Pain Points - Transcribed from User Image) -->
+    <section class="py-24 px-4 bg-slate-50 relative overflow-hidden">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(circle at 1px 1px, #dc2626 1px, transparent 0); background-size: 32px 32px;"></div>
+
+        <div class="max-w-[1200px] mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            <!-- Left Side: Header & Heading -->
+            <div class="lg:col-span-5 flex flex-col justify-center">
+                <span class="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-primary/10 text-primary border border-primary/20 font-bold text-xs tracking-wider uppercase mb-6 w-fit shadow-sm">
+                    Tantangan Mengelola SDM
+                </span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-dark leading-tight mb-6 tracking-tight">
+                    Apa Permasalahan yang Sering Anda Rasakan Sebagai Business Owner Saat Mengelola SDM?
+                </h2>
+                <p class="text-slate-500 text-sm leading-relaxed max-w-md font-medium">
+                    Mengelola manusia adalah aspek tersulit dalam menjalankan bisnis. Ketika tantangan internal ini dibiarkan, pertumbuhan operasional dan profitabilitas perusahaan akan terhambat secara signifikan.
+                </p>
+            </div>
+
+            <!-- Right Side: 8 Bullet Points from Image -->
+            <div class="lg:col-span-7 space-y-4">
+                <div class="flex items-start gap-3.5 bg-white p-4 rounded-2xl border border-slate-200/60 hover:border-slate-300 hover:shadow-md transition-all">
+                    <i class="fa-solid fa-circle-play text-primary text-lg shrink-0 mt-0.5"></i>
+                    <p class="text-dark text-[14.5px] font-semibold leading-relaxed">Visi dan Tujuan tidak sejalan serta kurangnya komunikasi antar tim di perusahaan</p>
+                </div>
+                
+                <div class="flex items-start gap-3.5 bg-white p-4 rounded-2xl border border-slate-200/60 hover:border-slate-300 hover:shadow-md transition-all">
+                    <i class="fa-solid fa-circle-play text-primary text-lg shrink-0 mt-0.5"></i>
+                    <p class="text-dark text-[14.5px] font-semibold leading-relaxed">SDM di perusahaan kurang menghayati dan menerjemahkan core value perusahaan</p>
+                </div>
+
+                <div class="flex items-start gap-3.5 bg-white p-4 rounded-2xl border border-slate-200/60 hover:border-slate-300 hover:shadow-md transition-all">
+                    <i class="fa-solid fa-circle-play text-primary text-lg shrink-0 mt-0.5"></i>
+                    <p class="text-dark text-[14.5px] font-semibold leading-relaxed">Kinerja SDM tidak optimal karena burnout dan stres yang berkepanjangan</p>
+                </div>
+
+                <div class="flex items-start gap-3.5 bg-white p-4 rounded-2xl border border-slate-200/60 hover:border-slate-300 hover:shadow-md transition-all">
+                    <i class="fa-solid fa-circle-play text-primary text-lg shrink-0 mt-0.5"></i>
+                    <p class="text-dark text-[14.5px] font-semibold leading-relaxed">Kurangnya peran HR dalam mengelola lingkungan kerja dan arah strategis perusahaan</p>
+                </div>
+
+                <div class="flex items-start gap-3.5 bg-white p-4 rounded-2xl border border-slate-200/60 hover:border-slate-300 hover:shadow-md transition-all">
+                    <i class="fa-solid fa-circle-play text-primary text-lg shrink-0 mt-0.5"></i>
+                    <p class="text-dark text-[14.5px] font-semibold leading-relaxed">Kurangnya keterampilan dan keahlian SDM sehingga tidak mampu menyelesaikan proyek sesuai parameter</p>
+                </div>
+
+                <div class="flex items-start gap-3.5 bg-white p-4 rounded-2xl border border-slate-200/60 hover:border-slate-300 hover:shadow-md transition-all">
+                    <i class="fa-solid fa-circle-play text-primary text-lg shrink-0 mt-0.5"></i>
+                    <p class="text-dark text-[14.5px] font-semibold leading-relaxed">KPI tidak efektif sehingga tujuan bisnis tidak tercapai</p>
+                </div>
+
+                <div class="flex items-start gap-3.5 bg-white p-4 rounded-2xl border border-slate-200/60 hover:border-slate-300 hover:shadow-md transition-all">
+                    <i class="fa-solid fa-circle-play text-primary text-lg shrink-0 mt-0.5"></i>
+                    <p class="text-dark text-[14.5px] font-semibold leading-relaxed">Leader tidak memiliki visi strategis dan kurang inspiratif dalam menjalankan peran kepemimpinannya di perusahaan</p>
+                </div>
+
+                <div class="flex items-start gap-3.5 bg-white p-4 rounded-2xl border border-slate-200/60 hover:border-slate-300 hover:shadow-md transition-all">
+                    <i class="fa-solid fa-circle-play text-primary text-lg shrink-0 mt-0.5"></i>
+                    <p class="text-dark text-[14.5px] font-semibold leading-relaxed">Terlaju banyak melakukan agenda meeting tapi kurang efektif dan tidak berdampak pada produktivitas</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. THEAIM CORPORATE SOLUTIONS -->
+    <section id="solusi" class="py-24 px-4 bg-corplight relative">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="text-center mb-16">
+                <span class="text-primary font-black tracking-widest text-sm uppercase mb-3 block">Corporate Solutions</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-dark tracking-tight">Satu Platform Untuk Seluruh <br> Kebutuhan Manajemen SDM</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Solution 1: Hiring, Assessment & Seleksi -->
+                <div class="feature-card bg-white rounded-[2rem] p-8 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-slate-50 text-slate-700 border border-slate-100 flex items-center justify-center text-xl mb-6">
+                            <i class="fa-solid fa-clipboard-question"></i>
+                        </div>
+                        <div class="inline-block bg-slate-100 text-slate-600 font-bold text-xs px-3 py-1 rounded-md mb-4 uppercase tracking-wider">Recruitment & Hiring</div>
+                        <h3 class="text-xl font-bold text-dark mb-4">Hiring, Tes Psikologi & Seleksi Karyawan</h3>
+                        <p class="text-slate-600 mb-6 leading-relaxed text-sm">Dapatkan kandidat terbaik tanpa kerumitan. Kami mengelola seluruh proses rekrutmen (Hiring) mulai dari sourcing, interview, psikotes online/offline, hingga pre-employment screening yang presisi. <span class="font-bold text-primary text-[13px] block mt-2">(Dapat dilaksanakan secara Online maupun Offline)</span></p>
+                        <ul class="space-y-2 text-xs font-medium text-slate-700 mb-8">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary"></i> End-to-End Hiring Assistance & Headhunter</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary"></i> Psikotes Online/Offline & Pemetaan Potensi (Talents Mapping)</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary"></i> Asesmen Promosi Jabatan & Kepemimpinan</li>
+                        </ul>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between border-t border-slate-100 pt-6 mt-auto gap-4">
+                        <a href="mockup_unduh_proposal.html?service=assessment" class="text-primary hover:text-red-700 font-bold text-sm inline-flex items-center gap-1.5 transition-colors">
+                            <i class="fa-solid fa-file-arrow-down"></i> Unduh Proposal
+                        </a>
+                        <a href="#konsultasi" class="text-slate-700 hover:text-primary font-bold text-sm transition-colors">Konsultasi Sesi Ini</a>
+                    </div>
+                </div>
+
+                <!-- Solution 2: Talents Mapping for School -->
+                <div class="feature-card bg-white rounded-[2rem] p-8 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-orange-50 text-orange-600 border border-orange-100 flex items-center justify-center text-xl mb-6">
+                            <i class="fa-solid fa-school"></i>
+                        </div>
+                        <div class="inline-block bg-orange-50 text-orange-600 font-bold text-xs px-3 py-1 rounded-md mb-4 uppercase tracking-wider">Education Solution</div>
+                        <h3 class="text-xl font-bold text-dark mb-4">Talents Mapping for School</h3>
+                        <p class="text-slate-600 mb-6 leading-relaxed text-sm">Layanan pemetaan bakat dan potensi bawaan khusus untuk siswa. Sangat ideal untuk membantu sekolah, guru, serta orang tua dalam mengarahkan minat belajar dan penjurusan studi secara presisi.</p>
+                        <ul class="space-y-2 text-xs font-medium text-slate-700 mb-8">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary"></i> Tes Minat & Bakat Alami Siswa (SMP/SMA)</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary"></i> Panduan Penjurusan Studi & Pemilihan Jurusan Kuliah</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary"></i> Konseling Pendidikan & Perencanaan Karir Siswa</li>
+                        </ul>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between border-t border-slate-100 pt-6 mt-auto gap-4">
+                        <a href="mockup_unduh_proposal.html?service=school" class="text-primary hover:text-red-700 font-bold text-sm inline-flex items-center gap-1.5 transition-colors">
+                            <i class="fa-solid fa-file-arrow-down"></i> Unduh Proposal
+                        </a>
+                        <a href="#konsultasi" class="text-slate-700 hover:text-primary font-bold text-sm transition-colors">Konsultasi Sesi Ini</a>
+                    </div>
+                </div>
+
+                <!-- Solution 3: In-House Training & Workshop -->
+                <div class="feature-card bg-white rounded-[2rem] p-8 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-red-50 text-primary border border-red-100 flex items-center justify-center text-xl mb-6">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <div class="inline-block bg-red-50 text-primary font-bold text-xs px-3 py-1 rounded-md mb-4 uppercase tracking-wider">People Development</div>
+                        <h3 class="text-xl font-bold text-dark mb-4">In-House Training & Workshop</h3>
+                        <p class="text-slate-600 mb-6 leading-relaxed text-sm">Meningkatkan kapasitas profesional tim Anda melalui program pelatihan terstruktur. Mulai dari kepemimpinan adaptif, kemampuan komunikasi efektif, hingga soft skills terstruktur.</p>
+                        <ul class="space-y-2 text-xs font-medium text-slate-700 mb-8">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary"></i> Leadership & Managerial Development</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary"></i> Team Building & Culture Alignment</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary"></i> Sesi Pelatihan Kustom Sesuai KPI Perusahaan</li>
+                        </ul>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between border-t border-slate-100 pt-6 mt-auto gap-4">
+                        <a href="mockup_unduh_proposal.html?service=training" class="text-primary hover:text-red-700 font-bold text-sm inline-flex items-center gap-1.5 transition-colors">
+                            <i class="fa-solid fa-file-arrow-down"></i> Unduh Proposal
+                        </a>
+                        <a href="#konsultasi" class="text-slate-700 hover:text-primary font-bold text-sm transition-colors">Konsultasi Sesi Ini</a>
+                    </div>
+                </div>
+
+                <!-- Solution 4: Outbound & Fun Learning -->
+                <div class="feature-card bg-white rounded-[2rem] p-8 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-green-50 text-green-600 border border-green-100 flex items-center justify-center text-xl mb-6">
+                            <i class="fa-solid fa-campground"></i>
+                        </div>
+                        <div class="inline-block bg-green-50 text-green-600 font-bold text-xs px-3 py-1 rounded-md mb-4 uppercase tracking-wider">Experiential Learning</div>
+                        <h3 class="text-xl font-bold text-dark mb-4">Outbound & Fun Learning</h3>
+                        <p class="text-slate-600 mb-6 leading-relaxed text-sm">Bangun kebersamaan dan kekompakan tim melalui aktivitas luar ruangan yang interaktif. Kami mengintegrasikan permainan yang menyenangkan dengan pembelajaran psikologi kelompok yang bermakna.</p>
+                        <ul class="space-y-2 text-xs font-medium text-slate-700 mb-8">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary"></i> Corporate Outbound & Team Bonding</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary"></i> Fun Games & Collaborative Challenges</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary"></i> Character Building & Refleksi Tim Terpandu</li>
+                        </ul>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between border-t border-slate-100 pt-6 mt-auto gap-4">
+                        <a href="mockup_unduh_proposal.html?service=outbound" class="text-primary hover:text-red-700 font-bold text-sm inline-flex items-center gap-1.5 transition-colors">
+                            <i class="fa-solid fa-file-arrow-down"></i> Unduh Proposal
+                        </a>
+                        <a href="#konsultasi" class="text-slate-700 hover:text-primary font-bold text-sm transition-colors">Konsultasi Sesi Ini</a>
+                    </div>
+                </div>
+
+                <!-- Solution 5: Mental Health Check-up & Employee Assistance Program (EAP) -->
+                <div class="feature-card bg-white rounded-[2rem] p-8 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center text-xl mb-6">
+                            <i class="fa-solid fa-heart-pulse"></i>
+                        </div>
+                        <div class="inline-block bg-blue-50 text-blue-600 font-bold text-xs px-3 py-1 rounded-md mb-4 uppercase tracking-wider font-bold">Employee Well-Being</div>
+                        <h3 class="text-xl font-bold text-dark mb-4">Mental Health Check-Up & EAP (Employee Assistance Program)</h3>
+                        <p class="text-slate-600 mb-6 leading-relaxed text-sm">Skrining berkala untuk memantau kesehatan mental karyawan Anda. Dilengkapi dengan program pendampingan karyawan / Employee Assistance Program (EAP) berupa konseling privat rahasia dengan psikolog klinis & coach profesional.</p>
+                        <ul class="space-y-2 text-xs font-medium text-slate-700 mb-8">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary"></i> Mental Health Check-up (Skrining Stres & Burnout)</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary"></i> Konseling Rahasia Karyawan (1-on-1 Online/Offline)</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary"></i> Dashboard Laporan Analitis Kesehatan Mental Tim</li>
+                        </ul>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between border-t border-slate-100 pt-6 mt-auto gap-4">
+                        <a href="mockup_unduh_proposal.html?service=mentalhealth" class="text-primary hover:text-red-700 font-bold text-sm inline-flex items-center gap-1.5 transition-colors">
+                            <i class="fa-solid fa-file-arrow-down"></i> Unduh Proposal
+                        </a>
+                        <a href="#konsultasi" class="text-slate-700 hover:text-primary font-bold text-sm transition-colors">Konsultasi Sesi Ini</a>
+                    </div>
+                </div>
+
+                <!-- Solution 6: HR & Organization Consulting -->
+                <div class="feature-card bg-white rounded-[2rem] p-8 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-yellow-50 text-yellow-600 border border-yellow-100 flex items-center justify-center text-xl mb-6">
+                            <i class="fa-solid fa-sliders"></i>
+                        </div>
+                        <div class="inline-block bg-yellow-100 text-yellow-700 font-bold text-xs px-3 py-1 rounded-md mb-4 uppercase tracking-wider font-bold">HR Consulting</div>
+                        <h3 class="text-xl font-bold text-dark mb-4">HR & Organization Consulting</h3>
+                        <p class="text-slate-600 mb-6 leading-relaxed text-sm">Tata kelola sistem manajemen SDM perusahaan Anda agar sejalan dengan arah pertumbuhan bisnis. Kami membantu menyusun KPI, SOP, kamus kompetensi, dan penataan struktur organisasi.</p>
+                        <ul class="space-y-2 text-xs font-medium text-slate-700 mb-8">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary"></i> Desain Struktur Organisasi & Analisis Jabatan</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary"></i> Penyusunan Key Performance Indicators (KPI) & SOP Kerja</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary"></i> Pembuatan Kamus Kompetensi & Performance Appraisal</li>
+                        </ul>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between border-t border-slate-100 pt-6 mt-auto gap-4">
+                        <a href="mockup_unduh_proposal.html?service=consulting" class="text-primary hover:text-red-700 font-bold text-sm inline-flex items-center gap-1.5 transition-colors">
+                            <i class="fa-solid fa-file-arrow-down"></i> Unduh Proposal
+                        </a>
+                        <a href="#konsultasi" class="text-slate-700 hover:text-primary font-bold text-sm transition-colors">Konsultasi Sesi Ini</a>
+                    </div>
+                </div>
+
+                <!-- Solution 7: HRIS Solution (Featured) -->
+                <div class="feature-card bg-white rounded-[2rem] p-8 flex flex-col justify-between md:col-span-2 border border-red-100 shadow-sm hover:border-red-200">
+                    <div class="grid md:grid-cols-2 gap-8 items-start">
+                        <div>
+                            <div class="w-12 h-12 rounded-xl bg-red-50 text-primary border border-red-100 flex items-center justify-center text-xl mb-6">
+                                <i class="fa-solid fa-laptop-code"></i>
+                            </div>
+                            <div class="inline-block bg-red-50 text-primary font-bold text-xs px-3 py-1 rounded-md mb-4 uppercase tracking-wider font-bold">HR Technology</div>
+                            <h3 class="text-xl font-bold text-dark mb-4">HRIS (Human Resource Information System)</h3>
+                            <p class="text-slate-600 leading-relaxed text-sm">Modernisasi dan digitalisasi seluruh administrasi HR perusahaan Anda. Pantau absensi online, kelola payroll (penggajian), pengajuan cuti, hingga database karyawan secara terpusat, otomatis, dan real-time.</p>
+                        </div>
+                        <div class="md:pt-14">
+                            <ul class="space-y-3 text-xs font-medium text-slate-700 mb-8 md:mb-0">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary"></i> Manajemen Absensi Online & Geotagging</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary"></i> Otomatisasi Payroll, PPh 21, & Slip Gaji Digital</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary"></i> Portal Karyawan Mandiri (Employee Self Service / ESS)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between border-t border-slate-100 pt-6 mt-8 gap-4">
+                        <a href="mockup_unduh_proposal.html?service=hris" class="text-primary hover:text-red-700 font-bold text-sm inline-flex items-center gap-1.5 transition-colors">
+                            <i class="fa-solid fa-file-arrow-down"></i> Unduh Proposal
+                        </a>
+                        <a href="#konsultasi" class="text-slate-700 hover:text-primary font-bold text-sm transition-colors">Konsultasi Sesi Ini</a>
+                    </div>
+                </div>
+
+                <!-- Solution 8: Custom Partnership (Cooperation Card) -->
+                <div class="feature-card bg-slate-900 rounded-[2rem] p-8 flex flex-col justify-between text-white border border-slate-800 shadow-lg md:col-span-1">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-slate-800 text-white flex items-center justify-center text-xl mb-6">
+                            <i class="fa-solid fa-handshake-simple text-primary"></i>
+                        </div>
+                        <span class="inline-block bg-primary text-white font-bold text-[10px] px-2.5 py-1 rounded-md mb-4 uppercase tracking-wider">Custom Partnership</span>
+                        <h3 class="text-xl font-bold mb-3">Kerjasama Lainnya</h3>
+                        <p class="text-slate-400 leading-relaxed text-xs">Punya ide kolaborasi, program kustom, atau bentuk kemitraan strategis lainnya yang tidak tercantum di atas? Kami sangat terbuka untuk berdiskusi.</p>
+                    </div>
+                    <div class="pt-6 mt-6 border-t border-slate-800">
+                        <a href="mockup_kerjasama.html" class="inline-flex items-center justify-center gap-2 bg-primary hover:bg-red-700 text-white w-full py-4 rounded-xl font-bold text-xs transition-all shadow-sm">
+                            Ajukan Kerja Sama <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. WHY THEAIM? (The Advantage) -->
+    <section class="py-24 px-4 bg-white border-y border-slate-100">
+        <div class="max-w-[1200px] mx-auto text-center">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-dark tracking-tight mb-16">Kenapa Korporasi Memilih TheAIM?</h2>
+            
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- Icon 1 -->
+                <div class="flex flex-col items-center">
+                    <div class="w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center text-primary text-3xl mb-6 shadow-sm border border-slate-100">
+                        <i class="fa-solid fa-box-open"></i>
+                    </div>
+                    <h4 class="font-bold text-dark text-lg mb-2">One-Stop Solution</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">Mulai dari pendeteksian akar masalah (Assessment) hingga pengobatan (Konseling/Terapi) dalam satu atap.</p>
+                </div>
+                <!-- Icon 2 -->
+                <div class="flex flex-col items-center">
+                    <div class="w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center text-primary text-3xl mb-6 shadow-sm border border-slate-100">
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+                    <h4 class="font-bold text-dark text-lg mb-2">Pakar Bersertifikasi</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">Difasilitasi oleh jejaring Psikolog Klinis, Asesor Talents Mapping, dan Professional Coach bersertifikasi resmi.</p>
+                </div>
+                <!-- Icon 3 -->
+                <div class="flex flex-col items-center">
+                    <div class="w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center text-primary text-3xl mb-6 shadow-sm border border-slate-100">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </div>
+                    <h4 class="font-bold text-dark text-lg mb-2">HR Analytics Report</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">HR akan mendapatkan laporan berkala tentang kerjasama.</p>
+                </div>
+                <!-- Icon 4 -->
+                <div class="flex flex-col items-center">
+                    <div class="w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center text-primary text-3xl mb-6 shadow-sm border border-slate-100">
+                        <i class="fa-solid fa-handshake"></i>
+                    </div>
+                    <h4 class="font-bold text-dark text-lg mb-2">Fleksibilitas Pelaksanaan</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">Layanan dapat dieksekusi secara Offline (Datang ke kantor) maupun Online (Akses platform/aplikasi jarak jauh).</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. DOWNLOAD CENTER REMOVED -->
+
+    <!-- 6. BOOKING CONSULTATION SECTION -->
+    <section id="konsultasi" class="py-24 px-4 bg-corplight border-t border-slate-100 relative overflow-hidden">
+        <div class="max-w-[1200px] mx-auto relative z-10">
+            <div class="grid lg:grid-cols-[1fr_500px] gap-16 items-center">
+                <!-- Left Side: Copywriting -->
+                <div>
+                    <span class="inline-block px-4 py-1.5 rounded-full bg-red-50 text-primary font-bold text-xs tracking-widest uppercase mb-4 border border-red-100">B2B Consultation</span>
+                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-dark mb-6 leading-tight tracking-tight">
+                        Jadwalkan Sesi Konsultasi Gratis (45 Menit)
+                    </h2>
+                    <p class="text-slate-600 text-base leading-relaxed mb-8">
+                        Diskusikan tantangan pengelolaan SDM, penurunan produktivitas karyawan, tingginya tingkat <i>burnout</i>, rekrutmen yang tidak efisien, atau struktur organisasi yang kurang sejalan dengan bisnis Anda. Dapatkan rekomendasi awal berupa <i>framework</i> taktis langsung dari konsultan senior kami.
+                    </p>
+
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-primary text-base shrink-0 shadow-sm">
+                                <i class="fa-solid fa-comments"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-dark text-sm mb-0.5">Diskusi 1-on-1 Rahasia</h4>
+                                <p class="text-xs text-slate-500 leading-relaxed">Sesi privat terjamin kerahasiaannya untuk membedah akar masalah budaya kerja dan SDM di kantor Anda.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-primary text-base shrink-0 shadow-sm">
+                                <i class="fa-solid fa-compass"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-dark text-sm mb-0.5">Rekomendasi Rencana Aksi</h4>
+                                <p class="text-xs text-slate-500 leading-relaxed">Dapatkan draft solusi awal berupa rekomendasi program pelatihan, asesmen, atau consulting taktis.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-primary text-base shrink-0 shadow-sm">
+                                <i class="fa-solid fa-gift"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-dark text-sm mb-0.5">100% Gratis & Tanpa Komitmen</h4>
+                                <p class="text-xs text-slate-500 leading-relaxed">Sesi evaluasi murni untuk membantu Anda memahami opsi terbaik tanpa kewajiban pembelian apa pun.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Side: Interactive Booking Form Card -->
+                <div class="bg-white rounded-3xl border border-slate-200/80 p-8 shadow-xl relative">
+                    <h3 class="text-xl font-extrabold text-dark mb-2">Formulir Pengajuan Sesi</h3>
+                    <p class="text-slate-500 text-xs mb-6">Mohon lengkapi data berikut agar tim spesialis kami dapat menghubungi Anda.</p>
+                    
+                    <form onsubmit="event.preventDefault(); alert('Terima kasih! Permintaan sesi konsultasi gratis Anda telah terkirim. Tim B2B kami akan menghubungi Anda melalui WhatsApp dalam 1x24 jam.');" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Nama Lengkap</label>
+                            <input type="text" placeholder="Masukkan nama lengkap Anda" required class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-primary transition-colors bg-slate-50/50">
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Nama Perusahaan</label>
+                                <input type="text" placeholder="PT Contoh Sukses" required class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-primary transition-colors bg-slate-50/50">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Jabatan Anda</label>
+                                <input type="text" placeholder="CEO / HRD / Manager" required class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-primary transition-colors bg-slate-50/50">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Nomor WhatsApp Aktif</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-400 font-medium">+62</span>
+                                <input type="tel" placeholder="8123456789" required class="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-primary transition-colors bg-slate-50/50">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Kebutuhan Utama</label>
+                            <select class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-primary transition-colors bg-slate-50/50 text-slate-600">
+                                <option value="assessment">Hiring, Tes Psikologi & Seleksi Karyawan</option>
+                                <option value="school_assessment">Talents Mapping for School (Siswa)</option>
+                                <option value="training">In-House Training & Workshop</option>
+                                <option value="outbound">Outbound & Fun Learning</option>
+                                <option value="mental_health">Mental Health Check-up & EAP (Employee Assistance Program)</option>
+                                <option value="consulting">HR & Organization Consulting</option>
+                                <option value="hris">HRIS (Human Resource Information System)</option>
+                                <option value="other">Kombinasi / Kebutuhan Lainnya</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="w-full py-4 rounded-xl bg-primary text-white font-bold text-sm hover:bg-red-700 transition-colors shadow-lg shadow-red-200 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-calendar-check"></i> Kirim Pengajuan Sesi Gratis
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. GENERAL INQUIRIES CTA (Admin Contact) -->
+    <section class="py-16 px-4 bg-slate-50 border-t border-slate-100 text-center">
+        <div class="max-w-[900px] mx-auto flex flex-col md:flex-row items-center justify-between gap-8 bg-white p-8 rounded-3xl border border-slate-200/80 shadow-md">
+            <div class="text-left max-w-xl">
+                <h4 class="font-black text-dark text-lg mb-2">Butuh Bantuan Hubungi CS / Admin?</h4>
+                <p class="text-slate-500 text-sm leading-relaxed">Untuk keperluan administrasi, penawaran khusus, proposal custom, kerja sama kemitraan, keluhan layanan, atau urusan umum lainnya.</p>
+            </div>
+            <a href="https://wa.me/6281999554599" target="_blank" class="inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-8 py-4 rounded-2xl font-bold text-sm transition-all shrink-0 shadow-lg shadow-slate-200">
+                <i class="fa-brands fa-whatsapp text-lg text-green-400"></i> Hubungi CS / Admin
+            </a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-dark pt-16 border-t border-slate-800 text-slate-400">
+        <div class="max-w-[1200px] mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+            <!-- Kolom 1 -->
+            <div class="pr-4">
+                <a href="#" class="text-2xl font-bold tracking-tight flex items-center gap-2 mb-8 text-white">
+                    <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM Logo" class="h-14 md:h-16 w-auto">
+                </a>
+                <p class="text-sm leading-relaxed mb-6">Mitra strategis Anda dalam pemetaan potensi dan pemeliharaan kesehatan mental karyawan terpadu.</p>
+            </div>
+
+            <!-- Kolom 2 -->
+            <div>
+                <h4 class="font-extrabold text-white text-lg mb-6 tracking-tight">Layanan B2B</h4>
+                <ul class="space-y-3 font-medium text-sm border-l-2 border-slate-700 pl-4">
+                    <li><a href="#solusi" class="hover:text-primary transition-colors">Hiring & Psikotes Karyawan</a></li>
+                    <li><a href="#solusi" class="hover:text-primary transition-colors">Talents Mapping for School</a></li>
+                    <li><a href="#solusi" class="hover:text-primary transition-colors">In-House Training & Outbound</a></li>
+                    <li><a href="#solusi" class="hover:text-primary transition-colors">Mental Health Check-up & EAP</a></li>
+                    <li><a href="#solusi" class="hover:text-primary transition-colors">HR Consulting & HRIS System</a></li>
+                </ul>
+            </div>
+
+            <!-- Kolom 3 -->
+            <div>
+                <h4 class="font-extrabold text-white text-lg mb-6 tracking-tight">Perusahaan</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li><a href="mockup_tentang_theaim.html" class="hover:text-white transition-colors">Tentang TheAIM</a></li>
+                    <li><a href="../index.html" class="hover:text-white transition-colors">Untuk Individu / B2C</a></li>
+                    <li><a href="mockup_artikel.html" class="hover:text-white transition-colors">Update Artikel</a></li>
+                    <li><a href="mockup_career.html" class="hover:text-white transition-colors">Karir</a></li>
+                </ul>
+            </div>
+
+            <!-- Kolom 4 -->
+            <div>
+                <h4 class="font-extrabold text-white text-lg mb-6 tracking-tight">Hubungi Kami</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li class="flex items-center gap-3">
+                        <i class="fa-solid fa-headset text-slate-600 border border-slate-700 p-2 rounded-md"></i>
+                        <a href="#" class="hover:text-white transition-colors text-white font-bold">0819-9955-4599</a>
+                    </li>
+                    <li class="flex items-center gap-3 mt-4">
+                        <i class="fa-solid fa-building text-slate-600 border border-slate-700 p-2 rounded-md"></i>
+                        <span>PT Abadi Insan Manfaat<br>Bandung, Indonesia</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="bg-darker py-6 px-4 border-t border-slate-800">
+            <div class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-center items-center gap-6 text-xs text-slate-500 font-medium">
+                <p>&copy; 2026 TheAIM Corporate Solution. All rights reserved.</p>
+                <div class="hidden sm:block">|</div>
+                <div class="space-x-4">
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

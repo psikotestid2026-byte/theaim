@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konsultasi Keuangan — Financial Psychology | TheAIM</title>
+    <meta name="description"
+        content="Masalah keuangan bukan cuma soal angka. TheAIM hadir dengan pendekatan Financial Psychology untuk membedah kebiasaan, emosi, dan pola pikir Anda seputar uang, lalu merancang jalan keluar yang tepat.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626',
+                        secondary: '#fbbf24',
+                        dark: '#18181b',
+                        emerald: {
+                            DEFAULT: '#059669',
+                            light: '#d1fae5',
+                            mid: '#10b981',
+                            dark: '#065f46',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Lexend', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .btn-primary {
+            background-color: #dc2626;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(220, 38, 38, 0.3);
+        }
+
+        .btn-emerald {
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-emerald:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(5, 150, 105, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: #fbbf24;
+            color: #18181b;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: #f59e0b;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(251, 191, 36, 0.4);
+        }
+
+        .btn-outline {
+            border: 2px solid #18181b;
+            color: #18181b;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background-color: #18181b;
+            color: white;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Hero Background */
+        .hero-bg {
+            background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 40%, #fffbeb 100%);
+        }
+
+        /* Coin Stack Animation */
+        .coin {
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .coin-group:hover .coin-1 {
+            transform: translateY(-50px) rotate(-8deg);
+        }
+
+        .coin-group:hover .coin-2 {
+            transform: translateY(-30px) rotate(4deg);
+        }
+
+        .coin-group:hover .coin-3 {
+            transform: translateY(-10px) rotate(-2deg);
+        }
+
+        /* Stat Card */
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -10px rgba(5, 150, 105, 0.15);
+        }
+
+        /* Pain Card */
+        .pain-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .pain-card:hover {
+            transform: translateX(6px);
+            border-left-color: #059669;
+            background-color: #f0fdf4;
+        }
+
+        /* Framework Step */
+        .fw-step {
+            transition: all 0.3s ease;
+        }
+
+        .fw-step:hover {
+            transform: scale(1.03);
+        }
+
+        /* Package Card */
+        .pkg-card {
+            transition: all 0.35s ease;
+            border: 2px solid transparent;
+        }
+
+        .pkg-card:hover {
+            border-color: #059669;
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px -10px rgba(5, 150, 105, 0.2);
+        }
+
+        /* Counter animation */
+        @keyframes countUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-count {
+            animation: countUp 0.8s ease forwards;
+        }
+
+        /* Marquee */
+        .marquee-track {
+            display: flex;
+            animation: marquee 20s linear infinite;
+            gap: 2rem;
+        }
+
+        .marquee-track:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes marquee {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(-50%);
+            }
+        }
+    </style>
+</head>
+
+<body class="font-sans text-dark flex flex-col min-h-screen">
+
+    <!-- NAVIGATION -->
+    <nav class="sticky top-0 z-50 w-full glass-panel flex items-center px-4 py-4 lg:px-8 border-b border-gray-100">
+        <div class="max-w-[1400px] mx-auto w-full flex justify-between items-center">
+
+            <a href="../index.html" class="text-2xl font-bold tracking-tight flex items-center gap-2">
+                <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM" class="h-14 md:h-16 w-auto">
+            </a>
+
+            <div class="hidden lg:flex items-center space-x-2 font-medium text-[15px] text-gray-700">
+                <a href="../index.html" class="px-4 py-2 rounded-lg transition-colors hover:bg-gray-100">Beranda</a>
+
+                <!-- Layanan Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg group-hover:bg-slate-100 transition-colors focus:outline-none">
+                        Layanan <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-64 bg-white rounded-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)] border border-slate-100 py-2 flex flex-col">
+                            <!-- Assessment -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Assessment <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Talents Mapping</a>
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Tes Psikologi (Psikotes)</a>
+                                        <a href="mockup_layanan_mental_health.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Mental Health Check Up</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Konsultasi & Coaching -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Konsultasi & Coaching <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_konseling.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konseling dengan Psikolog</a>
+                                        <a href="mockup_layanan_relaksasi.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Therapy (SEFT)</a>
+                                        <a href="mockup_layanan_visual_coaching.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Visual Coaching</a>
+                                        <a href="mockup_layanan_consultation.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konsultasi Keuangan</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Digital Product -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Digital Product <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-72 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_ecourse.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">E-Course Life Reset: 7 Days Re-Discover Yourself</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Webinar & Workshop -->
+                            <a href="mockup_layanan_workshop.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Webinar & Workshop</a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="mockup_perusahaan.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Untuk
+                    Perusahaan</a>
+                <a href="mockup_artikel.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Artikel &
+                    Aktivitas</a>
+                <a href="mockup_career.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Karir</a>
+
+                <!-- Tentang Dropdown -->
+                <div class="relative group">
+                    <button
+                        class="flex items-center gap-1.5 px-4 py-2 rounded-lg group-hover:bg-gray-100 transition-colors focus:outline-none">
+                        Tentang Kami <i
+                            class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div
+                        class="absolute right-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div
+                            class="w-56 bg-white rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-gray-100 py-3 overflow-hidden flex flex-col">
+                            <a href="mockup_tentang_theaim.html"
+                                class="px-6 py-3 text-sm text-gray-500 hover:bg-gray-50 hover:text-primary transition-colors">Tentang
+                                TheAIM</a>
+                            <a href="mockup_tentang_ecosystem.html"
+                                class="px-6 py-3 text-sm text-gray-500 hover:bg-gray-50 hover:text-primary transition-colors">TheAIM
+                                Ecosystem</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <a href="#"
+                class="btn-outline px-7 py-2.5 rounded-full font-semibold text-sm hidden md:block tracking-wide">
+                Masuk
+            </a>
+            <button class="md:hidden text-2xl text-dark">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 1. HERO SECTION -->
+    <section class="hero-bg relative pt-20 pb-16 lg:pt-32 lg:pb-28 px-4 overflow-hidden border-b border-gray-100">
+        <!-- Decorative circles -->
+        <div
+            class="absolute top-0 right-0 w-[600px] h-[600px] bg-emerald-light rounded-full mix-blend-multiply filter blur-3xl opacity-50 -translate-y-1/2 translate-x-1/3">
+        </div>
+        <div
+            class="absolute bottom-0 left-0 w-96 h-96 bg-yellow-100 rounded-full mix-blend-multiply filter blur-3xl opacity-60 translate-y-1/2 -translate-x-1/4">
+        </div>
+
+        <div class="max-w-[1250px] mx-auto grid lg:grid-cols-2 gap-12 items-center relative z-10">
+            <!-- Left Text -->
+            <div class="order-2 lg:order-1 text-center lg:text-left flex flex-col pt-8 lg:pt-0">
+                <!-- Badge -->
+                <div
+                    class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 border border-emerald-200 text-emerald-dark rounded-full text-sm font-bold w-fit mx-auto lg:mx-0 mb-6 uppercase tracking-wider">
+                    <i class="fa-solid fa-brain-circuit"></i> Financial Psychology
+                </div>
+
+                <h1
+                    class="text-4xl md:text-5xl lg:text-[3.8rem] font-black leading-[1.1] text-dark mb-6 tracking-tight">
+                    Masalah Uang Itu<br>Bukan Soal <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-[#059669] to-[#10b981]">Angka.</span><br>Tapi
+                    Soal <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-[#dc2626] to-[#fbbf24]">Mindset.</span>
+                </h1>
+
+                <p
+                    class="text-base md:text-lg text-gray-600 leading-relaxed mb-10 max-w-xl mx-auto lg:mx-0 font-medium">
+                    Banyak orang sudah berpenghasilan cukup, tapi tetap <span
+                        class="font-bold text-dark border-b-2 border-[#059669] pb-0.5">tidak pernah merasa aman
+                        finansial.</span> Akarnya bukan di rekening. Akarnya ada di pola pikir, kebiasaan, dan emosi
+                    Anda seputar uang.
+                </p>
+
+                <!-- Quick Trust Badges -->
+                <div class="flex flex-wrap gap-3 justify-center lg:justify-start mb-10 text-sm font-semibold">
+                    <span
+                        class="flex items-center gap-1.5 bg-white border border-gray-200 px-4 py-2 rounded-full shadow-sm text-gray-700"><i
+                            class="fa-solid fa-certificate text-[#059669]"></i> CFP Certified Coach</span>
+                    <span
+                        class="flex items-center gap-1.5 bg-white border border-gray-200 px-4 py-2 rounded-full shadow-sm text-gray-700"><i
+                            class="fa-solid fa-shield-check text-[#059669]"></i> Private & Confidential</span>
+                    <span
+                        class="flex items-center gap-1.5 bg-white border border-gray-200 px-4 py-2 rounded-full shadow-sm text-gray-700"><i
+                            class="fa-solid fa-calendar-check text-[#059669]"></i> Online & Offline</span>
+                </div>
+
+                <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
+                    <a href="#paket"
+                        class="btn-emerald px-8 py-4 rounded-full font-bold text-[15px] shadow-lg flex items-center justify-center gap-2">
+                        Lihat Program Sesi <i class="fa-solid fa-arrow-down text-sm"></i>
+                    </a>
+                    <a href="#pendekatan"
+                        class="btn-outline px-8 py-4 rounded-full font-bold text-[15px] flex items-center justify-center gap-2">
+                        Bagaimana Cara Kerjanya?
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right Visual: Financial Illustration -->
+            <div class="order-1 lg:order-2 flex justify-center items-center relative h-[420px] lg:h-[520px]">
+                <!-- Main Central Card -->
+                <div class="relative z-20 w-72 lg:w-80">
+                    <!-- Graph Card -->
+                    <div class="bg-white rounded-3xl p-6 shadow-2xl border border-gray-100 mb-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <p class="text-xs text-gray-500 font-medium">Financial Health Score</p>
+                                <p class="text-3xl font-black text-dark">87 <span
+                                        class="text-[#059669] text-lg">↑</span></p>
+                            </div>
+                            <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center">
+                                <i class="fa-solid fa-chart-line text-[#059669] text-xl"></i>
+                            </div>
+                        </div>
+                        <!-- Mini Bar Chart -->
+                        <div class="flex items-end gap-2 h-16">
+                            <div class="flex-1 bg-gray-100 rounded-t-lg" style="height: 40%"></div>
+                            <div class="flex-1 bg-gray-100 rounded-t-lg" style="height: 55%"></div>
+                            <div class="flex-1 bg-[#059669]/20 rounded-t-lg" style="height: 45%"></div>
+                            <div class="flex-1 bg-[#059669]/30 rounded-t-lg" style="height: 65%"></div>
+                            <div class="flex-1 bg-[#059669]/50 rounded-t-lg" style="height: 75%"></div>
+                            <div class="flex-1 bg-[#059669] rounded-t-lg" style="height: 90%"></div>
+                            <div class="flex-1 bg-[#dc2626] rounded-t-lg" style="height: 100%"></div>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-2 font-medium">Sebelum → Setelah Konsultasi</p>
+                    </div>
+
+                    <!-- Second: Money Script Insight Card -->
+                    <div class="bg-gradient-to-br from-[#065f46] to-[#059669] rounded-3xl p-6 shadow-xl text-white">
+                        <p class="text-xs font-semibold uppercase tracking-widest opacity-70 mb-3">Money Script
+                            Teridentifikasi</p>
+                        <p class="font-bold text-lg leading-snug mb-4">"Saya tidak layak punya banyak uang."</p>
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                                <i class="fa-solid fa-lightbulb text-yellow-300 text-sm"></i>
+                            </div>
+                            <p class="text-sm opacity-90 font-medium">Action plan tersedia setelah sesi</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Floating Elements -->
+                <div
+                    class="absolute top-8 right-4 lg:-right-4 bg-white rounded-2xl px-4 py-3 shadow-lg border border-gray-100 z-30 animate-pulse">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-coins text-yellow-500 text-sm"></i>
+                        </div>
+                        <div>
+                            <p class="text-[11px] text-gray-500">Bebas Utang dalam</p>
+                            <p class="text-sm font-black text-dark">14 Bulan 🎯</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="absolute bottom-10 left-0 lg:-left-8 bg-white rounded-2xl px-4 py-3 shadow-lg border border-gray-100 z-30">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 bg-red-50 rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-star text-primary text-sm"></i>
+                        </div>
+                        <div>
+                            <p class="text-[11px] text-gray-500">Kepuasan Klien</p>
+                            <p class="text-sm font-black text-dark">4.9 / 5.0 ⭐</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOCIAL PROOF MARQUEE -->
+    <div class="w-full py-5 bg-dark border-y border-gray-800 overflow-hidden">
+        <div class="marquee-track whitespace-nowrap text-sm text-gray-400 font-medium">
+            <span class="mx-6 flex items-center gap-2"><i class="fa-solid fa-circle-check text-[#059669]"></i>
+                Behavioral Finance Coaching</span>
+            <span class="mx-6 flex items-center gap-2"><i class="fa-solid fa-circle-check text-[#059669]"></i> Money
+                Psychology Assessment</span>
+            <span class="mx-6 flex items-center gap-2"><i class="fa-solid fa-circle-check text-[#059669]"></i> Debt-Free
+                Roadmap</span>
+            <span class="mx-6 flex items-center gap-2"><i class="fa-solid fa-circle-check text-[#059669]"></i> Couple
+                Financial Alignment</span>
+            <span class="mx-6 flex items-center gap-2"><i class="fa-solid fa-circle-check text-[#059669]"></i> Financial
+                Trauma Healing</span>
+            <span class="mx-6 flex items-center gap-2"><i class="fa-solid fa-circle-check text-[#059669]"></i> CFP
+                Certified Facilitator</span>
+
+            <!-- Duplicate for seamless loop -->
+            <span class="mx-6 flex items-center gap-2"><i class="fa-solid fa-circle-check text-[#059669]"></i>
+                Behavioral Finance Coaching</span>
+            <span class="mx-6 flex items-center gap-2"><i class="fa-solid fa-circle-check text-[#059669]"></i> Money
+                Psychology Assessment</span>
+            <span class="mx-6 flex items-center gap-2"><i class="fa-solid fa-circle-check text-[#059669]"></i> Debt-Free
+                Roadmap</span>
+            <span class="mx-6 flex items-center gap-2"><i class="fa-solid fa-circle-check text-[#059669]"></i> Couple
+                Financial Alignment</span>
+            <span class="mx-6 flex items-center gap-2"><i class="fa-solid fa-circle-check text-[#059669]"></i> Financial
+                Trauma Healing</span>
+            <span class="mx-6 flex items-center gap-2"><i class="fa-solid fa-circle-check text-[#059669]"></i> CFP
+                Certified Facilitator</span>
+        </div>
+    </div>
+
+    <!-- 2. STATS SECTION -->
+    <section class="py-16 px-4 bg-white">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="stat-card bg-white border border-gray-100 rounded-3xl p-6 text-center shadow-sm">
+                    <p class="text-4xl font-black text-[#059669] mb-2">78%</p>
+                    <p class="text-sm text-gray-500 font-medium leading-tight">Masalah keuangan bersumber dari faktor
+                        <strong>psikologis</strong>, bukan kurang gaji</p>
+                </div>
+                <div class="stat-card bg-white border border-gray-100 rounded-3xl p-6 text-center shadow-sm">
+                    <p class="text-4xl font-black text-[#dc2626] mb-2">1 : 3</p>
+                    <p class="text-sm text-gray-500 font-medium leading-tight">Pasangan bertengkar soal keuangan
+                        <strong>setiap 3 hari sekali</strong> rata-rata</p>
+                </div>
+                <div class="stat-card bg-white border border-gray-100 rounded-3xl p-6 text-center shadow-sm">
+                    <p class="text-4xl font-black text-[#059669] mb-2">91%</p>
+                    <p class="text-sm text-gray-500 font-medium leading-tight">Klien kami melaporkan kejelasan tujuan
+                        finansial setelah <strong>sesi pertama</strong></p>
+                </div>
+                <div class="stat-card bg-white border border-gray-100 rounded-3xl p-6 text-center shadow-sm">
+                    <p class="text-4xl font-black text-dark mb-2">200+</p>
+                    <p class="text-sm text-gray-500 font-medium leading-tight">Individu & pasangan telah dilayani sejak
+                        <strong>2022</strong></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. PAIN POINTS (Masalah yang Kamu Rasakan?) -->
+    <section class="py-24 px-4 bg-gray-50 border-y border-gray-200">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="text-center mb-16 max-w-2xl mx-auto">
+                <span class="text-[#059669] font-black tracking-widest text-sm uppercase mb-3 block">Kamu Salah Satu
+                    dari Ini?</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-dark tracking-tight mb-4">Masalah Keuangan
+                    yang<br>Kelihatannya <span class="text-primary">Tentang Uang</span>, Tapi Tidak</h2>
+                <p class="text-gray-500 font-medium">Kebanyakan dari kita tidak pernah diajarkan cara <em>berpikir</em>
+                    tentang uang. Akibatnya, polanya berulang terus, bukan karena bodoh — tapi karena belum tahu akar
+                    masalahnya.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-5">
+                <!-- Pain 1 -->
+                <div
+                    class="pain-card bg-white rounded-2xl p-6 flex items-start gap-5 shadow-sm border border-gray-100 cursor-default">
+                    <div class="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-cart-shopping text-primary text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-dark text-lg mb-2">Emotional Spending</h3>
+                        <p class="text-gray-500 text-sm font-medium leading-relaxed">Belanja saat stres atau senang
+                            terasa "normal" — tapi tagihan di akhir bulan tidak bohong. Ini bukan masalah disiplin, tapi
+                            soal regulasi emosi.</p>
+                    </div>
+                </div>
+
+                <!-- Pain 2 -->
+                <div
+                    class="pain-card bg-white rounded-2xl p-6 flex items-start gap-5 shadow-sm border border-gray-100 cursor-default">
+                    <div class="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-link-slash text-orange-500 text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-dark text-lg mb-2">Lingkaran Utang & PayLater</h3>
+                        <p class="text-gray-500 text-sm font-medium leading-relaxed">Bayar satu utang dengan utang lain.
+                            Paylater terus aktif. Merasa tidak ada jalan keluar — padahal ada, asal tahu strateginya.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Pain 3 -->
+                <div
+                    class="pain-card bg-white rounded-2xl p-6 flex items-start gap-5 shadow-sm border border-gray-100 cursor-default">
+                    <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-people-arrows text-blue-500 text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-dark text-lg mb-2">Sandwich Generation Stress</h3>
+                        <p class="text-gray-500 text-sm font-medium leading-relaxed">Menanggung orang tua, biaya anak,
+                            dan kebutuhan sendiri secara bersamaan. Tidak ada rumus baku, tapi ada strategi yang bisa
+                            dirancang.</p>
+                    </div>
+                </div>
+
+                <!-- Pain 4 -->
+                <div
+                    class="pain-card bg-white rounded-2xl p-6 flex items-start gap-5 shadow-sm border border-gray-100 cursor-default">
+                    <div class="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-heart-crack text-purple-500 text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-dark text-lg mb-2">Couple Financial Conflict</h3>
+                        <p class="text-gray-500 text-sm font-medium leading-relaxed">Beda visi soal menabung, investasi,
+                            dan pengeluaran kerap memicu pertengkaran. Bukan soal siapa yang benar — tapi soal
+                            menyatukan tujuan.</p>
+                    </div>
+                </div>
+
+                <!-- Pain 5 -->
+                <div
+                    class="pain-card bg-white rounded-2xl p-6 flex items-start gap-5 shadow-sm border border-gray-100 cursor-default">
+                    <div class="w-14 h-14 bg-yellow-50 rounded-2xl flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-piggy-bank text-yellow-500 text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-dark text-lg mb-2">Sulit Menabung & Investasi</h3>
+                        <p class="text-gray-500 text-sm font-medium leading-relaxed">Niat ada, uangnya ada, tapi selalu
+                            terpakai duluan. Ada "money script" tersembunyi yang menarik Anda kembali ke titik nol
+                            setiap bulan.</p>
+                    </div>
+                </div>
+
+                <!-- Pain 6 -->
+                <div
+                    class="pain-card bg-white rounded-2xl p-6 flex items-start gap-5 shadow-sm border border-gray-100 cursor-default">
+                    <div class="w-14 h-14 bg-emerald-light rounded-2xl flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-ghost text-[#059669] text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-dark text-lg mb-2">Financial Trauma & Anxiety</h3>
+                        <p class="text-gray-500 text-sm font-medium leading-relaxed">Tumbuh dalam keluarga yang
+                            kekurangan bisa meninggalkan "luka" seputar uang yang tanpa disadari terus memengaruhi
+                            keputusan finansial Anda hari ini.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3.5. TRUST BANNER: Jaminan Kerahasiaan Mutlak -->
+    <section class="py-12 px-4 bg-emerald-dark text-white border-y border-emerald/20 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] mix-blend-overlay"></div>
+        <div class="max-w-[900px] mx-auto flex flex-col md:flex-row items-center gap-6 relative z-10 text-center md:text-left">
+            <div class="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center text-white text-3xl shrink-0 mx-auto md:mx-0 shadow-lg border border-white/20">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <div class="flex-grow">
+                <h3 class="text-xl font-bold mb-1.5">Jaminan Kerahasiaan Data & Sesi (100% Private)</h3>
+                <p class="text-sm text-emerald-light leading-relaxed font-medium">
+                    Kami memahami bahwa keuangan adalah hal yang sangat sensitif. Seluruh data rekening, cicilan, dan cerita hidup yang Anda bagikan dijamin <strong>100% aman, rahasia, dan terikat komitmen privasi mutlak</strong>.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. PENDEKATAN: FRAMEWORK MIND-MONEY-MAP -->
+    <section id="pendekatan" class="py-24 px-4 bg-dark text-white relative overflow-hidden border-b-8 border-[#059669]">
+        <!-- BG Decorations -->
+        <div
+            class="absolute top-0 right-0 w-[500px] h-[500px] bg-[#059669]/10 rounded-full filter blur-3xl translate-x-1/3 -translate-y-1/4">
+        </div>
+        <div
+            class="absolute bottom-0 left-0 w-80 h-80 bg-primary/10 rounded-full filter blur-3xl -translate-x-1/3 translate-y-1/3">
+        </div>
+
+        <div class="max-w-[1200px] mx-auto relative z-10">
+            <div class="text-center mb-16 max-w-2xl mx-auto">
+                <span class="text-[#10b981] font-black tracking-widest text-sm uppercase mb-3 block">Metode Kami</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight mb-4">Framework <span
+                        class="text-[#10b981]">Mind–Money–Map™</span></h2>
+                <p class="text-gray-400 font-medium">Bukan sekadar buat anggaran. Kami menggali akarnya dari dalam, baru
+                    menyusun solusi nyata yang bisa dijalani.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Step 1: MIND -->
+                <div
+                    class="fw-step bg-white/5 border border-white/10 rounded-3xl p-8 text-center hover:bg-[#059669]/10 hover:border-[#059669]/40 transition-all group">
+                    <div
+                        class="w-16 h-16 mx-auto bg-[#059669]/20 rounded-2xl flex items-center justify-center text-[#10b981] text-3xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <div
+                        class="inline-block bg-[#059669]/20 text-[#10b981] text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full mb-4">
+                        Step 01 — Mind</div>
+                    <h3 class="text-xl font-bold mb-4">Bedah Money Script</h3>
+                    <p class="text-gray-400 text-sm font-medium leading-relaxed">
+                        Menggali kepercayaan bawah sadar Anda seputar uang (<em>money script</em>) — apakah Anda takut
+                        kaya? Merasa tidak layak untuk sejahtera? Ini yang diatasi pertama.
+                    </p>
+                </div>
+
+                <!-- Step 2: MONEY -->
+                <div
+                    class="fw-step bg-white/5 border border-white/10 rounded-3xl p-8 text-center hover:bg-primary/10 hover:border-primary/40 transition-all group">
+                    <div
+                        class="w-16 h-16 mx-auto bg-primary/20 rounded-2xl flex items-center justify-center text-primary text-3xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-magnifying-glass-chart"></i>
+                    </div>
+                    <div
+                        class="inline-block bg-primary/20 text-red-300 text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full mb-4">
+                        Step 02 — Money</div>
+                    <h3 class="text-xl font-bold mb-4">Audit Kondisi Nyata</h3>
+                    <p class="text-gray-400 text-sm font-medium leading-relaxed">
+                        Melihat kondisi finansial Anda apa adanya: aliran kas (<em>cash flow</em>), rasio utang, dan
+                        kesehatan tabungan-investasi — tanpa menghakimi, tapi jujur dan jernih.
+                    </p>
+                </div>
+
+                <!-- Step 3: MAP -->
+                <div
+                    class="fw-step bg-white/5 border border-white/10 rounded-3xl p-8 text-center hover:bg-secondary/10 hover:border-secondary/40 transition-all group">
+                    <div
+                        class="w-16 h-16 mx-auto bg-secondary/20 rounded-2xl flex items-center justify-center text-secondary text-3xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                    </div>
+                    <div
+                        class="inline-block bg-secondary/20 text-yellow-300 text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full mb-4">
+                        Step 03 — Map</div>
+                    <h3 class="text-xl font-bold mb-4">Roadmap yang Realistis</h3>
+                    <p class="text-gray-400 text-sm font-medium leading-relaxed">
+                        Menyusun rencana konkret dan personal: target pelunasan utang, alokasi cashflow, strategi
+                        menabung dan investasi yang sesuai dengan karakter serta nilai-nilai Anda.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Info Note -->
+            <div
+                class="mt-12 bg-white/5 border border-[#059669]/30 rounded-2xl p-6 flex items-start gap-4 max-w-3xl mx-auto">
+                <div class="w-10 h-10 bg-[#059669]/20 rounded-xl flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-shield text-[#10b981]"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-white mb-1">Tidak Ada Judgement di Sini</h4>
+                    <p class="text-gray-400 text-sm font-medium leading-relaxed">Sesi konsultasi bersifat <strong
+                            class="text-white">100% privat dan rahasia</strong>. Financial Coach kami hadir sebagai
+                        mitra berpikir, bukan penilai. Semua yang Anda ceritakan aman bersama kami.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. TENTANG FINANCIAL COACH -->
+    <section class="py-24 px-4 bg-white">
+        <div class="max-w-[1200px] mx-auto grid lg:grid-cols-2 gap-16 items-center">
+            <!-- Photo / Card Side -->
+            <div class="relative">
+                <div
+                    class="relative w-full aspect-square max-w-md mx-auto lg:mx-0 rounded-[3rem] overflow-hidden shadow-2xl">
+                    <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=800&auto=format&fit=crop"
+                        alt="Financial Coach" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/70 via-transparent to-transparent"></div>
+
+                    <!-- Credential Badge on Photo -->
+                    <div class="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-sm rounded-2xl p-4">
+                        <p class="font-black text-dark text-lg">Financial Coach TheAIM</p>
+                        <p class="text-sm text-gray-500 font-medium mb-3">CFP® Certified Financial Planner</p>
+                        <div class="flex gap-2 flex-wrap">
+                            <span
+                                class="text-xs bg-emerald-light text-emerald-dark px-3 py-1 rounded-full font-bold">CFP®</span>
+                            <span class="text-xs bg-blue-50 text-blue-700 px-3 py-1 rounded-full font-bold">Behavioral
+                                Finance</span>
+                            <span class="text-xs bg-yellow-50 text-yellow-700 px-3 py-1 rounded-full font-bold">7+ Tahun
+                                Pengalaman</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Floating stat -->
+                <div
+                    class="absolute -top-4 -right-4 lg:top-8 lg:-right-8 bg-white rounded-2xl px-5 py-4 shadow-xl border border-gray-100 z-10">
+                    <p class="text-xs text-gray-500 font-medium mb-1">Total Jam Konsultasi</p>
+                    <p class="text-3xl font-black text-dark">1.200+ <span
+                            class="text-[#059669] text-xl animate-pulse">⏱</span></p>
+                </div>
+            </div>
+
+            <!-- Text Side -->
+            <div>
+                <span class="text-[#059669] font-black tracking-widest text-sm uppercase mb-3 block">Siapa yang Akan
+                    Mendampingi Anda</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-dark tracking-tight mb-6">
+                    Bukan Sekadar Perencana.<br><span class="text-[#059669]">Tapi Mitra Finansial.</span>
+                </h2>
+                <p class="text-gray-500 leading-relaxed mb-6 font-medium text-lg">
+                    Financial Coach kami tidak hanya menguasai angka — beliau juga terlatih dalam <strong
+                        class="text-dark">Financial Psychology</strong> dan <em>Behavioral Finance</em>. Kombinasi ini
+                    memungkinkan pendampingan yang tidak hanya memperbaiki laporan keuangan, tapi juga mengubah pola
+                    pikir yang mendasarinya.
+                </p>
+
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start gap-3">
+                        <div class="w-6 h-6 rounded-full bg-[#059669] flex items-center justify-center shrink-0 mt-0.5">
+                            <i class="fa-solid fa-check text-white text-xs"></i>
+                        </div>
+                        <p class="text-gray-600 font-medium text-sm">Certified Financial Planner (CFP®) bersertifikat
+                            internasional</p>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-6 h-6 rounded-full bg-[#059669] flex items-center justify-center shrink-0 mt-0.5">
+                            <i class="fa-solid fa-check text-white text-xs"></i>
+                        </div>
+                        <p class="text-gray-600 font-medium text-sm">Terlatih dalam Behavioral Finance, Money
+                            Psychology, dan Couple Financial Coaching</p>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-6 h-6 rounded-full bg-[#059669] flex items-center justify-center shrink-0 mt-0.5">
+                            <i class="fa-solid fa-check text-white text-xs"></i>
+                        </div>
+                        <p class="text-gray-600 font-medium text-sm">Lebih dari 200 klien individu dan pasangan telah
+                            didampingi sejak 2022</p>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-6 h-6 rounded-full bg-[#059669] flex items-center justify-center shrink-0 mt-0.5">
+                            <i class="fa-solid fa-check text-white text-xs"></i>
+                        </div>
+                        <p class="text-gray-600 font-medium text-sm">Bagian dari ekosistem holistik TheAIM —
+                            berkolaborasi lintas disiplin (Psikolog, Life Coach, Terapis)</p>
+                    </div>
+                </div>
+
+                <div class="bg-[#f0fdf4] border border-[#a7f3d0] rounded-2xl p-5">
+                    <p class="text-sm text-emerald-dark font-medium leading-relaxed">
+                        <i class="fa-solid fa-quote-left text-[#059669] mr-2"></i>
+                        "Uang adalah cermin dari nilai-nilai yang Anda pegang dan keputusan yang Anda buat setiap hari.
+                        Perbaiki hubungan Anda dengan uang, dan masa depan finansial Anda akan berubah."
+                    </p>
+                    <p class="text-xs text-[#059669] font-bold mt-3">— Financial Coach TheAIM, CFP®</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. PILIHAN PAKET (Program Sesi) -->
+    <section id="paket" class="py-24 px-4 bg-gray-50 border-y border-gray-200">
+        <div class="max-w-[1100px] mx-auto">
+            <div class="text-center mb-16 max-w-2xl mx-auto">
+                <span class="text-[#059669] font-black tracking-widest text-sm uppercase mb-3 block">Program Sesi</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-dark tracking-tight mb-4">Pilih Perjalanan Finansial Anda</h2>
+                <p class="text-gray-500 font-medium">Setiap orang punya situasi berbeda. Kami siapkan program yang sesuai — mulai dari yang personal hingga untuk pasangan.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-7">
+                <!-- Package 1: Financial Check-Up -->
+                <div class="pkg-card bg-white rounded-3xl p-8 shadow-sm flex flex-col border border-gray-100">
+                    <div class="w-14 h-14 bg-[#f0fdf4] rounded-2xl flex items-center justify-center text-[#059669] text-2xl mb-6">
+                        <i class="fa-solid fa-stethoscope"></i>
+                    </div>
+                    <span class="text-xs font-black uppercase tracking-widest text-[#059669] mb-2 block">Personal</span>
+                    <h3 class="text-xl font-bold text-dark mb-1">Financial Check-Up</h3>
+                    <div class="flex items-end gap-1 mb-4 border-b border-gray-100 pb-4">
+                        <span class="text-lg font-bold text-dark">Rp</span>
+                        <span class="text-3xl font-black text-dark tracking-tight">499<span class="text-lg text-gray-400">rb</span></span>
+                    </div>
+                    <p class="text-sm text-gray-500 font-medium leading-relaxed mb-6 flex-grow">
+                        Audit total kondisi finansial Anda: cashflow, utang, simpanan. Cocok untuk Anda yang ingin tahu di mana posisi finansial saat ini.
+                    </p>
+                    <ul class="space-y-3 mb-8 text-sm font-medium text-gray-600">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#059669] text-xs"></i> 1x Sesi 90 Menit</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#059669] text-xs"></i> Money Script Assessment</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#059669] text-xs"></i> Laporan Financial Health (PDF)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#059669] text-xs"></i> 30-Day Action Plan</li>
+                    </ul>
+                    <a href="mockup_pendaftaran.html" class="block w-full text-center border-2 border-[#059669] text-[#059669] font-bold py-3.5 rounded-xl hover:bg-[#059669] hover:text-white transition-all duration-300">
+                        Pesan Sesi Ini
+                    </a>
+                </div>
+
+                <!-- Package 2: Debt-Free Roadmap (Highlighted) -->
+                <div class="pkg-card bg-gradient-to-br from-[#065f46] to-[#059669] rounded-3xl p-8 shadow-xl flex flex-col relative overflow-hidden text-white border-transparent transform md:-translate-y-4">
+                    <div class="absolute -top-0 -right-0 bg-secondary text-dark text-xs font-black uppercase tracking-widest px-5 py-2 rounded-bl-2xl rounded-tr-2xl shadow-md">
+                        🔥 Terpopuler
+                    </div>
+                    <div class="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center text-white text-2xl mb-6">
+                        <i class="fa-solid fa-road"></i>
+                    </div>
+                    <span class="text-xs font-black uppercase tracking-widest text-[#6ee7b7] mb-2 block">Personal · 3 Sesi</span>
+                    <h3 class="text-xl font-bold mb-1">Debt-Free Roadmap</h3>
+                    <div class="flex items-end gap-1 mb-4 border-b border-white/20 pb-4">
+                        <span class="text-lg font-bold text-white">Rp</span>
+                        <span class="text-3xl font-black text-white tracking-tight">1.299<span class="text-lg text-emerald-100">rb</span></span>
+                    </div>
+                    <p class="text-sm text-white/80 font-medium leading-relaxed mb-6 flex-grow">
+                        Program intensif untuk membedah akar masalah, menyusun strategi pelunasan utang, dan membangun pondasi bebas cicilan.
+                    </p>
+                    <ul class="space-y-3 mb-8 text-sm font-medium text-white/90">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-secondary text-xs"></i> 3x Sesi @90 Menit</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-secondary text-xs"></i> Deep Psychology Assessment</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-secondary text-xs"></i> Snowball/Avalanche Strategy</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-secondary text-xs"></i> Budget Blueprint Khusus</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-secondary text-xs"></i> WhatsApp Support 30 Hari</li>
+                    </ul>
+                    <a href="mockup_pendaftaran.html" class="block w-full text-center bg-white text-[#059669] font-bold py-3.5 rounded-xl hover:bg-yellow-300 hover:text-dark transition-all duration-300 shadow-lg">
+                        Mulai Program Ini →
+                    </a>
+                </div>
+
+                <!-- Package 3: Couple Financial -->
+                <div class="pkg-card bg-white rounded-3xl p-8 shadow-sm flex flex-col border border-gray-100">
+                    <div class="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-600 text-2xl mb-6">
+                        <i class="fa-solid fa-heart-pulse"></i>
+                    </div>
+                    <span class="text-xs font-black uppercase tracking-widest text-purple-600 mb-2 block">Untuk Pasangan</span>
+                    <h3 class="text-xl font-bold text-dark mb-1">Couple Alignment</h3>
+                    <div class="flex items-end gap-1 mb-4 border-b border-gray-100 pb-4">
+                        <span class="text-lg font-bold text-dark">Rp</span>
+                        <span class="text-3xl font-black text-dark tracking-tight">1.199<span class="text-lg text-gray-400">rb</span></span>
+                    </div>
+                    <p class="text-sm text-gray-500 font-medium leading-relaxed mb-6 flex-grow">
+                        Menyamakan visi, gaya keuangan, dan menyusun rencana finansial rumah tangga bersama tanpa konflik.
+                    </p>
+                    <ul class="space-y-3 mb-8 text-sm font-medium text-gray-600">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-500 text-xs"></i> 2x Sesi @120 Menit</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-500 text-xs"></i> Money Personality (Berdua)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-500 text-xs"></i> Joint Goal Setting</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-500 text-xs"></i> Household Budget Blueprint</li>
+                    </ul>
+                    <a href="mockup_pendaftaran.html" class="block w-full text-center border-2 border-purple-500 text-purple-600 font-bold py-3.5 rounded-xl hover:bg-purple-500 hover:text-white transition-all duration-300">
+                        Pesan Untuk Berdua
+                    </a>
+                </div>
+            </div>
+
+            <!-- Siapa yang Cocok & Tidak Cocok (Expectation Setting) -->
+            <div class="mt-20 max-w-4xl mx-auto grid md:grid-cols-2 gap-6">
+                <!-- Tidak Cocok -->
+                <div class="bg-red-50 border border-red-100 rounded-3xl p-8">
+                    <div class="w-12 h-12 bg-white text-red-500 rounded-full flex items-center justify-center text-xl shadow-sm mb-4">
+                        <i class="fa-solid fa-xmark"></i>
+                    </div>
+                    <h4 class="font-bold text-dark text-lg mb-3">Layanan Ini BUKAN Untuk:</h4>
+                    <ul class="space-y-3 text-sm text-gray-600 font-medium">
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-ban text-red-400 mt-0.5"></i> Mencari trik "cepat kaya" atau tips trading harian.</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-ban text-red-400 mt-0.5"></i> Ingin solusi ajaib lunas pinjol tanpa harus membayar kewajiban.</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-ban text-red-400 mt-0.5"></i> Tidak bersedia jujur dan tidak mau membuka data keuangan pribadi.</li>
+                    </ul>
+                </div>
+                <!-- Cocok -->
+                <div class="bg-emerald-50 border border-emerald-100 rounded-3xl p-8">
+                    <div class="w-12 h-12 bg-white text-emerald-600 rounded-full flex items-center justify-center text-xl shadow-sm mb-4">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <h4 class="font-bold text-dark text-lg mb-3">Layanan Ini SANGAT COCOK Untuk:</h4>
+                    <ul class="space-y-3 text-sm text-gray-600 font-medium">
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-emerald-500 mt-0.5"></i> Ingin membereskan pola pikir, emosi, dan cashflow untuk jangka panjang.</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-emerald-500 mt-0.5"></i> Pasangan yang ingin transparan dan membangun tujuan rumah tangga bersama.</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-emerald-500 mt-0.5"></i> Siap berkomitmen, disiplin, dan dibimbing oleh Coach tersertifikasi.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <p class="text-center text-sm text-gray-400 font-medium mt-12">Pilih paket dengan bijak sesuai kebutuhan Anda saat ini.</p>
+        </div>
+    </section>
+
+    <!-- 6.5. ALUR KONSULTASI KEUANGAN -->
+    <section class="py-24 px-4 bg-white border-t border-gray-100">
+        <div class="max-w-[1100px] mx-auto">
+            <div class="text-center mb-16">
+                <span class="text-[#059669] font-black tracking-widest text-sm uppercase mb-2 block">Langkah Sesi</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-dark tracking-tight mb-4">Bagaimana Alur Konsultasinya?</h2>
+                <p class="text-gray-500 max-w-2xl mx-auto font-medium">Kami merancang proses konsultasi yang aman, sistematis, dan berfokus pada hasil agar Anda mendapatkan kejelasan arah finansial dengan cepat.</p>
+            </div>
+            
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 relative">
+                <!-- Step 1 -->
+                <div class="bg-gray-50 rounded-3xl p-8 relative border border-gray-100 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 rounded-2xl bg-[#059669] text-white flex items-center justify-center font-bold text-lg mb-6 shadow-md shadow-emerald/20">1</div>
+                    <h3 class="font-bold text-dark text-lg mb-3">Registrasi & Jadwal</h3>
+                    <p class="text-gray-500 text-sm font-medium leading-relaxed">Hubungi admin via WhatsApp untuk menceritakan kondisi umum dan menjadwalkan tanggal sesi utama Anda.</p>
+                </div>
+                <!-- Step 2 -->
+                <div class="bg-gray-50 rounded-3xl p-8 relative border border-gray-100 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 rounded-2xl bg-secondary text-dark flex items-center justify-center font-bold text-lg mb-6 shadow-md shadow-amber-200">2</div>
+                    <h3 class="font-bold text-dark text-lg mb-3">Asesmen Money Script</h3>
+                    <p class="text-gray-500 text-sm font-medium leading-relaxed">Isi kuesioner psikologi keuangan pra-sesi untuk memetakan keyakinan bawah sadar Anda tentang uang.</p>
+                </div>
+                <!-- Step 3 -->
+                <div class="bg-gray-50 rounded-3xl p-8 relative border border-gray-100 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 rounded-2xl bg-dark text-white flex items-center justify-center font-bold text-lg mb-6 shadow-md">3</div>
+                    <h3 class="font-bold text-dark text-lg mb-3">Sesi Audit & Konsultasi</h3>
+                    <p class="text-gray-500 text-sm font-medium leading-relaxed">Lakukan sesi tatap muka atau online bersama coach untuk membedah data kas, utang, dan pola pikir Anda.</p>
+                </div>
+                <!-- Step 4 -->
+                <div class="bg-gray-50 rounded-3xl p-8 relative border border-gray-100 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 rounded-2xl bg-primary text-white flex items-center justify-center font-bold text-lg mb-6 shadow-md shadow-red-200">4</div>
+                    <h3 class="font-bold text-dark text-lg mb-3">Blueprint & Aksi</h3>
+                    <p class="text-gray-500 text-sm font-medium leading-relaxed">Dapatkan rangkuman blueprint personal serta lembar rencana aksi konkret yang siap dijalani selama 30 hari.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6.8 DELIVERABLES VISUAL -->
+    <section class="py-16 px-4 bg-emerald-50 border-t border-emerald-100">
+        <div class="max-w-[1000px] mx-auto flex flex-col md:flex-row items-center gap-12">
+            <div class="md:w-1/2">
+                <span class="text-[#059669] font-black tracking-widest text-sm uppercase mb-2 block">Hasil Nyata</span>
+                <h3 class="text-2xl md:text-3xl font-extrabold text-dark tracking-tight mb-4">Apa yang Akan Anda Dapatkan?</h3>
+                <p class="text-gray-600 font-medium leading-relaxed mb-6">Konsultasi kami bukan sekadar sesi curhat. Setiap program dilengkapi dengan dokumen cetak biru yang bisa Anda pegang dan jalankan secara mandiri setelah sesi selesai.</p>
+                <ul class="space-y-3 text-sm font-medium text-gray-700">
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-file-pdf text-red-500 text-lg w-5"></i> Laporan Financial Health Score</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-map text-blue-500 text-lg w-5"></i> Peta Jalan Pelunasan Utang (Snowball/Avalanche)</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-list-check text-emerald-500 text-lg w-5"></i> Lembar Action Plan 30 Hari</li>
+                </ul>
+            </div>
+            <div class="md:w-1/2 relative">
+                <!-- Decorative Mockup of PDF/Papers -->
+                <div class="relative w-full aspect-video bg-white rounded-2xl shadow-[0_20px_40px_-10px_rgba(5,150,105,0.2)] border border-gray-100 p-6 flex flex-col justify-between transform rotate-2">
+                    <div class="flex justify-between items-start">
+                        <div class="w-1/2 h-4 bg-gray-200 rounded-full mb-4"></div>
+                        <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center text-[#059669]"><i class="fa-solid fa-chart-pie"></i></div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="w-full h-3 bg-gray-100 rounded-full"></div>
+                        <div class="w-5/6 h-3 bg-gray-100 rounded-full"></div>
+                        <div class="w-4/6 h-3 bg-gray-100 rounded-full"></div>
+                    </div>
+                    <div class="mt-6 flex items-end gap-2 h-32">
+                        <div class="w-1/4 h-1/4 bg-red-400 rounded-t-lg"></div>
+                        <div class="w-1/4 h-2/4 bg-yellow-400 rounded-t-lg"></div>
+                        <div class="w-1/4 h-3/4 bg-emerald-400 rounded-t-lg"></div>
+                        <div class="w-1/4 h-full bg-emerald-600 rounded-t-lg"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. TESTIMONIALS -->
+    <section class="py-24 px-4 bg-white">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="text-center mb-16">
+                <span class="text-[#059669] font-black tracking-widest text-sm uppercase mb-3 block">Cerita dari
+                    Klien</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-dark tracking-tight">Mereka Sudah Merasakannya</h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-7">
+                <!-- Testimonial 1 -->
+                <div
+                    class="bg-gray-50 rounded-3xl p-8 border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <div class="flex gap-1 text-yellow-400 mb-5">
+                        <i class="fa-solid fa-star text-sm"></i><i class="fa-solid fa-star text-sm"></i><i
+                            class="fa-solid fa-star text-sm"></i><i class="fa-solid fa-star text-sm"></i><i
+                            class="fa-solid fa-star text-sm"></i>
+                    </div>
+                    <p class="text-gray-600 text-sm font-medium leading-relaxed mb-6 italic">
+                        "Baru satu sesi, saya langsung 'klik' kenapa selalu gagal nabung padahal gaji naik terus.
+                        Ternyata ada keyakinan masa kecil yang belum saya sadari. Setelah 3 bulan, utang saya berkurang
+                        40%."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 bg-gradient-to-br from-emerald-200 to-emerald-400 rounded-full flex items-center justify-center font-black text-dark">
+                            R</div>
+                        <div>
+                            <p class="font-bold text-dark text-sm">Rizal H.</p>
+                            <p class="text-xs text-gray-400">Marketing Manager, 34 thn</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div
+                    class="bg-gradient-to-br from-[#f0fdf4] to-white rounded-3xl p-8 border border-[#a7f3d0] shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <div class="flex gap-1 text-yellow-400 mb-5">
+                        <i class="fa-solid fa-star text-sm"></i><i class="fa-solid fa-star text-sm"></i><i
+                            class="fa-solid fa-star text-sm"></i><i class="fa-solid fa-star text-sm"></i><i
+                            class="fa-solid fa-star text-sm"></i>
+                    </div>
+                    <p class="text-gray-600 text-sm font-medium leading-relaxed mb-6 italic">
+                        "Kami pranikah dan sempat hampir berantakan gara-gara beda pendapat soal keuangan. Program
+                        Couple Financial Alignment benar-benar menyelamatkan kami. Sekarang punya visi yang sama dan
+                        bahkan lebih dekat."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 bg-gradient-to-br from-purple-200 to-purple-400 rounded-full flex items-center justify-center font-black text-dark">
+                            A</div>
+                        <div>
+                            <p class="font-bold text-dark text-sm">Ayu & Fajar</p>
+                            <p class="text-xs text-gray-400">Pasangan Pranikah, Surabaya</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div
+                    class="bg-gray-50 rounded-3xl p-8 border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <div class="flex gap-1 text-yellow-400 mb-5">
+                        <i class="fa-solid fa-star text-sm"></i><i class="fa-solid fa-star text-sm"></i><i
+                            class="fa-solid fa-star text-sm"></i><i class="fa-solid fa-star text-sm"></i><i
+                            class="fa-solid fa-star text-sm"></i>
+                    </div>
+                    <p class="text-gray-600 text-sm font-medium leading-relaxed mb-6 italic">
+                        "Saya sandwich generation dan selalu merasa bersalah kalau pakai uang untuk diri sendiri.
+                        Financial Coach di TheAIM bantu saya reframe cara pandang saya, dan sekarang saya punya dana
+                        darurat untuk pertama kalinya."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 bg-gradient-to-br from-orange-200 to-orange-400 rounded-full flex items-center justify-center font-black text-dark">
+                            D</div>
+                        <div>
+                            <p class="font-bold text-dark text-sm">Dewi P.</p>
+                            <p class="text-xs text-gray-400">PNS, 38 thn · Sandwich Generation</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7.5 FAQ SECTION -->
+    <section class="py-24 px-4 bg-gray-50 border-t border-gray-200">
+        <div class="max-w-[800px] mx-auto">
+            <div class="text-center mb-16">
+                <span class="text-[#059669] font-black tracking-widest text-sm uppercase mb-3 block">FAQ</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-dark tracking-tight">Pertanyaan yang Sering Diajukan</h2>
+            </div>
+            <div class="space-y-4">
+                <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+                    <h4 class="font-bold text-dark text-lg mb-2">Apakah saya harus memberikan password m-banking atau data sensitif?</h4>
+                    <p class="text-gray-500 text-sm font-medium leading-relaxed">Sama sekali tidak. Kami hanya butuh persentase atau angka global dari cashflow dan utang Anda untuk memetakan situasi. Privasi dan keamanan data Anda adalah prioritas utama kami.</p>
+                </div>
+                <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+                    <h4 class="font-bold text-dark text-lg mb-2">Apakah TheAIM akan menyuruh saya membeli produk investasi atau asuransi tertentu?</h4>
+                    <p class="text-gray-500 text-sm font-medium leading-relaxed">Tidak. Coach kami bersifat independen. Kami bukan agen asuransi atau sales investasi. Rekomendasi yang diberikan bersifat objektif murni untuk kesehatan finansial Anda, bukan untuk komisi.</p>
+                </div>
+                <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+                    <h4 class="font-bold text-dark text-lg mb-2">Utang saya sudah sangat besar, apakah masih bisa ditangani?</h4>
+                    <p class="text-gray-500 text-sm font-medium leading-relaxed">Selama Anda memiliki komitmen untuk jujur dan disiplin, tidak ada kata terlambat. Kami akan bantu menyusun peta jalan pelunasan (Debt-Free Roadmap) yang realistis sesuai kapasitas pemasukan Anda.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. FINAL CTA BANNER -->
+    <section class="py-20 px-4 bg-gray-50 border-t border-gray-100">
+        <div
+            class="max-w-[1200px] mx-auto bg-gradient-to-br from-[#065f46] via-[#059669] to-[#10b981] rounded-[2.5rem] overflow-hidden flex flex-col md:flex-row items-center relative shadow-2xl">
+            <!-- Dot pattern inside banner -->
+            <div class="absolute inset-0 opacity-10 pointer-events-none"
+                style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 24px 24px;">
+            </div>
+
+            <!-- Left Image -->
+            <div class="w-full md:w-5/12 h-[280px] md:h-[400px] relative shrink-0">
+                <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=700&auto=format&fit=crop"
+                    alt="Financial freedom" class="w-full h-full object-cover opacity-70 mix-blend-overlay">
+                <div class="absolute inset-0 bg-gradient-to-r from-transparent to-[#059669] md:to-transparent"></div>
+            </div>
+
+            <!-- Right Content -->
+            <div class="w-full md:w-7/12 p-8 md:p-12 lg:p-16 relative z-10 text-center md:text-left">
+                <span
+                    class="inline-block bg-white/10 text-white text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6 border border-white/20">Mulai
+                    Hari Ini</span>
+                <h2 class="text-2xl md:text-3xl lg:text-4xl font-black text-white mb-6 leading-tight">
+                    Stop Stres Soal Uang.<br>Mulai Kendalikan <br>Masa Depan Anda.
+                </h2>
+                <p class="text-white/80 font-medium mb-8 max-w-lg">
+                    Ratusan orang sudah mengambil langkah pertama mereka. Konsultasi gratis 15 menit tersedia untuk
+                    membantu Anda menentukan program yang paling tepat.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                    <a href="mockup_pendaftaran.html" id="cta-wa-consultation"
+                        class="inline-flex items-center justify-center gap-2 bg-white text-[#059669] px-8 py-4 rounded-full font-bold hover:bg-yellow-300 hover:text-dark transition-colors shadow-lg">
+                        Mulai Konsultasi Sekarang
+                    </a>
+                    <a href="#paket"
+                        class="inline-flex items-center justify-center gap-2 bg-white/10 border border-white/30 text-white px-8 py-4 rounded-full font-bold hover:bg-white/20 transition-colors">
+                        Lihat Semua Program
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-50 pt-16 border-t border-gray-200">
+        <div
+            class="max-w-[1200px] mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 text-[#334155]">
+            <!-- Kolom 1 -->
+            <div class="pr-4">
+                <a href="#" class="text-2xl font-bold tracking-tight flex items-center gap-2 mb-5 text-dark">
+                    <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM Logo" class="h-14 md:h-16 w-auto">
+                </a>
+                <p class="text-sm text-gray-500 font-medium leading-relaxed">Platform konsultasi holistik untuk jiwa,
+                    pikiran, dan keuangan yang lebih sehat.</p>
+            </div>
+
+            <!-- Kolom 2 -->
+            <div>
+                <h4 class="font-extrabold text-dark text-lg mb-6 tracking-tight">Layanan</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li><a href="mockup_layanan_assessment.html" class="hover:text-primary transition-colors">Talents
+                            Mapping Assessment</a></li>
+                    <li><a href="mockup_layanan_coaching.html" class="hover:text-primary transition-colors">Life
+                            Coaching</a></li>
+                    <li><a href="mockup_layanan_visual_coaching.html"
+                            class="hover:text-primary transition-colors">Visual Coaching</a></li>
+                    <li><a href="mockup_layanan_consultation.html" class="text-[#059669] font-bold">Konsultasi
+                            Keuangan</a></li>
+                    <li><a href="mockup_layanan_konseling.html" class="hover:text-primary transition-colors">Therapy</a>
+                    </li>
+                    <li><a href="mockup_layanan_workshop.html" class="hover:text-primary transition-colors">Workshop &
+                            Training</a></li>
+                </ul>
+            </div>
+
+            <!-- Kolom 3 -->
+            <div>
+                <h4 class="font-extrabold text-dark text-lg mb-6 tracking-tight">Tentang Kami</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li><a href="mockup_tentang_theaim.html" class="hover:text-primary transition-colors">Tentang
+                            TheAIM</a></li>
+                    <li><a href="mockup_tentang_ecosystem.html" class="hover:text-primary transition-colors">Talent
+                            Ecosystem</a></li>
+                    <li><a href="mockup_perusahaan.html" class="hover:text-primary transition-colors">Solusi Untuk
+                            Perusahaan</a></li>
+                    <li><a href="mockup_artikel.html" class="hover:text-primary transition-colors">Artikel &
+                            Aktivitas</a>
+                <a href="mockup_career.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Karir</a></li>
+                </ul>
+            </div>
+
+            <!-- Kolom 4 -->
+            <div>
+                <h4 class="font-extrabold text-dark text-lg mb-6 tracking-tight">Kontak Kami</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li class="flex items-center gap-3">
+                        <i class="fa-solid fa-phone text-primary"></i>
+                        <a href="#" class="hover:text-primary transition-colors">081999554599</a>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i class="fa-regular fa-envelope text-primary"></i>
+                        <a href="mailto:ptabadiinsanmanfaat@gmail.com"
+                            class="hover:text-primary transition-colors">ptabadiinsanmanfaat@gmail.com</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Bottom Bar -->
+        <div class="bg-dark py-6 px-4 text-white">
+            <div class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-center items-center gap-6">
+                <div class="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 text-xs text-gray-400 font-medium">
+                    <p>&copy; 2026 PT Abadi Insan Manfaat. All right reserved</p>
+                    <div class="hidden sm:block text-gray-600">|</div>
+                    <a href="#" class="hover:text-white transition-colors">Term & Condition</a>
+                    <div class="hidden sm:block text-gray-600">|</div>
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

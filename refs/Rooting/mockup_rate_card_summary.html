@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Services Rate Card - TheAIM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626', // Merah
+                        secondary: '#fbbf24', // Kuning
+                        dark: '#18181b', // Hitam
+                        light: '#ffffff', // Putih
+                    },
+                    fontFamily: {
+                        sans: ['Lexend', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f8fafc; overflow-x: hidden; }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .service-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+            border-color: #dc2626;
+        }
+
+        .badge {
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 10px;
+            border-radius: 99px;
+        }
+        .badge-primary { background: #fef2f2; color: #dc2626; }
+        .badge-dark { background: #f1f5f9; color: #475569; }
+        .badge-addon { background: #fffbeb; color: #d97706; }
+        .badge-success { background: #f0fdf4; color: #16a34a; }
+    </style>
+</head>
+<body class="font-sans text-dark flex flex-col min-h-screen">
+
+    <!-- HEADER -->
+    <nav class="sticky top-0 z-50 w-full glass-panel flex items-center px-4 py-4 lg:px-8 border-b border-gray-100">
+        <div class="max-w-[1400px] mx-auto w-full flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold tracking-tight flex items-center gap-2">
+                <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM" class="h-14 md:h-16 w-auto">
+            </a>
+            <div class="hidden lg:flex items-center space-x-2 font-medium text-[15px] text-gray-700">
+                <span class="px-4 py-2 font-bold text-primary">Service Directory & Rate Card</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow py-16 px-4">
+        <div class="max-w-[1200px] mx-auto">
+            
+            <div class="text-center mb-16">
+                <h1 class="text-4xl md:text-5xl font-black text-dark tracking-tight mb-4">Investment Summary</h1>
+                <p class="text-gray-500 font-medium max-w-2xl mx-auto">Daftar lengkap layanan, rate card, dan detail fitur yang didapatkan klien untuk setiap program di TheAIM.</p>
+            </div>
+
+            <!-- CATEGORY 1: ASSESSMENT -->
+            <div class="mb-16">
+                <h2 class="text-2xl font-extrabold border-b-2 border-primary inline-block pb-2 mb-8 uppercase tracking-wider text-dark">1. Assessment & Testing</h2>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Talents Mapping -->
+                    <div class="service-card p-6 flex flex-col">
+                        <span class="badge badge-primary w-fit mb-3">Terpopuler</span>
+                        <h3 class="text-xl font-bold mb-2">Talents Mapping</h3>
+                        <p class="text-sm text-gray-500 mb-6">Memetakan kekuatan bawaan lahir, potensi, dan arah karier.</p>
+                        
+                        <div class="space-y-4 mb-6 flex-grow">
+                            <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-bold text-sm">Assessment Only</span>
+                                    <span class="font-black text-primary">Rp 300K</span>
+                                </div>
+                                <ul class="text-xs text-gray-600 space-y-1 list-disc list-inside">
+                                    <li>Full Assessment TM</li>
+                                    <li>Handout Hasil Lengkap</li>
+                                </ul>
+                            </div>
+                            <div class="p-4 bg-red-50 rounded-xl border border-red-100">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-bold text-sm">Assessment + Consul</span>
+                                    <span class="font-black text-primary">Rp 500K</span>
+                                </div>
+                                <ul class="text-xs text-gray-600 space-y-1 list-disc list-inside">
+                                    <li>Full Assessment TM</li>
+                                    <li>Konsultasi Hasil (60 Menit)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mental Health Checkup -->
+                    <div class="service-card p-6 flex flex-col">
+                        <span class="badge badge-dark w-fit mb-3">Checkup</span>
+                        <h3 class="text-xl font-bold mb-2">Mental Health Checkup</h3>
+                        <p class="text-sm text-gray-500 mb-6">Evaluasi kondisi mental dan kepribadian mendasar.</p>
+                        
+                        <div class="space-y-4 mb-6 flex-grow">
+                            <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-bold text-sm">Enneagram + Coaching</span>
+                                    <span class="font-black text-primary">Rp 500K</span>
+                                </div>
+                                <ul class="text-xs text-gray-600 space-y-1 list-disc list-inside">
+                                    <li>Enneagram Personality Test</li>
+                                    <li><strong>Level of Development Analysis</strong></li>
+                                    <li>Sesi Coaching Pembahasan</li>
+                                    <li><strong>Coaching note & advice</strong></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Individual Assessment Cards -->
+                    <div class="service-card p-6 flex flex-col">
+                        <span class="badge badge-success w-fit mb-3">Psychometric Test</span>
+                        <h3 class="text-xl font-bold mb-2">Strength Typology 30</h3>
+                        <p class="text-sm text-gray-500 mb-6">Identifikasi 30 tipologi kekuatan dominan bawaan.</p>
+                        <div class="mt-auto p-4 bg-gray-50 rounded-xl border border-gray-100 flex justify-between items-center">
+                            <span class="font-bold text-sm">Akses Tes</span>
+                            <span class="font-black text-primary">Rp 75K</span>
+                        </div>
+                    </div>
+                    <div class="service-card p-6 flex flex-col">
+                        <span class="badge badge-success w-fit mb-3">Psychometric Test</span>
+                        <h3 class="text-xl font-bold mb-2">Enneagram Personality</h3>
+                        <p class="text-sm text-gray-500 mb-6">Peta motivasi inti dan ketakutan dasar kepribadian.</p>
+                        <div class="mt-auto p-4 bg-gray-50 rounded-xl border border-gray-100 flex justify-between items-center">
+                            <span class="font-bold text-sm">Akses Tes</span>
+                            <span class="font-black text-primary">Rp 75K</span>
+                        </div>
+                    </div>
+                    <div class="service-card p-6 flex flex-col">
+                        <span class="badge badge-success w-fit mb-3">Psychometric Test</span>
+                        <h3 class="text-xl font-bold mb-2">DISC Assessment</h3>
+                        <p class="text-sm text-gray-500 mb-6">Analisa gaya komunikasi dan perilaku kerja dasar.</p>
+                        <div class="mt-auto p-4 bg-gray-50 rounded-xl border border-gray-100 flex justify-between items-center">
+                            <span class="font-bold text-sm">Akses Tes</span>
+                            <span class="font-black text-primary">Rp 75K</span>
+                        </div>
+                    </div>
+                    <div class="service-card p-6 flex flex-col">
+                        <span class="badge badge-success w-fit mb-3">Psychometric Test</span>
+                        <h3 class="text-xl font-bold mb-2">MBTI</h3>
+                        <p class="text-sm text-gray-500 mb-6">Profil preferensi kepribadian Myers-Briggs.</p>
+                        <div class="mt-auto p-4 bg-gray-50 rounded-xl border border-gray-100 flex justify-between items-center">
+                            <span class="font-bold text-sm">Akses Tes</span>
+                            <span class="font-black text-primary">Rp 75K</span>
+                        </div>
+                    </div>
+                    <div class="service-card p-6 flex flex-col">
+                        <span class="badge badge-success w-fit mb-3">Psychometric Test</span>
+                        <h3 class="text-xl font-bold mb-2">Papikostick</h3>
+                        <p class="text-sm text-gray-500 mb-6">Evaluasi dinamika peran dan kebutuhan tempat kerja.</p>
+                        <div class="mt-auto p-4 bg-gray-50 rounded-xl border border-gray-100 flex justify-between items-center">
+                            <span class="font-bold text-sm">Akses Tes</span>
+                            <span class="font-black text-primary">Rp 75K</span>
+                        </div>
+                    </div>
+                    <div class="service-card p-6 flex flex-col">
+                        <span class="badge badge-success w-fit mb-3">Psychometric Test</span>
+                        <h3 class="text-xl font-bold mb-2">Cognitive Test (IQ)</h3>
+                        <p class="text-sm text-gray-500 mb-6">Pengukuran kapasitas kognitif dasar dan logika.</p>
+                        <div class="mt-auto p-4 bg-gray-50 rounded-xl border border-gray-100 flex justify-between items-center">
+                            <span class="font-bold text-sm">Akses Tes</span>
+                            <span class="font-black text-primary">Rp 75K</span>
+                        </div>
+                    </div>
+                    <div class="service-card p-6 flex flex-col">
+                        <span class="badge badge-success w-fit mb-3">Psychometric Test</span>
+                        <h3 class="text-xl font-bold mb-2">Management Style</h3>
+                        <p class="text-sm text-gray-500 mb-6">Analisa kecenderungan gaya kepemimpinan manajerial.</p>
+                        <div class="mt-auto p-4 bg-gray-50 rounded-xl border border-gray-100 flex justify-between items-center">
+                            <span class="font-bold text-sm">Akses Tes</span>
+                            <span class="font-black text-primary">Rp 75K</span>
+                        </div>
+                    </div>
+                    <div class="service-card p-6 flex flex-col">
+                        <span class="badge badge-success w-fit mb-3">Psychometric Test</span>
+                        <h3 class="text-xl font-bold mb-2">Holland RIASEC</h3>
+                        <p class="text-sm text-gray-500 mb-6">Pemetaan minat karir dan kesesuaian lingkungan kerja.</p>
+                        <div class="mt-auto p-4 bg-gray-50 rounded-xl border border-gray-100 flex justify-between items-center">
+                            <span class="font-bold text-sm">Akses Tes</span>
+                            <span class="font-black text-primary">Rp 75K</span>
+                        </div>
+                    </div>
+                    <div class="service-card p-6 flex flex-col">
+                        <span class="badge badge-success w-fit mb-3">Psychometric Test</span>
+                        <h3 class="text-xl font-bold mb-2">Gaya Belajar</h3>
+                        <p class="text-sm text-gray-500 mb-6">Identifikasi gaya belajar visual, auditori, atau kinestetik.</p>
+                        <div class="mt-auto p-4 bg-gray-50 rounded-xl border border-gray-100 flex justify-between items-center">
+                            <span class="font-bold text-sm">Akses Tes</span>
+                            <span class="font-black text-primary">Rp 75K</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CATEGORY 2: COACHING -->
+            <div class="mb-16">
+                <h2 class="text-2xl font-extrabold border-b-2 border-primary inline-block pb-2 mb-8 uppercase tracking-wider text-dark">2. Exclusive Coaching</h2>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
+                    <!-- Personal Coaching -->
+                    <div class="service-card p-6 flex flex-col">
+                        <span class="badge badge-primary w-fit mb-3">Private Session</span>
+                        <h3 class="text-xl font-bold mb-2">Personal Life Coaching</h3>
+                        <p class="text-sm text-gray-500 mb-6">Pendampingan 1-on-1 untuk transformasi hidup dan karier.</p>
+                        
+                        <div class="space-y-3 mb-4 flex-grow">
+                            <div class="p-4 bg-red-50 rounded-xl border border-red-100">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-bold text-sm">Individual Session</span>
+                                    <span class="font-black text-primary">Rp 400K</span>
+                                </div>
+                                <ul class="text-xs text-gray-600 space-y-1 list-disc list-inside">
+                                    <li>Sesi 90 - 120 Menit</li>
+                                    <li>Coaching Note & Recommendations</li>
+                                    <li>Personalized Treatment Plan</li>
+                                    <li><strong>FREE: Tes Kepribadian</strong></li>
+                                </ul>
+                            </div>
+                            <div class="p-3 bg-amber-50 rounded-xl border border-dashed border-amber-300">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="font-bold text-xs text-amber-700">+ Add-on: Visual Coaching</span>
+                                    <span class="font-black text-xs text-amber-700">Rp 550K</span>
+                                </div>
+                                <p class="text-[11px] text-amber-600">Pendalaman dengan teknik visual (+Rp 150K dari harga dasar)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Couple Coaching -->
+                    <div class="service-card p-6 flex flex-col">
+                        <span class="badge badge-primary w-fit mb-3">Partner Session</span>
+                        <h3 class="text-xl font-bold mb-2">Couple Coaching</h3>
+                        <p class="text-sm text-gray-500 mb-6">Sesi berdua untuk penyelarasan hubungan dan visi.</p>
+                        
+                        <div class="space-y-3 mb-4 flex-grow">
+                            <div class="p-4 bg-red-50 rounded-xl border border-red-100">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-bold text-sm">Dual Session</span>
+                                    <span class="font-black text-primary">Rp 550K</span>
+                                </div>
+                                <ul class="text-xs text-gray-600 space-y-1 list-disc list-inside">
+                                    <li>Sesi 90 - 120 Menit</li>
+                                    <li>Coaching Note & Recommendations</li>
+                                    <li>Personalized Treatment Plan</li>
+                                    <li><strong>FREE: Tes Kepribadian</strong></li>
+                                </ul>
+                            </div>
+                            <div class="p-3 bg-amber-50 rounded-xl border border-dashed border-amber-300">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="font-bold text-xs text-amber-700">+ Add-on: Visual Coaching</span>
+                                    <span class="font-black text-xs text-amber-700">Rp 700K</span>
+                                </div>
+                                <p class="text-[11px] text-amber-600">Pendalaman dengan teknik visual (+Rp 150K dari harga dasar)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CATEGORY 3: TRAINING & WORKSHOP -->
+            <div class="mb-16">
+                <h2 class="text-2xl font-extrabold border-b-2 border-primary inline-block pb-2 mb-8 uppercase tracking-wider text-dark">3. Training & Workshop (Corporate / Group)</h2>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Corporate Training -->
+                    <div class="service-card p-6 flex flex-col">
+                        <span class="badge badge-dark w-fit mb-3">Corporate / B2B</span>
+                        <h3 class="text-xl font-bold mb-2">In-House Training</h3>
+                        <p class="text-sm text-gray-500 mb-6">Pengembangan SDM perusahaan berbasis data dan psikologi.</p>
+                        
+                        <div class="space-y-4 mb-6 flex-grow">
+                            <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-bold text-sm">Baseline / Hari</span>
+                                    <span class="font-black text-dark">Rp 5 Jt - Rp 15 Jt</span>
+                                </div>
+                                <ul class="text-[11px] text-gray-500 space-y-1 list-disc list-inside">
+                                    <li>Maksimal 25-30 orang per batch.</li>
+                                    <li>Termasuk materi & sertifikat.</li>
+                                    <li>Tidak termasuk transport luar kota & custom tools.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Leadership & Outdoor -->
+                    <div class="service-card p-6 flex flex-col">
+                        <span class="badge badge-dark w-fit mb-3">Group Activity</span>
+                        <h3 class="text-xl font-bold mb-2">Leadership & Outbound</h3>
+                        <p class="text-sm text-gray-500 mb-6">Fasilitasi aktivitas luar ruang untuk team building.</p>
+                        
+                        <div class="space-y-4 mb-6 flex-grow">
+                            <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-bold text-sm">Baseline / Pax</span>
+                                    <span class="font-black text-dark">Rp 350K - Rp 750K</span>
+                                </div>
+                                <ul class="text-[11px] text-gray-500 space-y-1 list-disc list-inside">
+                                    <li>Minimal 30-50 Pax.</li>
+                                    <li>Tergantung venue & durasi (1 Hari vs Menginap).</li>
+                                    <li>High/Low impact games berpengaruh ke harga.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upgrading & Kajian -->
+                    <div class="service-card p-6 flex flex-col">
+                        <span class="badge badge-dark w-fit mb-3">Community / NPO</span>
+                        <h3 class="text-xl font-bold mb-2">Upgrading Relawan & Kajian</h3>
+                        <p class="text-sm text-gray-500 mb-6">Sesi motivasi dan peningkatan kapasitas komunitas sosial.</p>
+                        
+                        <div class="space-y-4 mb-6 flex-grow">
+                            <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-bold text-sm">Baseline / Sesi</span>
+                                    <span class="font-black text-dark">Subsidi Silang</span>
+                                </div>
+                                <ul class="text-[11px] text-gray-500 space-y-1 list-disc list-inside">
+                                    <li>Harga khusus/Infaq untuk NGO/Komunitas.</li>
+                                    <li>Normal baseline: Rp 1.5 Jt - Rp 3 Jt / Sesi.</li>
+                                    <li>Durasi rata-rata 2-3 Jam.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CATEGORY 4: ADD-ONS & DIGITAL -->
+            <div class="mb-16">
+                <h2 class="text-2xl font-extrabold border-b-2 border-primary inline-block pb-2 mb-8 uppercase tracking-wider text-dark">4. Add-ons & Digital Products</h2>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Visual Coaching (Add-on) -->
+                    <div class="service-card p-6 flex flex-col border-dashed border-2">
+                        <span class="badge badge-addon w-fit mb-3">Layanan Tambahan (Add-on)</span>
+                        <h3 class="text-xl font-bold mb-2">Visual Coaching</h3>
+                        <p class="text-sm text-gray-500 mb-6">Tools visual untuk mempercepat penyelesaian mental block.</p>
+                        
+                        <div class="space-y-4 flex-grow">
+                            <div class="p-4 bg-amber-50 rounded-xl border border-amber-100">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-bold text-sm">Sesi Tambahan</span>
+                                    <span class="font-black text-amber-600">Rp 150K</span>
+                                </div>
+                                <ul class="text-xs text-gray-600 space-y-1 list-disc list-inside">
+                                    <li>Diambil bersama layanan utama</li>
+                                    <li>Tools Visual (Phototherapy) Eksklusif</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SEFT Therapy (Add-on) -->
+                    <div class="service-card p-6 flex flex-col border-dashed border-2">
+                        <span class="badge badge-addon w-fit mb-3">Layanan Tambahan (Add-on)</span>
+                        <h3 class="text-xl font-bold mb-2">SEFT Therapy</h3>
+                        <p class="text-sm text-gray-500 mb-6">Terapi rilis emosi negatif menggunakan teknik SEFT.</p>
+                        
+                        <div class="space-y-4 flex-grow">
+                            <div class="p-4 bg-amber-50 rounded-xl border border-amber-100">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-bold text-sm">Sesi Tambahan</span>
+                                    <span class="font-black text-amber-600">Rp 150K</span>
+                                </div>
+                                <ul class="text-xs text-gray-600 space-y-1 list-disc list-inside">
+                                    <li>Diambil bersama layanan utama</li>
+                                    <li>Tapping Therapy untuk Trauma/Stress</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- E-Course -->
+                    <div class="service-card p-6 flex flex-col bg-gray-900 text-white border-none">
+                        <span class="badge bg-white/20 text-white w-fit mb-3">Digital Product</span>
+                        <h3 class="text-xl font-bold mb-2 text-white">E-Course: Life Reset</h3>
+                        <p class="text-sm text-gray-400 mb-6">Program 7 Hari Re-Discover Yourself secara mandiri.</p>
+                        
+                        <div class="space-y-4 flex-grow">
+                            <div class="p-4 bg-white/10 rounded-xl border border-white/20">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-bold text-sm">Akses Selamanya</span>
+                                    <span class="font-black text-white">Rp 100K</span>
+                                </div>
+                                <ul class="text-xs text-gray-300 space-y-1 list-disc list-inside">
+                                    <li>Video Modul (7 Hari)</li>
+                                    <li>Worksheet Interaktif</li>
+                                    <li>Grup Support Komunitas</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artikel & Aktivitas – TheAIM</title>
+    <meta name="description" content="Baca artikel terbaru dan ikuti aktivitas TheAIM seputar psikologi, karir, pengembangan diri, dan kesehatan mental.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626',
+                        secondary: '#fbbf24',
+                        dark: '#18181b',
+                        light: '#ffffff',
+                    },
+                    fontFamily: {
+                        sans: ['Lexend', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #ffffff; overflow-x: hidden; }
+
+        .btn-primary {
+            background-color: #dc2626;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(220, 38, 38, 0.3);
+        }
+
+        .btn-outline {
+            border: 2px solid #18181b;
+            color: #18181b;
+            transition: all 0.3s ease;
+        }
+        .btn-outline:hover {
+            background-color: #18181b;
+            color: white;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Category Filter Active State */
+        .filter-btn {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .filter-btn.active {
+            background-color: #dc2626;
+            color: white;
+            border-color: #dc2626;
+        }
+
+        /* Article card hover */
+        .article-card {
+            transition: all 0.3s ease;
+        }
+        .article-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.12);
+        }
+
+        /* Image zoom on hover */
+        .article-card .card-img {
+            transition: transform 0.6s ease;
+        }
+        .article-card:hover .card-img {
+            transform: scale(1.06);
+        }
+
+        /* Featured article */
+        .featured-card {
+            transition: all 0.3s ease;
+        }
+        .featured-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.15);
+        }
+        .featured-card .featured-img {
+            transition: transform 0.7s ease;
+        }
+        .featured-card:hover .featured-img {
+            transform: scale(1.04);
+        }
+
+        /* Skeleton / hidden articles for load more */
+        .article-item {
+            display: block;
+        }
+        .article-item.hidden-article {
+            display: none;
+        }
+
+        /* Hero background decoration */
+        .hero-bg-dot {
+            background-image: radial-gradient(circle at 2px 2px, #f1f5f9 1.5px, transparent 0);
+            background-size: 28px 28px;
+        }
+
+        /* Search input */
+        .search-input:focus {
+            outline: none;
+            border-color: #dc2626;
+            box-shadow: 0 0 0 3px rgba(220,38,38,0.1);
+        }
+
+        /* Fade in animation */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in-up {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        /* Tag label colors */
+        .tag-psikologi { background: #fee2e2; color: #dc2626; }
+        .tag-karir { background: #fef3c7; color: #92400e; }
+        .tag-tips { background: #dbeafe; color: #1d4ed8; }
+        .tag-event { background: #d1fae5; color: #065f46; }
+        .tag-partnership { background: #e2e8f0; color: #334155; }
+        .tag-news { background: #18181b; color: #ffffff; }
+    </style>
+</head>
+<body class="font-sans text-dark flex flex-col min-h-screen">
+
+    <!-- NAVIGATION -->
+    <nav class="sticky top-0 z-50 w-full glass-panel flex items-center px-4 py-4 lg:px-8 border-b border-gray-100">
+        <div class="max-w-[1400px] mx-auto w-full flex justify-between items-center">
+            
+            <a href="../index.html" class="text-2xl font-bold tracking-tight flex items-center gap-2">
+                <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM" class="h-14 md:h-16 w-auto">
+            </a>
+            
+            <div class="hidden lg:flex items-center space-x-2 font-medium text-[15px] text-gray-700">
+                <a href="../index.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Beranda</a>
+                
+                <!-- Layanan Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg group-hover:bg-slate-100 transition-colors focus:outline-none">
+                        Layanan <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-64 bg-white rounded-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)] border border-slate-100 py-2 flex flex-col">
+                            <!-- Assessment -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Assessment <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Talents Mapping</a>
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Tes Psikologi (Psikotes)</a>
+                                        <a href="mockup_layanan_mental_health.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Mental Health Check Up</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Konsultasi & Coaching -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Konsultasi & Coaching <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_konseling.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konseling dengan Psikolog</a>
+                                        <a href="mockup_layanan_relaksasi.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Therapy (SEFT)</a>
+                                        <a href="mockup_layanan_visual_coaching.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Visual Coaching</a>
+                                        <a href="mockup_layanan_consultation.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konsultasi Keuangan</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Digital Product -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Digital Product <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-72 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_ecourse.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">E-Course Life Reset: 7 Days Re-Discover Yourself</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Webinar & Workshop -->
+                            <a href="mockup_layanan_workshop.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Webinar & Workshop</a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="mockup_perusahaan.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Untuk Perusahaan</a>
+                <a href="mockup_artikel.html" class="px-4 py-2 rounded-lg text-primary font-semibold transition-colors">Artikel & Aktivitas</a>
+                <a href="mockup_career.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Karir</a>
+                
+                <!-- Tentang Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg group-hover:bg-gray-100 transition-colors focus:outline-none">
+                        Tentang Kami <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute right-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-56 bg-white rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-gray-100 py-3 overflow-hidden flex flex-col">
+                            <a href="mockup_tentang_theaim.html" class="px-6 py-3 text-sm text-gray-500 hover:bg-gray-50 hover:text-primary transition-colors">Tentang TheAIM</a>
+                            <a href="mockup_tentang_ecosystem.html" class="px-6 py-3 text-sm text-gray-500 hover:bg-gray-50 hover:text-primary transition-colors">TheAIM Ecosystem</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <a href="#" class="btn-outline px-7 py-2.5 rounded-full font-semibold text-sm hidden md:block tracking-wide">
+                Masuk
+            </a>
+
+            <button class="md:hidden text-2xl text-dark">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ===== HERO HEADER ===== -->
+    <section class="relative pt-20 pb-16 lg:pt-28 lg:pb-20 px-4 bg-white border-b border-gray-100 overflow-hidden hero-bg-dot">
+        <!-- Decorative blobs -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-red-50 rounded-full blur-3xl opacity-60 -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-64 h-64 bg-yellow-50 rounded-full blur-3xl opacity-60 translate-y-1/2 -translate-x-1/4 pointer-events-none"></div>
+
+        <div class="max-w-[900px] mx-auto text-center relative z-10">
+            <div class="inline-flex items-center gap-2 bg-red-50 text-primary border border-red-100 px-5 py-1.5 rounded-full font-semibold text-sm mb-6 shadow-sm">
+                <i class="fa-solid fa-newspaper text-xs"></i>
+                Artikel & Aktivitas TheAIM
+            </div>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-dark leading-[1.1] tracking-tight mb-6">
+                Wawasan & Cerita <span class="text-primary relative inline-block">
+                    Nyata
+                    <svg class="absolute w-full h-2.5 -bottom-1 left-0 text-secondary opacity-70" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 50 15 100 5" stroke="currentColor" stroke-width="4" fill="transparent"/></svg>
+                </span> <br class="hidden md:block"> dari Perjalanan Pengembangan Diri
+            </h1>
+            <p class="text-gray-500 font-medium text-lg max-w-2xl mx-auto mb-10">
+                Artikel, event recap, tips praktis, dan insight dari para profesional TheAIM — semua yang kamu butuhkan untuk bertumbuh.
+            </p>
+
+            <!-- Search Bar -->
+            <div class="max-w-lg mx-auto relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                <input id="search-input" type="text" placeholder="Cari artikel, topik, atau kata kunci..." 
+                    class="search-input w-full pl-12 pr-6 py-4 rounded-full border-2 border-gray-200 bg-white text-[15px] font-medium text-dark shadow-sm transition-all"
+                    oninput="filterArticles()">
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CATEGORY FILTER ===== -->
+    <section class="sticky top-[73px] z-40 bg-white border-b border-gray-100 shadow-sm">
+        <div class="max-w-[1200px] mx-auto px-4 py-4 flex items-center gap-2 overflow-x-auto hide-scrollbar">
+            <button class="filter-btn active px-5 py-2 rounded-full border-2 border-gray-200 text-sm font-semibold whitespace-nowrap" data-cat="semua" onclick="setFilter(this, 'semua')">
+                <i class="fa-solid fa-border-all mr-1.5 text-xs"></i> Semua
+            </button>
+            <button class="filter-btn px-5 py-2 rounded-full border-2 border-gray-200 text-gray-600 text-sm font-semibold whitespace-nowrap" data-cat="psikologi" onclick="setFilter(this, 'psikologi')">
+                <i class="fa-solid fa-brain mr-1.5 text-xs"></i> Psikologi & Mental
+            </button>
+            <button class="filter-btn px-5 py-2 rounded-full border-2 border-gray-200 text-gray-600 text-sm font-semibold whitespace-nowrap" data-cat="karir" onclick="setFilter(this, 'karir')">
+                <i class="fa-solid fa-briefcase mr-1.5 text-xs"></i> Karir & Profesional
+            </button>
+            <button class="filter-btn px-5 py-2 rounded-full border-2 border-gray-200 text-gray-600 text-sm font-semibold whitespace-nowrap" data-cat="tips" onclick="setFilter(this, 'tips')">
+                <i class="fa-solid fa-lightbulb mr-1.5 text-xs"></i> Tips Pengembangan Diri
+            </button>
+            <button class="filter-btn px-5 py-2 rounded-full border-2 border-gray-200 text-gray-600 text-sm font-semibold whitespace-nowrap" data-cat="event" onclick="setFilter(this, 'event')">
+                <i class="fa-solid fa-calendar-days mr-1.5 text-xs"></i> Event & Aktivitas
+            </button>
+            <button class="filter-btn px-5 py-2 rounded-full border-2 border-gray-200 text-gray-600 text-sm font-semibold whitespace-nowrap" data-cat="partnership" onclick="setFilter(this, 'partnership')">
+                <i class="fa-solid fa-handshake mr-1.5 text-xs"></i> Partnership
+            </button>
+            <button class="filter-btn px-5 py-2 rounded-full border-2 border-gray-200 text-gray-600 text-sm font-semibold whitespace-nowrap" data-cat="news" onclick="setFilter(this, 'news')">
+                <i class="fa-solid fa-bolt mr-1.5 text-xs"></i> In The News
+            </button>
+        </div>
+    </section>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="flex-grow py-16 px-4 bg-gray-50/50">
+        <div class="max-w-[1200px] mx-auto">
+
+            <!-- FEATURED ARTICLE -->
+            <div id="featured-section" class="mb-14">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-1.5 h-6 bg-primary rounded-full"></div>
+                    <h2 class="font-extrabold text-xl text-dark tracking-tight">Artikel Unggulan</h2>
+                </div>
+
+                <a href="#" class="featured-card group block rounded-[2rem] overflow-hidden bg-white shadow-md border border-gray-100 relative" data-cat="event">
+                    <div class="grid md:grid-cols-5 h-full">
+                        <!-- Image -->
+                        <div class="md:col-span-3 h-72 md:h-auto overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1515169067868-5387ec356754?q=80&w=1200&auto=format&fit=crop" 
+                                alt="Program Budaya Kerja BUMN x TheAIM" 
+                                class="featured-img w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-r from-transparent to-black/10"></div>
+                            <span class="absolute top-5 left-5 bg-primary text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow">
+                                <i class="fa-solid fa-calendar-days mr-1"></i> Event & Aktivitas
+                            </span>
+                        </div>
+                        <!-- Content -->
+                        <div class="md:col-span-2 p-8 md:p-10 lg:p-12 flex flex-col justify-between bg-white">
+                            <div>
+                                <div class="flex items-center gap-3 mb-5">
+                                    <span class="text-gray-400 text-xs font-semibold flex items-center gap-1.5">
+                                        <i class="fa-regular fa-calendar"></i> 20 Desember 2025
+                                    </span>
+                                    <span class="text-gray-300">•</span>
+                                    <span class="text-gray-400 text-xs font-semibold flex items-center gap-1.5">
+                                        <i class="fa-regular fa-clock"></i> 5 menit baca
+                                    </span>
+                                </div>
+                                <h2 class="font-extrabold text-2xl md:text-3xl text-dark leading-tight group-hover:text-primary transition-colors mb-5">
+                                    Kolaborasi Besar Peningkatan Budaya Kerja Bersama 3 BUMN Unggulan Indonesia
+                                </h2>
+                                <p class="text-gray-500 font-medium leading-relaxed text-[15px]">
+                                    TheAIM sukses merampungkan program People Assessment & Culture Building bersama tiga entitas BUMN nasional mencakup lebih dari 500 karyawan. Sebuah pencapaian yang membuktikan bahwa pengembangan SDM bukan sekadar agenda HRD, tapi investasi jangka panjang perusahaan.
+                                </p>
+                            </div>
+                            <div class="flex items-center justify-between mt-8 pt-6 border-t border-gray-100">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 bg-red-50 rounded-full flex items-center justify-center text-primary text-sm font-bold">A</div>
+                                    <div>
+                                        <p class="text-xs font-bold text-dark">Tim TheAIM</p>
+                                        <p class="text-[10px] text-gray-400 font-medium">Editorial Team</p>
+                                    </div>
+                                </div>
+                                <span class="text-primary font-bold text-sm flex items-center gap-1.5 group-hover:gap-3 transition-all">
+                                    Baca Selengkapnya <i class="fa-solid fa-arrow-right text-xs"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- ARTICLE GRID -->
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center gap-3">
+                    <div class="w-1.5 h-6 bg-secondary rounded-full"></div>
+                    <h2 class="font-extrabold text-xl text-dark tracking-tight" id="grid-heading">Semua Artikel</h2>
+                </div>
+                <p class="text-gray-400 text-sm font-medium" id="article-count">Menampilkan 9 artikel</p>
+            </div>
+
+            <div id="article-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+
+                <!-- Article 1: Psikologi -->
+                <div class="article-item article-card bg-white rounded-[1.75rem] overflow-hidden border border-gray-100 shadow-sm flex flex-col" data-cat="psikologi" data-title="kenali tanda burnout sebelum terlambat">
+                    <div class="overflow-hidden h-52 relative">
+                        <img src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?q=80&w=700&auto=format&fit=crop" 
+                            alt="Burnout" class="card-img w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                    </div>
+                    <div class="p-7 flex flex-col flex-grow">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="tag-psikologi text-[10px] font-bold px-2.5 py-1 rounded-lg">🧠 Psikologi & Mental</span>
+                        </div>
+                        <h3 class="font-bold text-dark text-lg leading-snug mb-3 group-hover:text-primary transition-colors line-clamp-2">
+                            Kenali Tanda-Tanda Burnout Sebelum Terlambat (dan Cara Keluar Darinya)
+                        </h3>
+                        <p class="text-gray-500 text-sm font-medium leading-relaxed line-clamp-3 flex-grow mb-5">
+                            Burnout bukan sekadar lelah biasa. Ini adalah kondisi kelelahan kronis yang merenggut produktivitas, motivasi, dan kebahagiaanmu secara diam-diam. Pelajari 7 tanda awal yang sering diabaikan.
+                        </p>
+                        <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+                            <span class="text-gray-400 text-xs font-semibold flex items-center gap-1.5">
+                                <i class="fa-regular fa-calendar text-gray-300"></i> 10 Januari 2026
+                            </span>
+                            <span class="text-gray-400 text-xs font-semibold flex items-center gap-1.5">
+                                <i class="fa-regular fa-clock text-gray-300"></i> 6 mnt
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article 2: Karir -->
+                <div class="article-item article-card bg-white rounded-[1.75rem] overflow-hidden border border-gray-100 shadow-sm flex flex-col" data-cat="karir" data-title="cara negosiasi gaji berdasarkan profil bakat">
+                    <div class="overflow-hidden h-52 relative">
+                        <img src="https://images.unsplash.com/photo-1551836022-deb4988cc6c0?q=80&w=700&auto=format&fit=crop" 
+                            alt="Negosiasi Karir" class="card-img w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                    </div>
+                    <div class="p-7 flex flex-col flex-grow">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="tag-karir text-[10px] font-bold px-2.5 py-1 rounded-lg">💼 Karir & Profesional</span>
+                        </div>
+                        <h3 class="font-bold text-dark text-lg leading-snug mb-3 line-clamp-2">
+                            Cara Negosiasi Gaji Berdasarkan Profil Bakat — Bukan Sekadar Angka
+                        </h3>
+                        <p class="text-gray-500 text-sm font-medium leading-relaxed line-clamp-3 flex-grow mb-5">
+                            Tau apa yang lebih kuat dari pengalaman saat negosiasi gaji? Data objektif tentang potensi bawaanmu. Begini cara menggunakannya saat salary discussion.
+                        </p>
+                        <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+                            <span class="text-gray-400 text-xs font-semibold flex items-center gap-1.5">
+                                <i class="fa-regular fa-calendar text-gray-300"></i> 3 Januari 2026
+                            </span>
+                            <span class="text-gray-400 text-xs font-semibold flex items-center gap-1.5">
+                                <i class="fa-regular fa-clock text-gray-300"></i> 8 mnt
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article 3: Tips -->
+                <div class="article-item article-card bg-white rounded-[1.75rem] overflow-hidden border border-gray-100 shadow-sm flex flex-col" data-cat="tips" data-title="5 kebiasaan pagi yang ubah produktivitas">
+                    <div class="overflow-hidden h-52 relative">
+                        <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=700&auto=format&fit=crop" 
+                            alt="Morning Routine" class="card-img w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                    </div>
+                    <div class="p-7 flex flex-col flex-grow">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="tag-tips text-[10px] font-bold px-2.5 py-1 rounded-lg">✨ Tips Pengembangan Diri</span>
+                        </div>
+                        <h3 class="font-bold text-dark text-lg leading-snug mb-3 line-clamp-2">
+                            5 Kebiasaan Pagi yang Terbukti Mengubah Energi & Produktivitasmu
+                        </h3>
+                        <p class="text-gray-500 text-sm font-medium leading-relaxed line-clamp-3 flex-grow mb-5">
+                            Bukan soal bangun jam 4 pagi. Ini tentang menciptakan ritme pagi yang sesuai dengan tipe kepribadianmu agar energi terjaga sepanjang hari.
+                        </p>
+                        <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+                            <span class="text-gray-400 text-xs font-semibold flex items-center gap-1.5">
+                                <i class="fa-regular fa-calendar text-gray-300"></i> 28 Desember 2025
+                            </span>
+                            <span class="text-gray-400 text-xs font-semibold flex items-center gap-1.5">
+                                <i class="fa-regular fa-clock text-gray-300"></i> 5 mnt
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article 4: Partnership -->
+                <div class="article-item article-card bg-white rounded-[1.75rem] overflow-hidden border border-gray-100 shadow-sm flex flex-col" data-cat="partnership" data-title="kemitraan theaim dan universitas negeri">
+                    <div class="overflow-hidden h-52 relative">
+                        <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=700&auto=format&fit=crop" 
+                            alt="Partnership" class="card-img w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                    </div>
+                    <div class="p-7 flex flex-col flex-grow">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="tag-partnership text-[10px] font-bold px-2.5 py-1 rounded-lg">🤝 Partnership</span>
+                        </div>
+                        <h3 class="font-bold text-dark text-lg leading-snug mb-3 line-clamp-2">
+                            Kemitraan Strategis TheAIM & Universitas Negeri Resmi Disepakati
+                        </h3>
+                        <p class="text-gray-500 text-sm font-medium leading-relaxed line-clamp-3 flex-grow mb-5">
+                            TheAIM kini hadir di kampus. Kemitraan ini membuka akses seluruh mahasiswa untuk mendapatkan layanan Talents Mapping dan bimbingan karir berbasis data psikometrik.
+                        </p>
+                        <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+                            <span class="text-gray-400 text-xs font-semibold flex items-center gap-1.5">
+                                <i class="fa-regular fa-calendar text-gray-300"></i> 18 November 2025
+                            </span>
+                            <span class="text-gray-400 text-xs font-semibold flex items-center gap-1.5">
+                                <i class="fa-regular fa-clock text-gray-300"></i> 4 mnt
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article 5: Psikologi -->
+                <div class="article-item article-card bg-white rounded-[1.75rem] overflow-hidden border border-gray-100 shadow-sm flex flex-col" data-cat="psikologi" data-title="quarter life crisis bukan krisis tapi titik balik">
+                    <div class="overflow-hidden h-52 relative">
+                        <img src="https://images.unsplash.com/photo-1474552226712-ac0f0961a954?q=80&w=700&auto=format&fit=crop" 
+                            alt="Quarter Life Crisis" class="card-img w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                    </div>
+                    <div class="p-7 flex flex-col flex-grow">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="tag-psikologi text-[10px] font-bold px-2.5 py-1 rounded-lg">🧠 Psikologi & Mental</span>
+                        </div>
+                        <h3 class="font-bold text-dark text-lg leading-snug mb-3 line-clamp-2">
+                            Quarter-Life Crisis: Bukan Krisis, Tapi Titik Balik yang Kamu Butuhkan
+                        </h3>
+                        <p class="text-gray-500 text-sm font-medium leading-relaxed line-clamp-3 flex-grow mb-5">
+                            Merasa hidup stagnan di usia 20-an? Bingung arah karir, ragu dengan identitas diri, takut tertinggal? Ini bukan tanda kegagalan — ini sinyal bahwa kamu siap bertumbuh.
+                        </p>
+                        <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+                            <span class="text-gray-400 text-xs font-semibold flex items-center gap-1.5">
+                                <i class="fa-regular fa-calendar text-gray-300"></i> 5 November 2025
+                            </span>
+                            <span class="text-gray-400 text-xs font-semibold flex items-center gap-1.5">
+                                <i class="fa-regular fa-clock text-gray-300"></i> 7 mnt
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article 6: News -->
+                <div class="article-item article-card bg-white rounded-[1.75rem] overflow-hidden border border-gray-100 shadow-sm flex flex-col" data-cat="news" data-title="theaim hadirkan space baru di bandung">
+                    <div class="overflow-hidden h-52 relative">
+                        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=700&auto=format&fit=crop" 
+                            alt="TheAIM Office Bandung" class="card-img w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                    </div>
+                    <div class="p-7 flex flex-col flex-grow">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="tag-news text-[10px] font-bold px-2.5 py-1 rounded-lg">⚡ In The News</span>
+                        </div>
+                        <h3 class="font-bold text-dark text-lg leading-snug mb-3 line-clamp-2">
+                            TheAIM Perluas Jangkauan, Hadirkan Ruang Konsultasi Baru di Pusat Kota Bandung
+                        </h3>
+                        <p class="text-gray-500 text-sm font-medium leading-relaxed line-clamp-3 flex-grow mb-5">
+                            Sebuah ruang nyaman dan privat kini tersedia di jantung Kota Bandung untuk melayani sesi coaching, konseling, dan assessment tatap muka secara eksklusif.
+                        </p>
+                        <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+                            <span class="text-gray-400 text-xs font-semibold flex items-center gap-1.5">
+                                <i class="fa-regular fa-calendar text-gray-300"></i> 12 Agustus 2025
+                            </span>
+                            <span class="text-gray-400 text-xs font-semibold flex items-center gap-1.5">
+                                <i class="fa-regular fa-clock text-gray-300"></i> 3 mnt
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article 7: Tips (hidden initially - load more) -->
+                <div class="article-item hidden-article article-card bg-white rounded-[1.75rem] overflow-hidden border border-gray-100 shadow-sm flex flex-col" data-cat="tips" data-title="cara baca hasil talent mapping untuk karir">
+                    <div class="overflow-hidden h-52 relative">
+                        <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=700&auto=format&fit=crop" 
+                            alt="Talent Mapping" class="card-img w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                    </div>
+                    <div class="p-7 flex flex-col flex-grow">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="tag-tips text-[10px] font-bold px-2.5 py-1 rounded-lg">✨ Tips Pengembangan Diri</span>
+                        </div>
+                        <h3 class="font-bold text-dark text-lg leading-snug mb-3 line-clamp-2">
+                            Cara Membaca Hasil Talent Mapping dan Mengaplikasikannya di Karir
+                        </h3>
+                        <p class="text-gray-500 text-sm font-medium leading-relaxed line-clamp-3 flex-grow mb-5">
+                            Sudah ikut asesmen tapi bingung harus mulai dari mana? Panduan step-by-step ini akan membantumu menerjemahkan data menjadi aksi nyata dalam karir.
+                        </p>
+                        <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+                            <span class="text-gray-400 text-xs font-semibold flex items-center gap-1.5">
+                                <i class="fa-regular fa-calendar text-gray-300"></i> 20 Juli 2025
+                            </span>
+                            <span class="text-gray-400 text-xs font-semibold flex items-center gap-1.5">
+                                <i class="fa-regular fa-clock text-gray-300"></i> 9 mnt
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article 8: Event (hidden initially) -->
+                <div class="article-item hidden-article article-card bg-white rounded-[1.75rem] overflow-hidden border border-gray-100 shadow-sm flex flex-col" data-cat="event" data-title="workshop mindfulness produktivitas recap">
+                    <div class="overflow-hidden h-52 relative">
+                        <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=700&auto=format&fit=crop" 
+                            alt="Workshop Mindfulness" class="card-img w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                    </div>
+                    <div class="p-7 flex flex-col flex-grow">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="tag-event text-[10px] font-bold px-2.5 py-1 rounded-lg">📸 Event & Aktivitas</span>
+                        </div>
+                        <h3 class="font-bold text-dark text-lg leading-snug mb-3 line-clamp-2">
+                            Recap: Workshop "Mindfulness di Tempat Kerja" — 200+ Peserta, Habis Terjual
+                        </h3>
+                        <p class="text-gray-500 text-sm font-medium leading-relaxed line-clamp-3 flex-grow mb-5">
+                            Lebih dari 200 profesional muda hadir dalam workshop intensif satu hari yang membahas cara menghadirkan kesadaran penuh dalam rutinitas kerja tanpa mengorbankan produktivitas.
+                        </p>
+                        <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+                            <span class="text-gray-400 text-xs font-semibold flex items-center gap-1.5">
+                                <i class="fa-regular fa-calendar text-gray-300"></i> 14 Juni 2025
+                            </span>
+                            <span class="text-gray-400 text-xs font-semibold flex items-center gap-1.5">
+                                <i class="fa-regular fa-clock text-gray-300"></i> 4 mnt
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article 9: Karir (hidden initially) -->
+                <div class="article-item hidden-article article-card bg-white rounded-[1.75rem] overflow-hidden border border-gray-100 shadow-sm flex flex-col" data-cat="karir" data-title="introvert vs ekstrovert kepemimpinan mitos">
+                    <div class="overflow-hidden h-52 relative">
+                        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=700&auto=format&fit=crop" 
+                            alt="Leadership" class="card-img w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                    </div>
+                    <div class="p-7 flex flex-col flex-grow">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="tag-karir text-[10px] font-bold px-2.5 py-1 rounded-lg">💼 Karir & Profesional</span>
+                        </div>
+                        <h3 class="font-bold text-dark text-lg leading-snug mb-3 line-clamp-2">
+                            Introvert Tak Cocok Jadi Pemimpin? Ini Mitos yang Harus Berhenti Dipercaya
+                        </h3>
+                        <p class="text-gray-500 text-sm font-medium leading-relaxed line-clamp-3 flex-grow mb-5">
+                            Data dari ribuan sesi Talent Mapping kami membuktikan sebaliknya. Introvert punya kekuatan kepemimpinan unik yang justru dibutuhkan di era kolaborasi masa kini.
+                        </p>
+                        <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+                            <span class="text-gray-400 text-xs font-semibold flex items-center gap-1.5">
+                                <i class="fa-regular fa-calendar text-gray-300"></i> 1 Mei 2025
+                            </span>
+                            <span class="text-gray-400 text-xs font-semibold flex items-center gap-1.5">
+                                <i class="fa-regular fa-clock text-gray-300"></i> 6 mnt
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="hidden text-center py-24">
+                <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fa-solid fa-newspaper text-gray-300 text-3xl"></i>
+                </div>
+                <h3 class="font-bold text-dark text-xl mb-2">Artikel tidak ditemukan</h3>
+                <p class="text-gray-400 font-medium">Coba kata kunci atau kategori lain.</p>
+            </div>
+
+            <!-- LOAD MORE BUTTON -->
+            <div class="text-center mt-14" id="load-more-wrapper">
+                <button id="load-more-btn" onclick="loadMore()" 
+                    class="inline-flex items-center gap-3 border-2 border-gray-200 hover:border-primary hover:text-primary text-dark font-bold px-10 py-4 rounded-full transition-all bg-white hover:bg-red-50 shadow-sm text-[15px]">
+                    <i class="fa-solid fa-rotate fa-spin-hover"></i>
+                    Muat Lebih Banyak Artikel
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- ===== CTA BANNER ===== -->
+    <section class="py-20 px-4 bg-dark relative overflow-hidden">
+        <div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: url('https://www.transparenttextures.com/patterns/cubes.png');"></div>
+        <div class="absolute -top-20 -right-20 w-80 h-80 bg-primary/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-[900px] mx-auto text-center relative z-10">
+            <span class="inline-flex items-center gap-2 bg-white/10 text-white/80 border border-white/10 px-5 py-1.5 rounded-full font-semibold text-sm mb-6">
+                <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+                Mulai Perjalananmu Hari Ini
+            </span>
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white mb-6 leading-tight tracking-tight">
+                Siap Kenali Diri <span class="text-secondary">Lebih Dalam?</span>
+            </h2>
+            <p class="text-white/60 font-medium text-lg max-w-xl mx-auto mb-10 leading-relaxed">
+                Jangan hanya membaca. Mulai bertindak. Ambil asesmen pertamamu dan temukan potensi tersembunyi yang selama ini menunggumu.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="mockup_layanan_assessment.html" class="btn-primary px-8 py-4 rounded-full font-bold text-[15px] shadow-xl shadow-red-900/30 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-puzzle-piece"></i> Mulai Asesmen Gratis
+                </a>
+                <a href="mockup_assessment.html#layanan" class="bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-colors px-8 py-4 rounded-full font-bold text-[15px] flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-compass"></i> Jelajahi Layanan
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="bg-gray-50 pt-16 border-t border-gray-200">
+        <div class="max-w-[1200px] mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 text-[#334155]">
+            
+            <!-- Kolom 1 -->
+            <div class="pr-4">
+                <a href="../index.html" class="text-2xl font-bold tracking-tight flex items-center gap-2 mb-8 text-dark">
+                    <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM Logo" class="h-14 md:h-16 w-auto">
+                </a>
+            </div>
+
+            <!-- Kolom 2: Layanan -->
+            <div>
+                <h4 class="font-extrabold text-dark text-lg mb-6 tracking-tight">Layanan</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li><a href="mockup_layanan_assessment.html" class="hover:text-primary transition-colors">Talents Mapping Assesmen</a></li>
+                    <li><a href="mockup_layanan_coaching.html" class="hover:text-primary transition-colors">Coaching</a></li>
+                    <li><a href="mockup_layanan_visual_coaching.html" class="hover:text-primary transition-colors">Visual Coaching</a></li>
+                    <li><a href="mockup_layanan_relaksasi.html" class="hover:text-primary transition-colors text-primary font-bold">Therapy (SEFT)</a></li>
+                    <li><a href="mockup_layanan_workshop.html" class="hover:text-primary transition-colors">Workshop & Training</a></li>
+                </ul>
+            </div>
+
+            <!-- Kolom 3: Tentang Kami -->
+            <div>
+                <h4 class="font-extrabold text-dark text-lg mb-6 tracking-tight">Tentang Kami</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li><a href="mockup_tentang_theaim.html" class="hover:text-primary transition-colors">Tentang TheAIM</a></li>
+                    <li><a href="mockup_tentang_ecosystem.html" class="hover:text-primary transition-colors">Talent Ecosystem</a></li>
+                    <li><a href="mockup_perusahaan.html" class="hover:text-primary transition-colors">Solusi Untuk Perusahaan</a></li>
+                    <li><a href="mockup_artikel.html" class="text-primary font-semibold transition-colors">Artikel & Aktivitas</a>
+                <a href="mockup_career.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Karir</a></li>
+                </ul>
+            </div>
+
+            <!-- Kolom 4: Kontak -->
+            <div>
+                <h4 class="font-extrabold text-dark text-lg mb-6 tracking-tight">Kontak Kami</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li class="flex items-center gap-3">
+                        <i class="fa-solid fa-phone text-primary"></i>
+                        <a href="#" class="hover:text-primary transition-colors">081999554599</a>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i class="fa-regular fa-envelope text-primary"></i>
+                        <a href="mailto:ptabadiinsanmanfaat@gmail.com" class="hover:text-primary transition-colors">ptabadiinsanmanfaat@gmail.com</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Bottom Bar -->
+        <div class="bg-dark py-6 px-4 text-white">
+            <div class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-center items-center gap-6">
+                <div class="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 text-xs text-gray-400 font-medium">
+                    <p>&copy; 2026 PT Abadi Insan Manfaat. All right reserved</p>
+                    <div class="hidden sm:block text-gray-600">|</div>
+                    <a href="#" class="hover:text-white transition-colors">Term & Condition</a>
+                    <div class="hidden sm:block text-gray-600">|</div>
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+
+    <script>
+        let currentFilter = 'semua';
+        let showAll = false;
+
+        const allArticles = document.querySelectorAll('.article-item');
+        const INITIAL_SHOW = 6;
+
+        function setFilter(btn, cat) {
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            currentFilter = cat;
+            showAll = false;
+
+            // Update heading
+            const headings = {
+                'semua': 'Semua Artikel',
+                'psikologi': 'Psikologi & Mental Health',
+                'karir': 'Karir & Profesional',
+                'tips': 'Tips Pengembangan Diri',
+                'event': 'Event & Aktivitas',
+                'partnership': 'Partnership',
+                'news': 'In The News'
+            };
+            document.getElementById('grid-heading').textContent = headings[cat] || 'Artikel';
+
+            // Clear search
+            document.getElementById('search-input').value = '';
+
+            renderArticles();
+        }
+
+        function filterArticles() {
+            showAll = false;
+            currentFilter = 'semua';
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('[data-cat="semua"]').classList.add('active');
+            renderArticles();
+        }
+
+        function renderArticles() {
+            const searchVal = document.getElementById('search-input').value.toLowerCase();
+            let visible = 0;
+            let total = 0;
+
+            allArticles.forEach((article) => {
+                const cat = article.dataset.cat;
+                const title = article.dataset.title || '';
+
+                const matchesCat = currentFilter === 'semua' || cat === currentFilter;
+                const matchesSearch = searchVal === '' || title.includes(searchVal);
+
+                if (matchesCat && matchesSearch) {
+                    total++;
+                    if (showAll || visible < INITIAL_SHOW) {
+                        article.style.display = 'flex';
+                        article.classList.remove('hidden-article');
+                        visible++;
+                    } else {
+                        article.style.display = 'none';
+                        article.classList.add('hidden-article');
+                    }
+                } else {
+                    article.style.display = 'none';
+                    article.classList.add('hidden-article');
+                }
+            });
+
+            // Empty state
+            document.getElementById('empty-state').classList.toggle('hidden', total > 0);
+
+            // Load more
+            const loadMoreWrapper = document.getElementById('load-more-wrapper');
+            loadMoreWrapper.style.display = (total > INITIAL_SHOW && !showAll) ? 'block' : 'none';
+
+            // Count
+            document.getElementById('article-count').textContent = `Menampilkan ${showAll ? total : Math.min(visible, total)} dari ${total} artikel`;
+
+            // Featured section - hide if filtered specific category that doesn't match
+            const featuredSection = document.getElementById('featured-section');
+            const featuredCat = 'event';
+            if (currentFilter === 'semua' || currentFilter === featuredCat) {
+                featuredSection.style.display = 'block';
+            } else {
+                featuredSection.style.display = 'none';
+            }
+        }
+
+        function loadMore() {
+            showAll = true;
+            renderArticles();
+        }
+
+        // Init
+        renderArticles();
+    </script>
+
+</body>
+</html>

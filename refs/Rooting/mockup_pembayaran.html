@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembayaran - TheAIM</title>
+    <meta name="description"
+        content="TheAIM adalah platform pengembangan diri dan organisasi yang memadukan asesmen psikometrik valid dengan coaching personal berempati, untuk menuntun setiap individu dan perusahaan mencapai potensi tertinggi mereka.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital@0;1&family=Lexend:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626',
+                        secondary: '#fbbf24',
+                        dark: '#18181b',
+                        light: '#ffffff',
+                    },
+                    fontFamily: {
+                        sans: ['Lexend', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .pattern-dots {
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* ─── Marquee Animation ─── */
+        .marquee-wrapper {
+            overflow: hidden;
+            position: relative;
+        }
+        .marquee-wrapper::before,
+        .marquee-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 120px;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .marquee-wrapper::before {
+            left: 0;
+            background: linear-gradient(to right, #ffffff, transparent);
+        }
+        .marquee-wrapper::after {
+            right: 0;
+            background: linear-gradient(to left, #ffffff, transparent);
+        }
+        .marquee-track {
+            display: flex;
+            gap: 16px;
+            width: max-content;
+            animation: marquee-scroll 40s linear infinite;
+        }
+        .marquee-track.reverse {
+            animation: marquee-scroll-reverse 45s linear infinite;
+        }
+        .marquee-track:hover {
+            animation-play-state: paused;
+        }
+        @keyframes marquee-scroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        @keyframes marquee-scroll-reverse {
+            0%   { transform: translateX(-50%); }
+            100% { transform: translateX(0); }
+        }
+        .logo-pill {
+            flex-shrink: 0;
+            width: 120px;
+            height: 64px;
+            background: white;
+            border: 1px solid #f1f5f9;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+        }
+        .logo-pill:hover {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+        }
+        .logo-pill img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: grayscale(100%);
+            opacity: 0.55;
+            transition: all 0.3s ease;
+        }
+        .logo-pill:hover img {
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body class="font-sans text-dark flex flex-col min-h-screen">
+
+    <!-- ╔══════════════════════════════╗ -->
+    <!-- ║         NAVIGATION           ║ -->
+    <!-- ╚══════════════════════════════╝ -->
+    <nav class="sticky top-0 z-50 w-full glass-panel flex items-center px-4 py-4 lg:px-8 border-b border-gray-100">
+        <div class="max-w-[1400px] mx-auto w-full flex justify-between items-center">
+
+            <a href="../index.html" class="text-2xl font-bold tracking-tight flex items-center gap-2">
+                <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM" class="h-14 md:h-16 w-auto">
+            </a>
+
+            <div class="hidden lg:flex items-center space-x-2 font-medium text-[15px] text-gray-700">
+                <a href="../index.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Beranda</a>
+
+                <!-- Layanan Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg group-hover:bg-slate-100 transition-colors focus:outline-none">
+                        Layanan <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-64 bg-white rounded-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)] border border-slate-100 py-2 flex flex-col">
+                            <!-- Assessment -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Assessment <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Talents Mapping</a>
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Tes Psikologi (Psikotes)</a>
+                                        <a href="mockup_layanan_mental_health.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Mental Health Check Up</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Konsultasi & Coaching -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Konsultasi & Coaching <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_konseling.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konseling dengan Psikolog</a>
+                                        <a href="mockup_layanan_relaksasi.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Therapy (SEFT)</a>
+                                        <a href="mockup_layanan_visual_coaching.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Visual Coaching</a>
+                                        <a href="mockup_layanan_consultation.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konsultasi Keuangan</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Digital Product -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Digital Product <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-72 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_ecourse.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">E-Course Life Reset: 7 Days Re-Discover Yourself</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Webinar & Workshop -->
+                            <a href="mockup_layanan_workshop.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Webinar & Workshop</a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="mockup_perusahaan.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Untuk Perusahaan</a>
+                <a href="mockup_artikel.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Artikel & Aktivitas</a>
+                <a href="mockup_career.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Karir</a>
+
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg text-primary font-semibold transition-colors focus:outline-none">
+                        Tentang Kami <i class="fa-solid fa-chevron-down text-[10px] text-primary group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute right-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-56 bg-white rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-gray-100 py-3 overflow-hidden flex flex-col">
+                            <a href="mockup_tentang_theaim.html" class="px-6 py-3 text-sm text-primary font-bold bg-red-50 transition-colors">Tentang TheAIM</a>
+                            <a href="mockup_tentang_ecosystem.html" class="px-6 py-3 text-sm text-gray-500 hover:bg-gray-50 hover:text-primary transition-colors">TheAIM Ecosystem</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <a href="#" class="border-2 border-dark text-dark hover:bg-dark hover:text-white transition-all px-7 py-2.5 rounded-full font-semibold text-sm hidden md:block tracking-wide">
+                Masuk
+            </a>
+            <button class="md:hidden text-2xl text-dark"><i class="fa-solid fa-bars"></i></button>
+        </div>
+    </nav>
+
+    <main class="flex-grow">
+
+        <section class="py-20 px-4 bg-slate-50 min-h-[80vh] flex items-center justify-center">
+            <div class="max-w-[500px] w-full bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-red-50 text-primary rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+                    <h1 class="text-2xl font-extrabold text-dark mb-2 tracking-tight">Pilih Pembayaran</h1>
+                    <p class="text-gray-500 font-medium text-sm">Selesaikan pembayaran untuk mengamankan jadwal Anda.</p>
+                </div>
+
+                <div class="bg-slate-50 rounded-2xl p-5 mb-8 border border-slate-100">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Ringkasan Pendaftaran</h3>
+                    <div class="flex justify-between items-start mb-1">
+                        <span class="text-xs text-slate-400 font-semibold uppercase">Layanan</span>
+                        <span class="text-sm font-bold text-dark text-right" id="summary-layanan">—</span>
+                    </div>
+                    <div class="flex justify-between items-start pb-3 border-b border-slate-200">
+                        <span class="text-xs text-slate-400 font-semibold uppercase">Paket</span>
+                        <span class="text-sm font-medium text-slate-600 text-right" id="summary-paket">—</span>
+                    </div>
+                    <div class="flex justify-between items-center pt-3">
+                        <span class="text-sm font-bold text-dark">Total Tagihan</span>
+                        <span class="text-xl font-black text-primary" id="summary-harga">Akan Dikonfirmasi</span>
+                    </div>
+                    <p class="text-[11px] text-slate-500 mt-2 italic" id="harga-note">* Harga akan dikonfirmasi oleh admin setelah verifikasi jadwal.</p>
+                </div>
+
+                <div class="space-y-4 mb-8">
+                    <label class="block relative border-2 border-slate-200 rounded-xl p-4 cursor-pointer hover:border-primary transition-colors has-[:checked]:border-primary has-[:checked]:bg-red-50">
+                        <input type="radio" name="payment" value="qris" class="peer sr-only" checked>
+                        <div class="flex items-center gap-4">
+                            <div class="w-6 h-6 rounded-full border-2 border-slate-300 peer-checked:border-primary flex justify-center items-center relative">
+                                <div class="w-3 h-3 bg-primary rounded-full opacity-0 scale-50 transition-all peer-checked:opacity-100 peer-checked:scale-100 absolute"></div>
+                            </div>
+                            <div class="flex-1">
+                                <div class="font-bold text-dark text-sm">QRIS (Semua E-Wallet)</div>
+                                <div class="text-xs text-slate-500 font-medium mt-0.5">OVO, GoPay, Dana, LinkAja, dll</div>
+                            </div>
+                            <i class="fa-solid fa-qrcode text-slate-400 text-xl"></i>
+                        </div>
+                    </label>
+
+                    <label class="block relative border-2 border-slate-200 rounded-xl p-4 cursor-pointer hover:border-primary transition-colors has-[:checked]:border-primary has-[:checked]:bg-red-50">
+                        <input type="radio" name="payment" value="transfer" class="peer sr-only">
+                        <div class="flex items-center gap-4">
+                            <div class="w-6 h-6 rounded-full border-2 border-slate-300 peer-checked:border-primary flex justify-center items-center relative">
+                                <div class="w-3 h-3 bg-primary rounded-full opacity-0 scale-50 transition-all peer-checked:opacity-100 peer-checked:scale-100 absolute"></div>
+                            </div>
+                            <div class="flex-1">
+                                <div class="font-bold text-dark text-sm">Transfer Bank</div>
+                                <div class="text-xs text-slate-500 font-medium mt-0.5">BCA, Mandiri, BNI, BRI</div>
+                            </div>
+                            <i class="fa-solid fa-building-columns text-slate-400 text-xl"></i>
+                        </div>
+                    </label>
+                </div>
+
+                <a href="../index.html" class="block w-full bg-dark text-white text-center font-bold py-4 rounded-xl hover:bg-black shadow-lg shadow-slate-200 transition-all transform hover:-translate-y-1">
+                    Konfirmasi & Ajukan Pendaftaran
+                </a>
+            </div>
+        </section>
+
+</main>
+
+    <!-- ╔══════════════════════════════╗ -->
+    <!-- ║           FOOTER             ║ -->
+    <!-- ╚══════════════════════════════╝ -->
+    <footer class="bg-white pt-16 border-t border-gray-200">
+        <div class="max-w-[1200px] mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 text-[#334155]">
+            <div class="pr-4">
+                <a href="../index.html" class="text-2xl font-bold tracking-tight flex items-center gap-2 mb-5 text-dark">
+                    <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM" class="h-14 md:h-16 w-auto">
+                </a>
+                <p class="text-xs text-gray-400 font-medium leading-relaxed">Empowering Potential, Accelerating Growth.</p>
+            </div>
+            <div>
+                <h4 class="font-extrabold text-dark text-sm mb-5 tracking-tight uppercase">Layanan</h4>
+                <ul class="space-y-3 font-medium text-sm text-gray-500">
+                    <li><a href="mockup_layanan_assessment.html" class="hover:text-primary transition-colors">Talents Mapping Asesmen</a></li>
+                    <li><a href="mockup_layanan_coaching.html" class="hover:text-primary transition-colors">Life Coaching</a></li>
+                    <li><a href="mockup_layanan_visual_coaching.html" class="hover:text-primary transition-colors">Visual Coaching</a></li>
+                    <li><a href="mockup_layanan_relaksasi.html" class="hover:text-primary transition-colors">Therapy (SEFT)</a></li>
+                    <li><a href="mockup_layanan_workshop.html" class="hover:text-primary transition-colors">Workshop & Training</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-extrabold text-dark text-sm mb-5 tracking-tight uppercase">Tentang</h4>
+                <ul class="space-y-3 font-medium text-sm text-gray-500">
+                    <li><a href="mockup_tentang_theaim.html" class="text-primary font-semibold">Tentang TheAIM</a></li>
+                    <li><a href="mockup_tentang_ecosystem.html" class="hover:text-primary transition-colors">Talent Ecosystem</a></li>
+                    <li><a href="mockup_perusahaan.html" class="hover:text-primary transition-colors">Solusi Perusahaan</a></li>
+                    <li><a href="mockup_artikel.html" class="hover:text-primary transition-colors">Artikel & Aktivitas</a>
+                <a href="mockup_career.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Karir</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-extrabold text-dark text-sm mb-5 tracking-tight uppercase">Kontak</h4>
+                <ul class="space-y-3 font-medium text-sm text-gray-500">
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-phone text-primary text-xs"></i><a href="#" class="hover:text-primary transition-colors">081999554599</a></li>
+                    <li class="flex items-center gap-3"><i class="fa-regular fa-envelope text-primary text-xs"></i><a href="mailto:ptabadiinsanmanfaat@gmail.com" class="hover:text-primary transition-colors">ptabadiinsanmanfaat@gmail.com</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="bg-dark py-5 px-4 text-white">
+            <div class="max-w-[1200px] mx-auto flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 text-xs text-gray-500 font-medium">
+                <p>&copy; 2026 PT Abadi Insan Manfaat. All rights reserved.</p>
+                <span class="hidden sm:block">|</span>
+                <a href="#" class="hover:text-white transition-colors">Term & Condition</a>
+                <span class="hidden sm:block">|</span>
+                <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Count-Up Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        document.querySelectorAll('.stat-num').forEach(counter => {
+                            const target = +counter.getAttribute('data-target');
+                            const duration = 1800;
+                            const increment = target / (duration / 16);
+                            let current = 0;
+                            const tick = () => {
+                                current += increment;
+                                if (current < target) {
+                                    counter.innerText = Math.ceil(current).toLocaleString('id-ID');
+                                    setTimeout(tick, 16);
+                                } else {
+                                    counter.innerText = target === 1500 ? '1.500' : target >= 10000 ? '10k' : target;
+                                }
+                            };
+                            tick();
+                        });
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.3 });
+            const s = document.getElementById('stats-section');
+            if (s) observer.observe(s);
+        });
+    </script>
+
+
+    <script>
+    const LAYANAN_LABELS = {
+        talents_mapping:       'Talents Mapping',
+        konseling_individu:    'Konseling Individu',
+        konseling_pasangan:    'Konseling Pasangan',
+        mental_health_checkup: 'Mental Health Check Up',
+        visual_coaching:       'Visual Coaching',
+        therapy_seft:          'Therapy (SEFT)',
+        konsultasi_keuangan:   'Konsultasi Keuangan',
+        tes_psikologi:         'Tes Psikologi (Psikotes)',
+        ecourse:               'E-Course Life Reset',
+    };
+    const PAKET_LABELS = {
+        assessment_only:        'Assessment Only',
+        assessment_pro_consul:  'Assessment + Pro Consultation',
+        assessment_coach_alif:  'Assessment + Coach Alif',
+        pro_consul_only:        'Pro Consultation Only',
+        pro_consul_coach_alif:  'Pro Consultation with Coach Alif',
+        basic:                  'Paket Basic (1 Sesi)',
+        bundling_3:             'Paket Bundling (3 Sesi)',
+        bundling_6:             'Paket Perubahan (6 Sesi)',
+        premium:                'Paket Premium / Eksklusif',
+        standar:                'Standar',
+        ecourse_7days:          'E-Course Life Reset: 7 Days',
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const layanan = urlParams.get('layanan') || '';
+        const paket   = urlParams.get('paket')   || '';
+        const harga   = urlParams.get('harga')   || '';
+        const nama    = urlParams.get('nama')     || '';
+
+        document.getElementById('summary-layanan').textContent =
+            LAYANAN_LABELS[layanan] || layanan.replace(/_/g,' ') || '—';
+        document.getElementById('summary-paket').textContent =
+            PAKET_LABELS[paket] || paket.replace(/_/g,' ') || '—';
+
+        if (harga) {
+            const hargaNum = parseInt(harga);
+            document.getElementById('summary-harga').textContent =
+                'Rp ' + hargaNum.toLocaleString('id-ID');
+            document.getElementById('harga-note').classList.add('hidden');
+        }
+    });
+    </script>
+
+</body>
+</html>

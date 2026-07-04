@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengajuan Kerja Sama - TheAIM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626',   // TheAIM Red
+                        secondary: '#fbbf24', // TheAIM Yellow
+                        dark: '#0f172a',      // Slate-900 (Corporate Navy/Dark)
+                        darker: '#020617',    // Slate-950
+                        light: '#ffffff',
+                        corpblue: '#1e293b',  // Slate-800
+                        corplight: '#f8fafc', // Slate-50
+                    },
+                    fontFamily: {
+                        sans: ['Lexend', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f8fafc; overflow-x: hidden; }
+        
+        .btn-primary {
+            background-color: #dc2626;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(220, 38, 38, 0.4);
+        }
+        
+        .btn-corp {
+            background-color: #0f172a;
+            color: white;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .btn-corp:hover {
+            background-color: #1e293b;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.4);
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .form-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.05);
+        }
+    </style>
+</head>
+<body class="font-sans text-dark flex flex-col min-h-screen">
+    
+    <!-- NAVIGATION -->
+    <nav class="sticky top-0 z-50 w-full glass-nav flex items-center px-4 py-4 lg:px-8">
+        <div class="max-w-[1400px] mx-auto w-full flex justify-between items-center">
+            
+            <a href="../index.html" class="text-2xl font-bold tracking-tight flex items-center gap-2">
+                <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM" class="h-14 md:h-16 w-auto">
+            </a>
+            
+            <div class="hidden lg:flex items-center space-x-2 font-medium text-[15px] text-gray-600">
+                <a href="../index.html" class="px-4 py-2 rounded-lg hover:bg-slate-100 transition-colors">Beranda</a>
+                
+                <!-- Layanan Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg group-hover:bg-slate-100 transition-colors focus:outline-none">
+                        Layanan <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-64 bg-white rounded-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)] border border-slate-100 py-2 flex flex-col">
+                            <!-- Assessment -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Assessment <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Talents Mapping</a>
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Tes Psikologi (Psikotes)</a>
+                                        <a href="mockup_layanan_mental_health.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Mental Health Check Up</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Konsultasi & Coaching -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Konsultasi & Coaching <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_konseling.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konseling dengan Psikolog</a>
+                                        <a href="mockup_layanan_relaksasi.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Therapy (SEFT)</a>
+                                        <a href="mockup_layanan_visual_coaching.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Visual Coaching</a>
+                                        <a href="mockup_layanan_consultation.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konsultasi Keuangan</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Digital Product -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Digital Product <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-72 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_ecourse.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">E-Course Life Reset: 7 Days Re-Discover Yourself</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Webinar & Workshop -->
+                            <a href="mockup_layanan_workshop.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Webinar & Workshop</a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="mockup_perusahaan.html" class="px-4 py-2 rounded-lg hover:bg-slate-100 transition-colors">Untuk Perusahaan</a>
+                <a href="mockup_artikel.html" class="px-4 py-2 rounded-lg hover:bg-slate-100 transition-colors">Artikel & Aktivitas</a>
+                <a href="mockup_career.html" class="px-4 py-2 rounded-lg hover:bg-slate-100 transition-colors">Karir</a>
+                <a href="mockup_tentang_theaim.html" class="px-4 py-2 rounded-lg hover:bg-slate-100 transition-colors">Tentang Kami</a>
+            </div>
+            
+            <a href="mockup_perusahaan.html#konsultasi" class="btn-corp px-8 py-2.5 rounded-full font-semibold text-sm hidden md:block tracking-wide">
+                Hubungi B2B Tim
+            </a>
+            
+            <button class="md:hidden text-2xl text-dark">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- FORM MAIN CONTAINER -->
+    <main class="flex-grow py-16 px-4 bg-corplight">
+        <div class="max-w-[760px] mx-auto">
+            
+            <!-- HEADER BLOCK (Transcribed Note / "Spoiler" as requested) -->
+            <div class="bg-white border border-slate-200/80 rounded-3xl p-8 md:p-10 mb-8 form-card">
+                <h1 class="text-2xl md:text-3xl font-black text-dark mb-6 leading-tight tracking-tight">
+                    Formulir Pengajuan Kerja Sama - TheAIM
+                </h1>
+                
+                <div class="space-y-4 text-sm text-slate-600 leading-relaxed font-medium">
+                    <p>
+                        Terima kasih atas minat Kakak untuk berkolaborasi dengan TheAIM. Formulir ini ditujukan untuk ide atau proposal kerja sama yang tidak termasuk dalam kategori layanan utama B2B korporat atau sekolah yang telah disebutkan sebelumnya.
+                    </p>
+                    <p>
+                        Silakan jelaskan ide kolaborasi Kakak pada kolom yang tersedia di bawah ini. Kami sangat antusias untuk mendengar ide-ide kreatif dan baru untuk bertumbuh bersama!
+                    </p>
+                    <p class="pt-4 border-t border-slate-100 text-xs font-bold text-slate-500 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info text-primary text-sm"></i>
+                        <span>Apabila ada pertanyaan lebih lanjut silakan hubungi <a href="https://wa.me/6281999554599" target="_blank" class="text-primary hover:underline font-extrabold">0819-9955-4599 (Whatsapp, chat only)</a></span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- FORM START -->
+            <form onsubmit="event.preventDefault(); alert('Terima kasih! Proposal pengajuan kerja sama Anda telah terkirim. Tim kemitraan strategis kami akan meninjau ide Anda dan menghubungi PIC dalam waktu maksimal 3x24 jam.'); window.location.href='mockup_perusahaan.html';" class="space-y-8 bg-white border border-slate-200/80 rounded-3xl p-8 md:p-10 form-card">
+                
+                <!-- SECTION 1: INFORMASI KONTAK -->
+                <div>
+                    <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 mb-6 flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                        Informasi Kontak Kemitraan (PIC)
+                    </h3>
+                    
+                    <div class="space-y-5">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Nama Lengkap PIC <span class="text-primary">*</span></label>
+                            <input type="text" placeholder="Masukkan nama lengkap penanggung jawab" required class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-primary transition-colors bg-slate-50/50">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Nomor Whatsapp PIC <span class="text-primary">*</span></label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-400 font-medium">+62</span>
+                                <input type="tel" placeholder="8123456789" required class="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-primary transition-colors bg-slate-50/50">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Nama Brand / Institusi / Organisasi <span class="text-primary">*</span></label>
+                            <input type="text" placeholder="Nama organisasi, kampus, sekolah, atau brand yang mengajukan" required class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-primary transition-colors bg-slate-50/50">
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-slate-100">
+
+                <!-- SECTION 2: DETAIL IDE KERJA SAMA -->
+                <div>
+                    <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 mb-6 flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                        Detail Ide Kerja Sama
+                    </h3>
+                    
+                    <div class="space-y-5">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Judul atau Tema Utama Kerja Sama <span class="text-primary">*</span></label>
+                            <input type="text" placeholder="Contoh: Kolaborasi Webinar / Sponsorship Event / Kemitraan Konten" required class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-primary transition-colors bg-slate-50/50">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Jelaskan Secara Detail Ide atau Proposal Kerja Sama Anda <span class="text-primary">*</span></label>
+                            <textarea rows="4" placeholder="Tuliskan latar belakang ide, bentuk kegiatan, dan konsep kerja sama secara rinci..." required class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-primary transition-colors bg-slate-50/50 resize-none"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Bagaimana TheAIM dapat berpartisipasi dalam kerja sama ini? <span class="text-primary">*</span></label>
+                            <textarea rows="3" placeholder="Jelaskan peran, kontribusi, atau tugas yang Anda harapkan dari pihak TheAIM..." required class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-primary transition-colors bg-slate-50/50 resize-none"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Tujuan Kerjasama <span class="text-primary">*</span></label>
+                            <textarea rows="3" placeholder="Sebutkan output, benefit mutualisme, atau gol akhir yang ingin dicapai dari kolaborasi ini..." required class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-primary transition-colors bg-slate-50/50 resize-none"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Estimasi Waktu Pelaksanaan (Jika Ada)</label>
+                            <input type="text" placeholder="Contoh: Akhir Bulan Juni 2026 / Kuartal 3" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-primary transition-colors bg-slate-50/50">
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-slate-100">
+
+                <!-- SECTION 3: UPLOAD PROPOSAL -->
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Upload Proposal Kerjasama (Opsional)</label>
+                    <div class="border-2 border-dashed border-slate-200 hover:border-primary rounded-2xl p-8 text-center bg-slate-50/30 transition-colors cursor-pointer group">
+                        <input type="file" id="proposal_upload" class="hidden">
+                        <label for="proposal_upload" class="cursor-pointer flex flex-col items-center justify-center">
+                            <i class="fa-solid fa-cloud-arrow-up text-3xl text-slate-400 group-hover:text-primary transition-colors mb-3"></i>
+                            <span class="text-xs font-bold text-slate-600 mb-1">Click to choose a file or drag here</span>
+                            <span class="text-[10px] text-slate-400 font-medium">Format: PDF / DOCX (Maksimal 10MB)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <hr class="border-slate-100">
+
+                <!-- SECTION 4: PREVIOUS RELATIONSHIP -->
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-4">Sudah pernah bekerjasama dengan TheAIM sebelumnya? <span class="text-primary">*</span></label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <label class="border border-slate-200 rounded-xl p-4 flex items-center gap-3 cursor-pointer hover:bg-slate-50/50 transition-colors">
+                            <input type="radio" name="previous_relation" value="yes" required class="accent-primary w-4 h-4">
+                            <span class="text-sm font-semibold text-slate-700">Sudah Pernah</span>
+                        </label>
+                        <label class="border border-slate-200 rounded-xl p-4 flex items-center gap-3 cursor-pointer hover:bg-slate-50/50 transition-colors">
+                            <input type="radio" name="previous_relation" value="no" required class="accent-primary w-4 h-4">
+                            <span class="text-sm font-semibold text-slate-700">Belum Pernah</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- SUBMIT BUTTON -->
+                <button type="submit" class="w-full py-4 rounded-xl bg-primary text-white font-bold text-sm hover:bg-red-700 transition-all shadow-lg shadow-red-200 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-paper-plane"></i> Kirim Pengajuan Kerja Sama
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-dark pt-12 border-t border-slate-800 text-slate-400 text-xs">
+        <div class="max-w-[1200px] mx-auto px-4 text-center py-6">
+            <p>&copy; 2026 TheAIM Solution Kemitraan. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

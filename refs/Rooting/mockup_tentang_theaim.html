@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tentang TheAIM - Kenali Dirimu Lebih Dalam</title>
+    <meta name="description"
+        content="TheAIM adalah platform pengembangan diri dan organisasi yang memadukan asesmen psikometrik valid dengan coaching personal berempati, untuk menuntun setiap individu dan perusahaan mencapai potensi tertinggi mereka.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital@0;1&family=Lexend:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626',
+                        secondary: '#fbbf24',
+                        dark: '#18181b',
+                        light: '#ffffff',
+                    },
+                    fontFamily: {
+                        sans: ['Lexend', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .pattern-dots {
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* ─── Marquee Animation ─── */
+        .marquee-wrapper {
+            overflow: hidden;
+            position: relative;
+        }
+        .marquee-wrapper::before,
+        .marquee-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 120px;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .marquee-wrapper::before {
+            left: 0;
+            background: linear-gradient(to right, #ffffff, transparent);
+        }
+        .marquee-wrapper::after {
+            right: 0;
+            background: linear-gradient(to left, #ffffff, transparent);
+        }
+        .marquee-track {
+            display: flex;
+            gap: 16px;
+            width: max-content;
+            animation: marquee-scroll 40s linear infinite;
+        }
+        .marquee-track.reverse {
+            animation: marquee-scroll-reverse 45s linear infinite;
+        }
+        .marquee-track:hover {
+            animation-play-state: paused;
+        }
+        @keyframes marquee-scroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        @keyframes marquee-scroll-reverse {
+            0%   { transform: translateX(-50%); }
+            100% { transform: translateX(0); }
+        }
+        .logo-pill {
+            flex-shrink: 0;
+            width: 120px;
+            height: 64px;
+            background: white;
+            border: 1px solid #f1f5f9;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+        }
+        .logo-pill:hover {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+        }
+        .logo-pill img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: grayscale(100%);
+            opacity: 0.55;
+            transition: all 0.3s ease;
+        }
+        .logo-pill:hover img {
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body class="font-sans text-dark flex flex-col min-h-screen">
+
+    <!-- ╔══════════════════════════════╗ -->
+    <!-- ║         NAVIGATION           ║ -->
+    <!-- ╚══════════════════════════════╝ -->
+    <nav class="sticky top-0 z-50 w-full glass-panel flex items-center px-4 py-4 lg:px-8 border-b border-gray-100">
+        <div class="max-w-[1400px] mx-auto w-full flex justify-between items-center">
+
+            <a href="../index.html" class="text-2xl font-bold tracking-tight flex items-center gap-2">
+                <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM" class="h-14 md:h-16 w-auto">
+            </a>
+
+            <div class="hidden lg:flex items-center space-x-2 font-medium text-[15px] text-gray-700">
+                <a href="../index.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Beranda</a>
+
+                <!-- Layanan Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg group-hover:bg-slate-100 transition-colors focus:outline-none">
+                        Layanan <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-64 bg-white rounded-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)] border border-slate-100 py-2 flex flex-col">
+                            <!-- Assessment -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Assessment <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Talents Mapping</a>
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Tes Psikologi (Psikotes)</a>
+                                        <a href="mockup_layanan_mental_health.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Mental Health Check Up</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Konsultasi & Coaching -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Konsultasi & Coaching <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_konseling.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konseling dengan Psikolog</a>
+                                        <a href="mockup_layanan_relaksasi.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Therapy (SEFT)</a>
+                                        <a href="mockup_layanan_visual_coaching.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Visual Coaching</a>
+                                        <a href="mockup_layanan_consultation.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konsultasi Keuangan</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Digital Product -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Digital Product <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-72 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_ecourse.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">E-Course Life Reset: 7 Days Re-Discover Yourself</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Webinar & Workshop -->
+                            <a href="mockup_layanan_workshop.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Webinar & Workshop</a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="mockup_perusahaan.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Untuk Perusahaan</a>
+                <a href="mockup_artikel.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Artikel & Aktivitas</a>
+                <a href="mockup_career.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Karir</a>
+
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg text-primary font-semibold transition-colors focus:outline-none">
+                        Tentang Kami <i class="fa-solid fa-chevron-down text-[10px] text-primary group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute right-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-56 bg-white rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-gray-100 py-3 overflow-hidden flex flex-col">
+                            <a href="mockup_tentang_theaim.html" class="px-6 py-3 text-sm text-primary font-bold bg-red-50 transition-colors">Tentang TheAIM</a>
+                            <a href="mockup_tentang_ecosystem.html" class="px-6 py-3 text-sm text-gray-500 hover:bg-gray-50 hover:text-primary transition-colors">TheAIM Ecosystem</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <a href="#" class="border-2 border-dark text-dark hover:bg-dark hover:text-white transition-all px-7 py-2.5 rounded-full font-semibold text-sm hidden md:block tracking-wide">
+                Masuk
+            </a>
+            <button class="md:hidden text-2xl text-dark"><i class="fa-solid fa-bars"></i></button>
+        </div>
+    </nav>
+
+    <main class="flex-grow">
+
+        <!-- ╔══════════════════════════════╗ -->
+        <!-- ║   1. HERO — FIRST IMPRESSION  ║ -->
+        <!-- ╚══════════════════════════════╝ -->
+        <!-- Customer POV: "Siapa kalian?" — Jawaban pertama harus kuat, jujur, dan bermakna -->
+        <section class="relative pt-24 pb-20 lg:pt-32 lg:pb-32 px-4 bg-gradient-to-b from-slate-50 to-white overflow-hidden border-b border-gray-100">
+            <div class="absolute top-0 right-0 w-2/5 h-full bg-gradient-to-l from-red-50/60 to-transparent z-0 pointer-events-none"></div>
+            <div class="absolute bottom-0 left-0 w-96 h-96 bg-yellow-50 rounded-full blur-[120px] opacity-40 z-0 pointer-events-none"></div>
+
+            <div class="max-w-[900px] mx-auto text-center relative z-10">
+                <!-- Spiritual anchor -->
+                <div class="text-3xl md:text-4xl text-primary mb-3" dir="rtl" style="font-family: 'Amiri', serif; line-height: 1.7;">
+                    خَيْرُ النَّاسِ أَنْفَعُهُمْ لِلنَّاسِ
+                </div>
+                <p class="text-xs md:text-sm font-bold text-gray-400 tracking-[0.18em] uppercase mb-10">
+                    "Sebaik-baiknya manusia adalah yang paling bermanfaat bagi yang lainnya"
+                </p>
+
+                <!-- Core statement -->
+                <div class="inline-flex items-center gap-2 bg-white border border-gray-200 px-5 py-1.5 rounded-full font-semibold text-xs tracking-widest text-gray-500 mb-6 shadow-sm uppercase">
+                    PT Abadi Insan Manfaat
+                </div>
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-black text-dark leading-[1.08] tracking-tight mb-6">
+                    Empowering Potential,<br>
+                    <span class="text-primary">Accelerating Growth.</span>
+                </h1>
+                <p class="text-gray-500 text-lg md:text-xl font-medium leading-relaxed max-w-2xl mx-auto mb-10">
+                    Kami hadir dengan satu tujuan: membantu setiap individu menemukan kekuatan sejati mereka, dan membantu setiap organisasi bertumbuh melalui pendekatan yang holistik dan berbasis data.
+                </p>
+
+                <!-- Value anchors as subtle pills -->
+                <div class="flex flex-wrap justify-center gap-3">
+                    <span class="flex items-center gap-1.5 bg-white border border-gray-200 text-gray-500 text-xs font-semibold px-4 py-2 rounded-full shadow-sm">
+                        <i class="fa-solid fa-chart-line text-primary text-[10px]"></i> Data-Driven
+                    </span>
+                    <span class="flex items-center gap-1.5 bg-white border border-gray-200 text-gray-500 text-xs font-semibold px-4 py-2 rounded-full shadow-sm">
+                        <i class="fa-solid fa-shield-heart text-primary text-[10px]"></i> Safe Space
+                    </span>
+                    <span class="flex items-center gap-1.5 bg-white border border-gray-200 text-gray-500 text-xs font-semibold px-4 py-2 rounded-full shadow-sm">
+                        <i class="fa-solid fa-seedling text-primary text-[10px]"></i> Lifelong Growth
+                    </span>
+                    <span class="flex items-center gap-1.5 bg-white border border-gray-200 text-gray-500 text-xs font-semibold px-4 py-2 rounded-full shadow-sm">
+                        <i class="fa-solid fa-map-location-dot text-primary text-[10px]"></i> Actionable Clarity
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ╔══════════════════════════════╗ -->
+        <!-- ║    2. WHO WE ARE — NAMING     ║ -->
+        <!-- ╚══════════════════════════════╝ -->
+        <!-- Customer POV: "Apa yang membuat kalian berbeda? Apa arti nama ini?" -->
+        <section class="py-24 px-4 bg-white border-b border-gray-100">
+            <div class="max-w-[900px] mx-auto">
+                <div class="text-center mb-12">
+                    <span class="inline-block px-4 py-1.5 rounded-full bg-yellow-100 text-yellow-700 font-bold text-xs tracking-widest uppercase mb-4 border border-yellow-200">Kenapa TheAIM?</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-dark tracking-tight">Sinergi Nama yang Bermakna</h2>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- PT AIM Card -->
+                    <div class="bg-gray-50 rounded-3xl p-8 border border-gray-100">
+                        <div class="w-12 h-12 bg-red-50 text-primary rounded-xl flex items-center justify-center text-xl mb-5">
+                            <i class="fa-solid fa-building"></i>
+                        </div>
+                        <h3 class="text-xl font-extrabold text-dark mb-3">PT Abadi Insan Manfaat</h3>
+                        <p class="text-gray-500 font-medium leading-relaxed text-[15px]">
+                            Nama badan hukum kami bukan sekadar legalitas. <strong class="text-dark">Abadi</strong> bermakna kekal dan berkelanjutan. <strong class="text-dark">Insan</strong> adalah manusia seutuhnya. <strong class="text-dark">Manfaat</strong> adalah tujuan kehadiran kami — memberikan dampak nyata yang dirasakan, bukan hanya dijanjikan.
+                        </p>
+                        <div class="mt-5 pt-5 border-t border-gray-200">
+                            <h4 class="text-sm font-bold text-dark mb-2">Legalitas Perusahaan</h4>
+                            <ul class="text-xs text-gray-500 space-y-2 font-medium">
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-file-invoice text-primary mt-0.5"></i>
+                                    <span><strong class="text-gray-700">NPWP:</strong> 65.785.061.6-429.000</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-certificate text-primary mt-0.5"></i>
+                                    <span><strong class="text-gray-700">SK KEMENKUMHAM:</strong> AHU-027190.AH.01.30.Tahun 2023</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- TheAIM Card -->
+                    <div class="bg-red-600 rounded-3xl p-8 text-white relative overflow-hidden">
+                        <div class="pattern-dots absolute inset-0 opacity-10"></div>
+                        <div class="relative z-10">
+                            <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-xl mb-5">
+                                <i class="fa-solid fa-crosshairs text-white"></i>
+                            </div>
+                            <h3 class="text-xl font-extrabold mb-3">TheAIM</h3>
+                            <p class="text-red-100 font-medium leading-relaxed text-[15px]">
+                                <strong class="text-white">Aim</strong> dalam bahasa Inggris berarti <em>tujuan</em> atau <em>sasaran</em>. Itulah inti dari apa yang kami lakukan — membantu kamu menemukan sasaran hidupmu yang paling tepat, lalu mengakselerasinya. Bukan dengan menebak, tapi dengan <strong class="text-white">data, empati, dan kejelasan yang bisa dieksekusi.</strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ╔══════════════════════════════╗ -->
+        <!-- ║   3. VISI & MISI             ║ -->
+        <!-- ╚══════════════════════════════╝ -->
+        <!-- Customer POV: "Kalian mau kemana? Saya percaya nggak nih?" -->
+        <section class="py-24 px-4 bg-gray-50 border-b border-gray-100">
+            <div class="max-w-[1100px] mx-auto">
+                <div class="text-center mb-16">
+                    <span class="inline-block px-4 py-1.5 rounded-full bg-red-50 text-primary font-bold text-xs tracking-widest uppercase mb-4 border border-red-100">Arah Strategis</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-dark tracking-tight">Visi & Misi Kami</h2>
+                </div>
+
+                <!-- Vision — Full Width Banner -->
+                <div class="bg-dark text-white rounded-3xl p-10 md:p-14 mb-8 relative overflow-hidden">
+                    <div class="pattern-dots absolute inset-0 opacity-5"></div>
+                    <div class="relative z-10 max-w-2xl">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
+                                <i class="fa-solid fa-eye text-white text-sm"></i>
+                            </div>
+                            <span class="text-xs font-extrabold tracking-widest uppercase text-primary">Visi</span>
+                        </div>
+                        <h3 class="text-3xl md:text-4xl font-black text-white mb-4 leading-tight">
+                            Empowering Potential,<br>Accelerating Growth.
+                        </h3>
+                        <p class="text-gray-400 font-medium text-base leading-relaxed">
+                            Menjadi motor pengembangan manusia yang mengoptimalkan setiap potensi tersembunyi — untuk melahirkan individu berdampak dan organisasi yang tumbuh berkelanjutan.
+                        </p>
+                    </div>
+                    <div class="absolute right-8 bottom-8 text-[8rem] font-black text-white/5 leading-none select-none hidden md:block">AIM</div>
+                </div>
+
+                <!-- Mission — 2 Cards -->
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-full bg-red-50 text-primary font-black flex items-center justify-center flex-shrink-0 text-sm">1</div>
+                            <div>
+                                <h4 class="font-extrabold text-dark text-xl mb-2">Guiding Individuals</h4>
+                                <p class="text-gray-500 font-medium text-sm leading-relaxed">
+                                    Membimbing setiap individu untuk <em>rediscover their true power</em> — menemukan kembali kekuatan autentik yang selama ini tersembunyi, melalui asesmen yang valid dan sesi coaching yang aman, empatik, dan berorientasi aksi.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-full bg-red-50 text-primary font-black flex items-center justify-center flex-shrink-0 text-sm">2</div>
+                            <div>
+                                <h4 class="font-extrabold text-dark text-xl mb-2">Helping Organizations</h4>
+                                <p class="text-gray-500 font-medium text-sm leading-relaxed">
+                                    Membantu organisasi mencapai tujuan strategis mereka melalui konsultasi berbasis data dan pendekatan pengembangan SDM yang holistik, progresif, dan terukur hasilnya.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ╔══════════════════════════════╗ -->
+        <!-- ║   4. BRAND PHILOSOPHY        ║ -->
+        <!-- ╚══════════════════════════════╝ -->
+        <!-- Customer POV: "Ada cerita di balik logo ini?" — Membangun koneksi emosional -->
+        <section class="py-24 px-4 bg-[#18181b] text-white relative overflow-hidden border-b border-gray-800">
+            <div class="pattern-dots absolute inset-0 opacity-10"></div>
+            <div class="max-w-[1000px] mx-auto grid md:grid-cols-2 gap-12 items-center relative z-10">
+                <div class="flex justify-center">
+                    <div class="w-44 h-44 bg-white rounded-[2rem] flex justify-center items-center shadow-[0_0_60px_rgba(255,255,255,0.15)]">
+                        <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM Logo" class="w-32 h-auto">
+                    </div>
+                </div>
+                <div class="text-center md:text-left">
+                    <h2 class="text-2xl md:text-3xl font-extrabold mb-8 tracking-tight">Filosofi Logo & Naming</h2>
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-primary font-bold text-base mb-2 flex items-center gap-2 justify-center md:justify-start">
+                                <i class="fa-solid fa-route text-sm"></i> Arah. Tumbuh. Berdampak.
+                            </h4>
+                            <p class="text-gray-400 font-medium text-sm leading-relaxed">
+                                Lekukan dinamis pada logo memvisualisasikan tiga pilar utama kami: <span class="text-red-500 font-semibold">Arah (Merah)</span> yang melambangkan kejelasan dan energi, <span class="text-yellow-400 font-semibold">Tumbuh (Kuning)</span> yang melambangkan cahaya potensi individu, dan <span class="text-white font-semibold">Berdampak (Hitam)</span> yang menjadi pondasi kuat dari hasil yang nyata.
+                            </p>
+                        </div>
+                        <div>
+                            <h4 class="text-secondary font-bold text-base mb-2 flex items-center gap-2 justify-center md:justify-start">
+                                <i class="fa-solid fa-quote-left text-sm"></i> Makna "TheAIM"
+                            </h4>
+                            <p class="text-gray-400 font-medium text-sm leading-relaxed">
+                                Kendali ada di tanganmu. Bukan perusahaan atau sistem yang menilai nilaimu. Kamulah yang <span class="text-white font-semibold">Assess</span> dirimu sendiri, memvalidasi siapa <span class="text-white font-semibold">I/Me</span> sebenarnya, dan menentukan <span class="text-white font-semibold">Aim</span> (tujuan) yang ingin kamu capai.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ╔══════════════════════════════╗ -->
+        <!-- ║   5. STATS — TRACK RECORD    ║ -->
+        <!-- ╚══════════════════════════════╝ -->
+        <!-- Customer POV: "Udah terbukti belum?" — Angka berbicara -->
+        <section id="stats-section" class="py-20 px-4 bg-white border-b border-gray-100">
+            <div class="max-w-[1100px] mx-auto">
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-[1px] bg-gray-100 border border-gray-100 rounded-3xl overflow-hidden shadow-sm">
+                    <div class="flex flex-col items-center justify-center p-6 lg:p-8 bg-white text-center">
+                        <div class="text-4xl md:text-5xl font-black text-primary mb-1">
+                            <span class="stat-num" data-target="10">0</span>+
+                        </div>
+                        <div class="text-xs tracking-widest text-gray-400 uppercase font-bold">Tahun<br>Pengalaman</div>
+                    </div>
+                    <div class="flex flex-col items-center justify-center p-6 lg:p-8 bg-white text-center">
+                        <div class="text-4xl md:text-5xl font-black text-primary mb-1">
+                            <span class="stat-num" data-target="1500">0</span>+
+                        </div>
+                        <div class="text-xs tracking-widest text-gray-400 uppercase font-bold">Klien<br>Terbantu</div>
+                    </div>
+                    <div class="flex flex-col items-center justify-center p-6 lg:p-8 bg-white text-center">
+                        <div class="text-4xl md:text-5xl font-black text-primary mb-1">
+                            <span class="stat-num" data-target="100">0</span>+
+                        </div>
+                        <div class="text-xs tracking-widest text-gray-400 uppercase font-bold">Jam<br>Coaching</div>
+                    </div>
+                    <div class="flex flex-col items-center justify-center p-6 lg:p-8 bg-white text-center">
+                        <div class="text-4xl md:text-5xl font-black text-primary mb-1">
+                            <span class="stat-num" data-target="50">0</span>+
+                        </div>
+                        <div class="text-xs tracking-widest text-gray-400 uppercase font-bold">Mitra<br>Korporat</div>
+                    </div>
+                    <div class="flex flex-col items-center justify-center p-6 lg:p-8 bg-white text-center">
+                        <div class="text-4xl md:text-5xl font-black text-primary mb-1">
+                            <span class="stat-num" data-target="500">0</span>+
+                        </div>
+                        <div class="text-xs tracking-widest text-gray-400 uppercase font-bold">Pelatihan<br>Digelar</div>
+                    </div>
+                    <div class="flex flex-col items-center justify-center p-6 lg:p-8 bg-white text-center">
+                        <div class="text-4xl md:text-5xl font-black text-primary mb-1">
+                            <span class="stat-num" data-target="10">0</span>k+
+                        </div>
+                        <div class="text-xs tracking-widest text-gray-400 uppercase font-bold">Total<br>Peserta</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ╔══════════════════════════════╗ -->
+        <!-- ║  6. PARTNER LOGOS — MARQUEE  ║ -->
+        <!-- ╚══════════════════════════════╝ -->
+        <!-- Customer POV: "Siapa aja yang udah percaya sama kalian?" — Social proof terkuat -->
+        <section class="py-20 px-4 bg-gray-50 border-b border-gray-100">
+            <div class="max-w-[1200px] mx-auto">
+                <div class="text-center mb-12">
+                    <span class="inline-block px-4 py-1.5 rounded-full bg-gray-200 text-gray-600 font-bold text-xs tracking-widest uppercase mb-4">Dipercaya Oleh</span>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-dark tracking-tight">Jejaring Kemitraan Kami</h2>
+                    <p class="text-gray-400 text-sm font-medium mt-2">Organisasi, perusahaan, dan institusi yang telah bertumbuh bersama TheAIM</p>
+                </div>
+
+                <!-- Marquee Container -->
+                <div class="marquee-wrapper py-4 flex flex-col gap-4">
+                    <!-- Layer 1 -->
+                    <div class="marquee-track">
+                        <!-- SET 1 -->
+                        <div class="logo-pill"><img src="../Logo2/LOGO%20kgs.png" alt="KGS"></div>
+                        <div class="logo-pill"><img src="../Logo2/Logo%20GF.png" alt="GF"></div>
+                        <div class="logo-pill"><img src="../Logo2/Logo%20KI.png" alt="KI"></div>
+                        <div class="logo-pill"><img src="../Logo2/Logo%20MPR.webp" alt="MPR"></div>
+                        <div class="logo-pill"><img src="../Logo2/Logo%20TIG.jpeg" alt="TIG"></div>
+                        <div class="logo-pill"><img src="../Logo2/Logo%20disbudpar.png" alt="Disbudpar Bandung"></div>
+                        <div class="logo-pill"><img src="../Logo2/Logo%20tle.jpeg" alt="TLE"></div>
+                        <div class="logo-pill"><img src="../Logo2/Logo%20ybm.png" alt="YBM BRILiaN"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20JJ.jpeg" alt="JJ"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20MAI.png" alt="MAI"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20Mulia%20University%20.png" alt="Mulia University"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20TM.png" alt="Talents Mapping"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20adaide.jpg" alt="Adaide"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20bertumbuh%20.png" alt="Bertumbuh"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20bpm.png" alt="BPM"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20bsk.jpeg" alt="BSK"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20dhs.jpg" alt="DHS"></div>
+                        <!-- SET 2 -->
+                        <div class="logo-pill"><img src="../Logo2/LOGO%20kgs.png" alt="KGS"></div>
+                        <div class="logo-pill"><img src="../Logo2/Logo%20GF.png" alt="GF"></div>
+                        <div class="logo-pill"><img src="../Logo2/Logo%20KI.png" alt="KI"></div>
+                        <div class="logo-pill"><img src="../Logo2/Logo%20MPR.webp" alt="MPR"></div>
+                        <div class="logo-pill"><img src="../Logo2/Logo%20TIG.jpeg" alt="TIG"></div>
+                        <div class="logo-pill"><img src="../Logo2/Logo%20disbudpar.png" alt="Disbudpar Bandung"></div>
+                        <div class="logo-pill"><img src="../Logo2/Logo%20tle.jpeg" alt="TLE"></div>
+                        <div class="logo-pill"><img src="../Logo2/Logo%20ybm.png" alt="YBM BRILiaN"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20JJ.jpeg" alt="JJ"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20MAI.png" alt="MAI"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20Mulia%20University%20.png" alt="Mulia University"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20TM.png" alt="Talents Mapping"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20adaide.jpg" alt="Adaide"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20bertumbuh%20.png" alt="Bertumbuh"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20bpm.png" alt="BPM"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20bsk.jpeg" alt="BSK"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20dhs.jpg" alt="DHS"></div>
+                    </div>
+                    <!-- Layer 2 -->
+                    <div class="marquee-track reverse">
+                        <!-- SET 1 -->
+                        <div class="logo-pill"><img src="../Logo2/logo%20dyummy.webp" alt="Dyummy"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20funtrip.jpg" alt="Funtrip"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20kmc.jpeg" alt="KMC"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20kopi.png" alt="Kopi"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20lokadesa.png" alt="Lokadesa"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20nikahmudah.jpeg" alt="Nikahmudah"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20qordova.png" alt="Qordova"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20rn.png" alt="RN"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20rwi.png" alt="RWI"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20rz.jpeg" alt="Rumah Zakat"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20sajiwa.jpeg" alt="Sajiwa Foundation"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20smk%20it%20ba.png" alt="SMK IT BA"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20syamil.jpg" alt="Syamil"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20telkomsel.webp" alt="Telkomsel"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20tokped.png" alt="Tokopedia"></div>
+                        <div class="logo-pill"><img src="../Logo2/tokoparts%20logo.jpeg" alt="Tokoparts"></div>
+                        <!-- SET 2 -->
+                        <div class="logo-pill"><img src="../Logo2/logo%20dyummy.webp" alt="Dyummy"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20funtrip.jpg" alt="Funtrip"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20kmc.jpeg" alt="KMC"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20kopi.png" alt="Kopi"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20lokadesa.png" alt="Lokadesa"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20nikahmudah.jpeg" alt="Nikahmudah"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20qordova.png" alt="Qordova"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20rn.png" alt="RN"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20rwi.png" alt="RWI"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20rz.jpeg" alt="Rumah Zakat"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20sajiwa.jpeg" alt="Sajiwa Foundation"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20smk%20it%20ba.png" alt="SMK IT BA"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20syamil.jpg" alt="Syamil"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20telkomsel.webp" alt="Telkomsel"></div>
+                        <div class="logo-pill"><img src="../Logo2/logo%20tokped.png" alt="Tokopedia"></div>
+                        <div class="logo-pill"><img src="../Logo2/tokoparts%20logo.jpeg" alt="Tokoparts"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ╔══════════════════════════════╗ -->
+        <!-- ║   7. PROFIL TIM              ║ -->
+        <!-- ╚══════════════════════════════╝ -->
+        <!-- Customer POV: "Siapa yang akan mendampingi saya?" — Wajah manusia di balik brand membangun kepercayaan -->
+        <section class="py-24 px-4 bg-white border-b border-gray-100">
+            <div class="max-w-[1100px] mx-auto">
+                <div class="text-center mb-16">
+                    <span class="inline-block px-4 py-1.5 rounded-full bg-red-50 text-primary font-bold text-xs tracking-widest uppercase mb-4 border border-red-100">Tim Kami</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-dark tracking-tight mb-3">Orang-orang di Balik TheAIM</h2>
+                </div>
+
+                <!-- Team Grid — 3 Columns (Adjusted) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-[1000px] mx-auto">
+
+                    <!-- Alifya Ihya Muhammad (CEO) -->
+                    <div class="group flex flex-col items-center text-center">
+                        <div class="relative w-full aspect-[4/5] rounded-3xl overflow-hidden bg-gray-50 mb-6 border border-gray-100">
+                            <!-- Alif: Dikembalikan ke ukuran aslinya (undo zoom) -->
+                            <img src="../Management/Coach%20Alif%20-%20update.png" alt="Alifya Ihya Muhammad" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
+                        </div>
+                        <div class="px-2 flex flex-col flex-grow">
+                            <h3 class="text-lg font-black text-dark mb-0.5">Alifya Ihya Muhammad</h3>
+                            <p class="text-primary font-bold text-[11px] uppercase tracking-wide mb-3">S.Psi, M.M · Chief Executive Officer</p>
+                            <p class="text-gray-500 text-[13px] font-medium leading-relaxed max-w-[245px] mx-auto mb-4 flex-grow">
+                                Trainer, coach, therapist, & HR Consultant dengan pengalaman lebih dari satu dekade membimbing transformasi individu serta pertumbuhan strategis organisasi.
+                            </p>
+                            <a href="https://coach-alif.netlify.app/" target="_blank" class="inline-flex items-center justify-center gap-2 text-xs font-bold text-dark border border-gray-200 bg-gray-50 hover:bg-dark hover:text-white px-5 py-2.5 rounded-full transition-all duration-300 w-fit mx-auto">
+                                Lihat Portofolio <i class="fa-solid fa-arrow-right-long"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Saefudin (CMO) -->
+                    <div class="group flex flex-col items-center text-center">
+                        <div class="relative w-full aspect-[4/5] rounded-3xl overflow-hidden bg-white mb-6 border border-gray-100">
+                            <!-- Saefudin: Normal sebagai patokan -->
+                            <img src="../management/Saefudin.jpeg" alt="Saefudin" class="w-full h-full object-cover object-top scale-100 transition-transform duration-500 group-hover:scale-105">
+                        </div>
+                        <div class="px-2 flex flex-col flex-grow">
+                            <h3 class="text-lg font-black text-dark mb-0.5">Saefudin</h3>
+                            <p class="text-primary font-bold text-[11px] uppercase tracking-wide mb-3">S.Pd · Chief Marketing Officer</p>
+                            <p class="text-gray-500 text-[13px] font-medium leading-relaxed max-w-[245px] mx-auto mb-4 flex-grow">
+                                Spesialis pemasaran digital bersertifikasi yang berfokus pada strategi pertumbuhan organik dan akselerasi visibilitas brand di ranah digital.
+                            </p>
+                            <a href="https://coach-dm.netlify.app/" target="_blank" class="inline-flex items-center justify-center gap-2 text-xs font-bold text-dark border border-gray-200 bg-gray-50 hover:bg-dark hover:text-white px-5 py-2.5 rounded-full transition-all duration-300 w-fit mx-auto">
+                                Lihat Portofolio <i class="fa-solid fa-arrow-right-long"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Zuhud Nurromdhoni (CPSO) -->
+                    <div class="group flex flex-col items-center text-center">
+                        <!-- Background putih, gambar di-contain agar tidak ter-crop (zoom out alami) dan ditaruh di bawah -->
+                        <div class="relative w-full aspect-[4/5] rounded-3xl overflow-hidden bg-white mb-6 border border-gray-100 flex items-end justify-center">
+                            <img src="../management/Zuhud.jpeg" alt="Zuhud Nurromdhoni" class="w-full h-[90%] object-contain object-bottom transition-transform duration-500 group-hover:scale-105">
+                        </div>
+                        <div class="px-2 flex flex-col flex-grow">
+                            <h3 class="text-lg font-black text-dark mb-0.5">Zuhud Nurromdhoni</h3>
+                            <p class="text-primary font-bold text-[11px] uppercase tracking-wide mb-3">S.Psi, Psikolog · Chief of Psychological Services Officer</p>
+                            <p class="text-gray-500 text-[13px] font-medium leading-relaxed max-w-[245px] mx-auto mb-4 flex-grow">
+                                Psikolog umum dan praktisi teknologi yang merancang platform digital asesmen dengan pendekatan berpusat pada kenyamanan manusia.
+                            </p>
+                            <a href="https://startling-brigadeiros-0699f2.netlify.app/" target="_blank" class="inline-flex items-center justify-center gap-2 text-xs font-bold text-dark border border-gray-200 bg-gray-50 hover:bg-dark hover:text-white px-5 py-2.5 rounded-full transition-all duration-300 w-fit mx-auto">
+                                Lihat Portofolio <i class="fa-solid fa-arrow-right-long"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ╔══════════════════════════════╗ -->
+        <!-- ║   8. DUAL CTA — FINAL NUDGE  ║ -->
+        <!-- ╚══════════════════════════════╝ -->
+        <!-- Customer POV: "Oke saya tertarik — langkah selanjutnya apa?" — Harus ada dua jalur jelas -->
+        <section class="py-24 px-4 bg-white">
+            <div class="max-w-[1100px] mx-auto">
+                <div class="text-center mb-14">
+                    <h2 class="text-3xl md:text-4xl font-black text-dark tracking-tight mb-3">
+                        Mulai Perjalananmu.<br><span class="text-primary">Pilih Jalur yang Tepat.</span>
+                    </h2>
+                    <p class="text-gray-400 font-medium text-base max-w-xl mx-auto">
+                        Baik kamu individu yang mencari arah, atau organisasi yang ingin akselerasi — TheAIM punya jalannya.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- CTA 1: Untuk Individu / Layanan -->
+                    <a href="../index.html" class="group relative rounded-3xl overflow-hidden bg-primary p-8 md:p-10 text-white flex flex-col justify-between min-h-[240px] hover:shadow-2xl hover:shadow-red-200 transition-all duration-300 hover:-translate-y-1">
+                        <div class="pattern-dots absolute inset-0 opacity-10"></div>
+                        <div class="relative z-10">
+                            <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mb-5">
+                                <i class="fa-solid fa-user-check text-white text-lg"></i>
+                            </div>
+                            <h3 class="text-2xl font-black mb-2">Untuk Individu</h3>
+                            <p class="text-red-100 text-sm font-medium leading-relaxed">
+                                Kenali potensi, temukan arah karir, dan capai kejelasan hidup melalui asesmen psikometrik dan sesi coaching personal kami.
+                            </p>
+                        </div>
+                        <div class="relative z-10 mt-6 flex items-center gap-2 font-bold text-sm group-hover:gap-4 transition-all">
+                            Jelajahi Layanan <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+                    </a>
+
+                    <!-- CTA 2: Untuk Perusahaan -->
+                    <a href="mockup_perusahaan.html" class="group relative rounded-3xl overflow-hidden bg-dark p-8 md:p-10 text-white flex flex-col justify-between min-h-[240px] hover:shadow-2xl hover:shadow-gray-300 transition-all duration-300 hover:-translate-y-1">
+                        <div class="pattern-dots absolute inset-0 opacity-10"></div>
+                        <div class="relative z-10">
+                            <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center mb-5">
+                                <i class="fa-solid fa-building-columns text-white text-lg"></i>
+                            </div>
+                            <h3 class="text-2xl font-black mb-2">Untuk Perusahaan</h3>
+                            <p class="text-gray-400 text-sm font-medium leading-relaxed">
+                                Tingkatkan kapasitas tim, bangun budaya kerja yang kuat, dan akselerasi pertumbuhan organisasi Anda dengan solusi konsultasi SDM kami.
+                            </p>
+                        </div>
+                        <div class="relative z-10 mt-6 flex items-center gap-2 font-bold text-sm group-hover:gap-4 transition-all text-secondary">
+                            Solusi Korporat <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ╔══════════════════════════════╗ -->
+    <!-- ║           FOOTER             ║ -->
+    <!-- ╚══════════════════════════════╝ -->
+    <footer class="bg-white pt-16 border-t border-gray-200">
+        <div class="max-w-[1200px] mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 text-[#334155]">
+            <div class="pr-4">
+                <a href="../index.html" class="text-2xl font-bold tracking-tight flex items-center gap-2 mb-5 text-dark">
+                    <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM" class="h-14 md:h-16 w-auto">
+                </a>
+                <p class="text-xs text-gray-400 font-medium leading-relaxed">Empowering Potential, Accelerating Growth.</p>
+            </div>
+            <div>
+                <h4 class="font-extrabold text-dark text-sm mb-5 tracking-tight uppercase">Layanan</h4>
+                <ul class="space-y-3 font-medium text-sm text-gray-500">
+                    <li><a href="mockup_layanan_assessment.html" class="hover:text-primary transition-colors">Talents Mapping Asesmen</a></li>
+                    <li><a href="mockup_layanan_coaching.html" class="hover:text-primary transition-colors">Life Coaching</a></li>
+                    <li><a href="mockup_layanan_visual_coaching.html" class="hover:text-primary transition-colors">Visual Coaching</a></li>
+                    <li><a href="mockup_layanan_relaksasi.html" class="hover:text-primary transition-colors">Therapy (SEFT)</a></li>
+                    <li><a href="mockup_layanan_workshop.html" class="hover:text-primary transition-colors">Workshop & Training</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-extrabold text-dark text-sm mb-5 tracking-tight uppercase">Tentang</h4>
+                <ul class="space-y-3 font-medium text-sm text-gray-500">
+                    <li><a href="mockup_tentang_theaim.html" class="text-primary font-semibold">Tentang TheAIM</a></li>
+                    <li><a href="mockup_tentang_ecosystem.html" class="hover:text-primary transition-colors">Talent Ecosystem</a></li>
+                    <li><a href="mockup_perusahaan.html" class="hover:text-primary transition-colors">Solusi Perusahaan</a></li>
+                    <li><a href="mockup_artikel.html" class="hover:text-primary transition-colors">Artikel & Aktivitas</a>
+                <a href="mockup_career.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Karir</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-extrabold text-dark text-sm mb-5 tracking-tight uppercase">Kontak</h4>
+                <ul class="space-y-3 font-medium text-sm text-gray-500">
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-phone text-primary text-xs"></i><a href="#" class="hover:text-primary transition-colors">081999554599</a></li>
+                    <li class="flex items-center gap-3"><i class="fa-regular fa-envelope text-primary text-xs"></i><a href="mailto:ptabadiinsanmanfaat@gmail.com" class="hover:text-primary transition-colors">ptabadiinsanmanfaat@gmail.com</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="bg-dark py-5 px-4 text-white">
+            <div class="max-w-[1200px] mx-auto flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 text-xs text-gray-500 font-medium">
+                <p>&copy; 2026 PT Abadi Insan Manfaat. All rights reserved.</p>
+                <span class="hidden sm:block">|</span>
+                <a href="#" class="hover:text-white transition-colors">Term & Condition</a>
+                <span class="hidden sm:block">|</span>
+                <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Count-Up Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        document.querySelectorAll('.stat-num').forEach(counter => {
+                            const target = +counter.getAttribute('data-target');
+                            const duration = 1800;
+                            const increment = target / (duration / 16);
+                            let current = 0;
+                            const tick = () => {
+                                current += increment;
+                                if (current < target) {
+                                    counter.innerText = Math.ceil(current).toLocaleString('id-ID');
+                                    setTimeout(tick, 16);
+                                } else {
+                                    counter.innerText = target === 1500 ? '1.500' : target >= 10000 ? '10k' : target;
+                                }
+                            };
+                            tick();
+                        });
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.3 });
+            const s = document.getElementById('stats-section');
+            if (s) observer.observe(s);
+        });
+    </script>
+
+</body>
+</html>

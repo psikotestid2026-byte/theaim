@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendaftaran Layanan - TheAIM</title>
+    <meta name="description"
+        content="TheAIM adalah platform pengembangan diri dan organisasi yang memadukan asesmen psikometrik valid dengan coaching personal berempati, untuk menuntun setiap individu dan perusahaan mencapai potensi tertinggi mereka.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital@0;1&family=Lexend:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626',
+                        secondary: '#fbbf24',
+                        dark: '#18181b',
+                        light: '#ffffff',
+                    },
+                    fontFamily: {
+                        sans: ['Lexend', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .pattern-dots {
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* ─── Marquee Animation ─── */
+        .marquee-wrapper {
+            overflow: hidden;
+            position: relative;
+        }
+        .marquee-wrapper::before,
+        .marquee-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 120px;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .marquee-wrapper::before {
+            left: 0;
+            background: linear-gradient(to right, #ffffff, transparent);
+        }
+        .marquee-wrapper::after {
+            right: 0;
+            background: linear-gradient(to left, #ffffff, transparent);
+        }
+        .marquee-track {
+            display: flex;
+            gap: 16px;
+            width: max-content;
+            animation: marquee-scroll 40s linear infinite;
+        }
+        .marquee-track.reverse {
+            animation: marquee-scroll-reverse 45s linear infinite;
+        }
+        .marquee-track:hover {
+            animation-play-state: paused;
+        }
+        @keyframes marquee-scroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        @keyframes marquee-scroll-reverse {
+            0%   { transform: translateX(-50%); }
+            100% { transform: translateX(0); }
+        }
+        .logo-pill {
+            flex-shrink: 0;
+            width: 120px;
+            height: 64px;
+            background: white;
+            border: 1px solid #f1f5f9;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+        }
+        .logo-pill:hover {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+        }
+        .logo-pill img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: grayscale(100%);
+            opacity: 0.55;
+            transition: all 0.3s ease;
+        }
+        .logo-pill:hover img {
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body class="font-sans text-dark flex flex-col min-h-screen">
+
+    <!-- ╔══════════════════════════════╗ -->
+    <!-- ║         NAVIGATION           ║ -->
+    <!-- ╚══════════════════════════════╝ -->
+    <nav class="sticky top-0 z-50 w-full glass-panel flex items-center px-4 py-4 lg:px-8 border-b border-gray-100">
+        <div class="max-w-[1400px] mx-auto w-full flex justify-between items-center">
+
+            <a href="../index.html" class="text-2xl font-bold tracking-tight flex items-center gap-2">
+                <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM" class="h-14 md:h-16 w-auto">
+            </a>
+
+            <div class="hidden lg:flex items-center space-x-2 font-medium text-[15px] text-gray-700">
+                <a href="../index.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Beranda</a>
+
+                <!-- Layanan Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg group-hover:bg-slate-100 transition-colors focus:outline-none">
+                        Layanan <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-64 bg-white rounded-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)] border border-slate-100 py-2 flex flex-col">
+                            <!-- Assessment -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Assessment <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Talents Mapping</a>
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Tes Psikologi (Psikotes)</a>
+                                        <a href="mockup_layanan_mental_health.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Mental Health Check Up</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Konsultasi & Coaching -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Konsultasi & Coaching <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_konseling.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konseling dengan Psikolog</a>
+                                        <a href="mockup_layanan_relaksasi.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Therapy (SEFT)</a>
+                                        <a href="mockup_layanan_visual_coaching.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Visual Coaching</a>
+                                        <a href="mockup_layanan_consultation.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konsultasi Keuangan</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Digital Product -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Digital Product <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-72 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_ecourse.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">E-Course Life Reset: 7 Days Re-Discover Yourself</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Webinar & Workshop -->
+                            <a href="mockup_layanan_workshop.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Webinar & Workshop</a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="mockup_perusahaan.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Untuk Perusahaan</a>
+                <a href="mockup_artikel.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Artikel & Aktivitas</a>
+                <a href="mockup_career.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Karir</a>
+
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg text-primary font-semibold transition-colors focus:outline-none">
+                        Tentang Kami <i class="fa-solid fa-chevron-down text-[10px] text-primary group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute right-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-56 bg-white rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-gray-100 py-3 overflow-hidden flex flex-col">
+                            <a href="mockup_tentang_theaim.html" class="px-6 py-3 text-sm text-primary font-bold bg-red-50 transition-colors">Tentang TheAIM</a>
+                            <a href="mockup_tentang_ecosystem.html" class="px-6 py-3 text-sm text-gray-500 hover:bg-gray-50 hover:text-primary transition-colors">TheAIM Ecosystem</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <a href="#" class="border-2 border-dark text-dark hover:bg-dark hover:text-white transition-all px-7 py-2.5 rounded-full font-semibold text-sm hidden md:block tracking-wide">
+                Masuk
+            </a>
+            <button class="md:hidden text-2xl text-dark"><i class="fa-solid fa-bars"></i></button>
+        </div>
+    </nav>
+
+    <main class="flex-grow">
+
+        <section class="py-20 px-4 bg-slate-50 min-h-[80vh] flex items-center justify-center">
+            <div class="max-w-[620px] w-full">
+
+                <!-- Order Summary Card -->
+                <div id="order-summary" class="hidden bg-white rounded-2xl border border-slate-200 shadow-sm p-5 mb-5">
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-3">Ringkasan Pesanan</p>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p id="summary-layanan-text" class="font-bold text-dark text-sm"></p>
+                            <p id="summary-paket-text" class="text-slate-500 text-xs font-medium mt-0.5"></p>
+                        </div>
+                        <div class="text-right">
+                            <p id="summary-harga-text" class="font-black text-primary text-xl tracking-tight"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100">
+                    <div class="text-center mb-10">
+                        <h1 class="text-3xl font-extrabold text-dark mb-3 tracking-tight">Formulir Pendaftaran</h1>
+                        <p class="text-gray-500 font-medium text-sm">Silakan lengkapi data diri Anda untuk melanjutkan proses pendaftaran layanan TheAIM.</p>
+                    </div>
+
+                    <form id="reg-form" action="mockup_pembayaran.html" method="GET" class="space-y-6">
+                        <!-- Hidden fields for passing data -->
+                        <input type="hidden" id="harga-field" name="harga" value="">
+
+                        <!-- Pilihan Layanan -->
+                        <div>
+                            <label for="layanan" class="block text-sm font-bold text-dark mb-2">Layanan yang Dipilih <span class="text-primary">*</span></label>
+                            <div class="relative">
+                                <select id="layanan" name="layanan" required class="w-full appearance-none bg-slate-50 border border-slate-200 text-dark font-medium rounded-xl px-5 py-3.5 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all cursor-pointer">
+                                    <option value="" disabled selected>-- Pilih Layanan --</option>
+                                    <option value="konseling_individu">Konseling Individu</option>
+                                    <option value="konseling_pasangan">Konseling Pasangan</option>
+                                    <option value="mental_health_checkup">Mental Health Check Up (Enneagram)</option>
+                                    <option value="visual_coaching">Visual Coaching</option>
+                                    <option value="therapy_seft">Therapy (SEFT)</option>
+                                    <option value="konsultasi_keuangan">Konsultasi Keuangan</option>
+                                    <option value="talents_mapping">Talents Mapping</option>
+                                    <option value="tes_psikologi">Tes Psikologi (Psikotes)</option>
+                                    <option value="ecourse">E-Course Life Reset</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-sm"></i>
+                            </div>
+                        </div>
+
+                        <!-- Pilihan Paket (dynamic) -->
+                        <div>
+                            <label for="paket" class="block text-sm font-bold text-dark mb-2">Paket/Sesi <span class="text-primary">*</span></label>
+                            <div class="relative">
+                                <select id="paket" name="paket" required class="w-full appearance-none bg-slate-50 border border-slate-200 text-dark font-medium rounded-xl px-5 py-3.5 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all cursor-pointer">
+                                    <option value="" disabled selected>-- Pilih Paket --</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-sm"></i>
+                            </div>
+                        </div>
+
+                        <div class="h-px w-full bg-slate-100 my-2"></div>
+
+                        <!-- Nama Lengkap -->
+                        <div>
+                            <label for="nama" class="block text-sm font-bold text-dark mb-2">Nama Lengkap <span class="text-primary">*</span></label>
+                            <input type="text" id="nama" name="nama" required placeholder="Masukkan nama lengkap Anda" class="w-full bg-slate-50 border border-slate-200 text-dark font-medium rounded-xl px-5 py-3.5 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-slate-400">
+                        </div>
+
+                        <!-- Nomor HP -->
+                        <div>
+                            <label for="nohp" class="block text-sm font-bold text-dark mb-2">Nomor WhatsApp <span class="text-primary">*</span></label>
+                            <div class="relative">
+                                <span class="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500 font-bold border-r border-slate-200 pr-3">+62</span>
+                                <input type="tel" id="nohp" name="nohp" required placeholder="81234567890" class="w-full bg-slate-50 border border-slate-200 text-dark font-medium rounded-xl pl-[4.5rem] pr-5 py-3.5 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-slate-400">
+                            </div>
+                            <p class="text-[11px] text-slate-500 mt-2"><i class="fa-solid fa-circle-info mr-1"></i> Pastikan nomor aktif. Informasi lanjutan akan dikirimkan ke nomor ini.</p>
+                        </div>
+
+                        <div class="pt-4">
+                            <button type="submit" class="w-full bg-primary text-white font-bold py-4 rounded-xl hover:bg-red-700 shadow-lg shadow-red-200 transition-all transform hover:-translate-y-1 flex justify-center items-center gap-2">
+                                Lanjut ke Pembayaran <i class="fa-solid fa-arrow-right text-sm"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+</main>
+
+    <!-- ╔══════════════════════════════╗ -->
+    <!-- ║           FOOTER             ║ -->
+    <!-- ╚══════════════════════════════╝ -->
+    <footer class="bg-white pt-16 border-t border-gray-200">
+        <div class="max-w-[1200px] mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 text-[#334155]">
+            <div class="pr-4">
+                <a href="../index.html" class="text-2xl font-bold tracking-tight flex items-center gap-2 mb-5 text-dark">
+                    <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM" class="h-14 md:h-16 w-auto">
+                </a>
+                <p class="text-xs text-gray-400 font-medium leading-relaxed">Empowering Potential, Accelerating Growth.</p>
+            </div>
+            <div>
+                <h4 class="font-extrabold text-dark text-sm mb-5 tracking-tight uppercase">Layanan</h4>
+                <ul class="space-y-3 font-medium text-sm text-gray-500">
+                    <li><a href="mockup_layanan_assessment.html" class="hover:text-primary transition-colors">Talents Mapping Asesmen</a></li>
+                    <li><a href="mockup_layanan_konseling.html" class="hover:text-primary transition-colors">Konseling Psikolog</a></li>
+                    <li><a href="mockup_layanan_visual_coaching.html" class="hover:text-primary transition-colors">Visual Coaching</a></li>
+                    <li><a href="mockup_layanan_relaksasi.html" class="hover:text-primary transition-colors">Therapy (SEFT)</a></li>
+                    <li><a href="mockup_layanan_workshop.html" class="hover:text-primary transition-colors">Workshop & Training</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-extrabold text-dark text-sm mb-5 tracking-tight uppercase">Tentang</h4>
+                <ul class="space-y-3 font-medium text-sm text-gray-500">
+                    <li><a href="mockup_tentang_theaim.html" class="hover:text-primary transition-colors">Tentang TheAIM</a></li>
+                    <li><a href="mockup_tentang_ecosystem.html" class="hover:text-primary transition-colors">Talent Ecosystem</a></li>
+                    <li><a href="mockup_perusahaan.html" class="hover:text-primary transition-colors">Solusi Perusahaan</a></li>
+                    <li><a href="mockup_artikel.html" class="hover:text-primary transition-colors">Artikel & Aktivitas</a></li>
+                    <li><a href="mockup_career.html" class="hover:text-primary transition-colors">Karir</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-extrabold text-dark text-sm mb-5 tracking-tight uppercase">Kontak</h4>
+                <ul class="space-y-3 font-medium text-sm text-gray-500">
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-phone text-primary text-xs"></i><a href="https://wa.me/6281999554599" class="hover:text-primary transition-colors">081999554599</a></li>
+                    <li class="flex items-center gap-3"><i class="fa-regular fa-envelope text-primary text-xs"></i><a href="mailto:ptabadiinsanmanfaat@gmail.com" class="hover:text-primary transition-colors">ptabadiinsanmanfaat@gmail.com</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="bg-dark py-5 px-4 text-white">
+            <div class="max-w-[1200px] mx-auto flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 text-xs text-gray-500 font-medium">
+                <p>&copy; 2026 PT Abadi Insan Manfaat. All rights reserved.</p>
+                <span class="hidden sm:block">|</span>
+                <a href="#" class="hover:text-white transition-colors">Term & Condition</a>
+                <span class="hidden sm:block">|</span>
+                <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Count-Up Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        document.querySelectorAll('.stat-num').forEach(counter => {
+                            const target = +counter.getAttribute('data-target');
+                            const duration = 1800;
+                            const increment = target / (duration / 16);
+                            let current = 0;
+                            const tick = () => {
+                                current += increment;
+                                if (current < target) {
+                                    counter.innerText = Math.ceil(current).toLocaleString('id-ID');
+                                    setTimeout(tick, 16);
+                                } else {
+                                    counter.innerText = target === 1500 ? '1.500' : target >= 10000 ? '10k' : target;
+                                }
+                            };
+                            tick();
+                        });
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.3 });
+            const s = document.getElementById('stats-section');
+            if (s) observer.observe(s);
+        });
+    </script>
+
+    <!-- Dynamic Form Logic & Auto-Fill Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Data Base Harga dan Paket
+            const LayananData = {
+                'talents_mapping': [
+                    { name: 'Assessment Only', price: 399000 },
+                    { name: 'Assessment + Pro Consultation', price: 599000 },
+                    { name: 'Assessment + Coach Alif', price: 799000 },
+                    { name: 'Pro Consultation Only', price: 299000 },
+                    { name: 'Pro Consultation with Coach Alif', price: 499000 }
+                ],
+                'mental_health_checkup': [
+                    { name: 'Check-Up Only', price: 199000 },
+                    { name: 'Check-Up + Konseling', price: 299000 },
+                    { name: 'Check-Up + Coach Alif', price: 499000 }
+                ],
+                'konseling_individu': [
+                    { name: 'Konseling Basic (1 Sesi)', price: 199000 },
+                    { name: 'Konseling Pro (1 Sesi)', price: 299000 },
+                    { name: 'Paket Tuntas (3 Sesi)', price: 749000 }
+                ],
+                'konseling_pasangan': [
+                    { name: 'Konseling Pasangan Basic', price: 299000 },
+                    { name: 'Konseling Pasangan Pro', price: 499000 }
+                ],
+                'visual_coaching': [
+                    { name: 'Basic Session', price: 299000 },
+                    { name: 'Pro Session', price: 349000 },
+                    { name: 'Bundling Tuntas (3 Sesi)', price: 999000 }
+                ],
+                'therapy_seft': [
+                    { name: '1 Sesi Online', price: 149000 },
+                    { name: '1 Sesi Offline', price: 199000 },
+                    { name: 'Paket Tuntas Online (3 Sesi)', price: 399000 },
+                    { name: 'Paket Tuntas Offline (3 Sesi)', price: 499000 }
+                ],
+                'konsultasi_keuangan': [
+                    { name: 'Konsultasi Basic', price: 299000 },
+                    { name: 'Perencanaan Komprehensif', price: 799000 }
+                ],
+                'tes_psikologi': [
+                    { name: 'Psikotes Basic', price: 199000 },
+                    { name: 'Psikotes Komprehensif', price: 399000 }
+                ],
+                'ecourse': [
+                    { name: 'E-Course Life Reset', price: 79000 }
+                ]
+            };
+
+            const selectLayanan = document.getElementById('layanan');
+            const selectPaket = document.getElementById('paket');
+            const hargaField = document.getElementById('harga-field');
+            
+            const summaryCard = document.getElementById('order-summary');
+            const summaryLayananText = document.getElementById('summary-layanan-text');
+            const summaryPaketText = document.getElementById('summary-paket-text');
+            const summaryHargaText = document.getElementById('summary-harga-text');
+
+            // Format angka ke Rupiah
+            const formatRupiah = (angka) => {
+                return new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                    minimumFractionDigits: 0
+                }).format(angka);
+            };
+
+            // Fungsi untuk mengupdate dropdown Paket berdasarkan Layanan
+            const updatePaketDropdown = (layananValue) => {
+                // Bersihkan dropdown
+                selectPaket.innerHTML = '<option value="" disabled selected>-- Pilih Paket --</option>';
+                
+                if (LayananData[layananValue]) {
+                    LayananData[layananValue].forEach((paket, index) => {
+                        const option = document.createElement('option');
+                        option.value = index; // Gunakan index sebagai value agar mudah ambil harganya
+                        option.textContent = `${paket.name} - ${formatRupiah(paket.price)}`;
+                        option.dataset.name = paket.name;
+                        option.dataset.price = paket.price;
+                        selectPaket.appendChild(option);
+                    });
+                }
+            };
+
+            // Fungsi untuk mengupdate Kartu Ringkasan
+            const updateSummaryCard = () => {
+                if (selectLayanan.value && selectPaket.value) {
+                    const selectedPaketOption = selectPaket.options[selectPaket.selectedIndex];
+                    const layananName = selectLayanan.options[selectLayanan.selectedIndex].text;
+                    const paketName = selectedPaketOption.dataset.name;
+                    const price = selectedPaketOption.dataset.price;
+
+                    // Set field tersembunyi
+                    hargaField.value = price;
+
+                    // Update UI Card
+                    summaryLayananText.textContent = layananName;
+                    summaryPaketText.textContent = `Paket: ${paketName}`;
+                    summaryHargaText.textContent = formatRupiah(parseInt(price));
+                    
+                    // Munculkan card
+                    summaryCard.classList.remove('hidden');
+                } else {
+                    summaryCard.classList.add('hidden');
+                    hargaField.value = '';
+                }
+            };
+
+            // Event Listeners untuk form interaktif
+            selectLayanan.addEventListener('change', (e) => {
+                updatePaketDropdown(e.target.value);
+                updateSummaryCard();
+            });
+
+            selectPaket.addEventListener('change', () => {
+                updateSummaryCard();
+            });
+
+            // ==========================================
+            // LOGIKA AUTO-FILL DARI URL PARAMETERS
+            // ==========================================
+            const urlParams = new URLSearchParams(window.location.search);
+            const paramLayanan = urlParams.get('layanan');
+            const paramPaket = urlParams.get('paket');
+            
+            if (paramLayanan && Array.from(selectLayanan.options).some(opt => opt.value === paramLayanan)) {
+                // 1. Pilih layanan
+                selectLayanan.value = paramLayanan;
+                // 2. Load paket untuk layanan tersebut
+                updatePaketDropdown(paramLayanan);
+                
+                // 3. Jika ada parameter paket, cari dan pilih
+                if (paramPaket) {
+                    const decodedPaket = decodeURIComponent(paramPaket).replace(/\+/g, ' ');
+                    // Cari option yang text-nya mirip atau dataset name-nya sama
+                    const options = Array.from(selectPaket.options);
+                    const matchingOption = options.find(opt => 
+                        opt.dataset && opt.dataset.name.toLowerCase() === decodedPaket.toLowerCase()
+                    );
+                    
+                    if (matchingOption) {
+                        selectPaket.value = matchingOption.value;
+                    }
+                }
+                
+                // 4. Update ringkasan
+                updateSummaryCard();
+            }
+        });
+    </script>
+
+</body>
+</html>

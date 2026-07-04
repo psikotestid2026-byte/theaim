@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulir Lamaran Kerja - TheAIM</title>
+    <meta name="description" content="Formulir pengisian lamaran kerja untuk posisi di PT Abadi Insan Manfaat (TheAIM). Unggah berkas CV dan biodata Anda secara langsung.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626',   // TheAIM Red
+                        secondary: '#fbbf24', // TheAIM Yellow
+                        dark: '#0f172a',      // Slate-900
+                        darker: '#020617',    // Slate-950
+                        light: '#ffffff',
+                        cream: '#faf8f5',     // Warm cream background
+                        beige: '#fcfaf6',     // Card background
+                    },
+                    fontFamily: {
+                        sans: ['Lexend', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #faf8f5;
+            overflow-x: hidden;
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+
+<body class="font-sans text-dark flex flex-col min-h-screen">
+
+    <!-- ╔══════════════════════════════╗ -->
+    <!-- ║         NAVIGATION           ║ -->
+    <!-- ╚══════════════════════════════╝ -->
+    <nav class="sticky top-0 z-50 w-full glass-nav flex items-center px-4 py-4 lg:px-8 border-b border-gray-100">
+        <div class="max-w-[1400px] mx-auto w-full flex justify-between items-center">
+
+            <a href="../index.html" class="text-2xl font-bold tracking-tight flex items-center gap-2">
+                <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM" class="h-14 md:h-16 w-auto">
+            </a>
+
+            <div class="hidden lg:flex items-center space-x-2 font-medium text-[15px] text-gray-700">
+                <a href="../index.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Beranda</a>
+
+                <!-- Layanan Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg group-hover:bg-slate-100 transition-colors focus:outline-none">
+                        Layanan <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-60 bg-white rounded-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)] border border-slate-100 py-2 flex flex-col">
+                            <!-- Assessment -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Assessment <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Talents Mapping</a>
+                                        <a href="mockup_layanan_mental_health.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Mental Health Check Up</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Konsultasi -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Konsultasi <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_konseling.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konseling dengan Psikolog</a>
+                                        <a href="mockup_layanan_coaching.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Life Coaching</a>
+                                        <a href="mockup_layanan_visual_coaching.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Visual Coaching</a>
+                                        <a href="mockup_layanan_consultation.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konsultasi Keuangan</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Digital Product -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Digital Product <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-72 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_ecourse.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">E-Course Life Reset: 7 Days Re-Discover Yourself</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Regular Items -->
+                            <a href="mockup_layanan_relaksasi.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors text-primary font-bold">Therapy (SEFT)</a>
+                            <a href="mockup_layanan_workshop.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Workshop & Training</a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="mockup_perusahaan.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Untuk Perusahaan</a>
+                <a href="mockup_artikel.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Artikel & Aktivitas</a>
+                <a href="mockup_career.html" class="px-4 py-2 rounded-lg bg-red-50 text-primary font-bold border-b-2 border-primary transition-colors">Karir</a>
+
+                <!-- Tentang Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg group-hover:bg-slate-100 transition-colors focus:outline-none">
+                        Tentang Kami <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute right-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-56 bg-white rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-gray-100 py-3 overflow-hidden flex flex-col">
+                            <a href="mockup_tentang_theaim.html" class="px-6 py-3 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Tentang TheAIM</a>
+                            <a href="mockup_tentang_ecosystem.html" class="px-6 py-3 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">TheAIM Ecosystem</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <a href="#" class="border-2 border-dark text-dark hover:bg-dark hover:text-white transition-all px-7 py-2.5 rounded-full font-semibold text-sm hidden md:block tracking-wide">
+                Masuk
+            </a>
+            <button class="md:hidden text-2xl text-dark" onclick="toggleMobileMenu()"><i class="fa-solid fa-bars" id="menu-icon"></i></button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-white border-b border-slate-100 shadow-lg px-6 py-6 flex flex-col space-y-4 lg:hidden z-40">
+            <a href="../index.html" class="font-semibold text-slate-600 hover:text-primary">Beranda</a>
+            <hr class="border-slate-100">
+            <div>
+                <p class="font-bold text-xs uppercase tracking-widest text-slate-400 mb-2">Layanan</p>
+                <div class="grid grid-cols-2 gap-2 text-sm">
+                    <a href="mockup_layanan_assessment.html" class="text-slate-600 hover:text-primary">Talents Mapping</a>
+                    <a href="mockup_layanan_mental_health.html" class="text-slate-600 hover:text-primary">Mental Health</a>
+                    <a href="mockup_layanan_konseling.html" class="text-slate-600 hover:text-primary">Konseling</a>
+                    <a href="mockup_layanan_coaching.html" class="text-slate-600 hover:text-primary">Life Coaching</a>
+                    <a href="mockup_layanan_visual_coaching.html" class="text-slate-600 hover:text-primary">Visual Coaching</a>
+                    <a href="mockup_layanan_consultation.html" class="text-slate-600 hover:text-primary">Konsultasi Keuangan</a>
+                    <a href="mockup_layanan_relaksasi.html" class="text-slate-600 hover:text-primary font-bold text-primary">Therapy (SEFT)</a>
+                    <a href="mockup_layanan_workshop.html" class="text-slate-600 hover:text-primary">Workshop & Training</a>
+                </div>
+            </div>
+            <hr class="border-slate-100">
+            <a href="mockup_perusahaan.html" class="font-semibold text-slate-600 hover:text-primary">Untuk Perusahaan</a>
+            <a href="mockup_artikel.html" class="font-semibold text-slate-600 hover:text-primary">Artikel & Aktivitas</a>
+            <a href="mockup_career.html" class="font-bold text-primary">Karir</a>
+            <hr class="border-slate-100">
+            <div>
+                <p class="font-bold text-xs uppercase tracking-widest text-slate-400 mb-2">Tentang Kami</p>
+                <div class="flex flex-col space-y-2 text-sm">
+                    <a href="mockup_tentang_theaim.html" class="text-slate-600 hover:text-primary">Tentang TheAIM</a>
+                    <a href="mockup_tentang_ecosystem.html" class="text-slate-600 hover:text-primary">TheAIM Ecosystem</a>
+                </div>
+            </div>
+            <hr class="border-slate-100">
+            <a href="#" class="btn-corp py-3 rounded-full font-semibold text-sm text-center">Masuk</a>
+        </div>
+    </nav>
+
+    <main class="flex-grow py-12 px-4">
+        <div class="max-w-[1100px] mx-auto">
+            
+            <!-- Breadcrumb / Back Link to Detail page -->
+            <div class="mb-6">
+                <a href="javascript:history.back()" class="text-xs font-bold text-slate-500 hover:text-primary transition-colors flex items-center gap-1.5 bg-white px-4 py-2 rounded-xl border border-slate-200/60 shadow-sm w-fit">
+                    <i class="fa-solid fa-arrow-left"></i> Kembali ke Detail Lowongan
+                </a>
+            </div>
+
+            <!-- Views Box -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                
+                <!-- Left: Form Card or Success Screen -->
+                <div class="lg:col-span-8 bg-white rounded-2xl p-6 md:p-8 border border-slate-200/60 shadow-sm" id="form-container">
+                    
+                    <!-- Form view -->
+                    <div id="apply-form-view">
+                        <h3 class="text-sm font-extrabold text-dark border-b border-slate-100 pb-3 mb-6">
+                            Formulir Lamaran Pekerjaan
+                        </h3>
+
+                        <form id="apply-form" onsubmit="submitApplication(event)" class="space-y-5">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-2">Nama Lengkap *</label>
+                                    <input type="text" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs font-medium focus:outline-none focus:border-primary text-slate-800" placeholder="e.g. Alif Muhammad">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-2">Alamat Email *</label>
+                                    <input type="email" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs font-medium focus:outline-none focus:border-primary text-slate-800" placeholder="e.g. alif@example.com">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-2">Nomor Telepon / WhatsApp *</label>
+                                    <input type="tel" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs font-medium focus:outline-none focus:border-primary text-slate-800" placeholder="e.g. 08123456789">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-2">Tautan Portofolio / LinkedIn (Opsional)</label>
+                                    <input type="url" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs font-medium focus:outline-none focus:border-primary text-slate-800" placeholder="e.g. https://linkedin.com/in/username">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-2">Unggah CV / Resume (PDF, Max 5MB) *</label>
+                                <div class="relative border-2 border-dashed border-slate-200 hover:border-primary rounded-2xl p-6 transition-colors flex flex-col items-center justify-center cursor-pointer bg-slate-50" id="drop-zone" onclick="triggerFileInput()">
+                                    <i class="fa-solid fa-cloud-arrow-up text-3xl text-slate-400 mb-3" id="upload-icon"></i>
+                                    <p class="text-xs text-slate-500 font-semibold text-center mb-1" id="upload-text">Tarik berkas ke sini atau klik untuk memilih file</p>
+                                    <p class="text-[10px] text-slate-400 text-center">Hanya file PDF dengan ukuran maksimal 5 Megabytes</p>
+                                    
+                                    <input type="file" id="cv-file" accept=".pdf" required class="hidden" onchange="handleFileSelected(this)">
+                                </div>
+                                <!-- File details layout -->
+                                <div id="file-details" class="hidden mt-3 p-3 bg-red-50 border border-red-100 rounded-xl flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fa-solid fa-file-pdf text-xl text-primary"></i>
+                                        <div>
+                                            <p class="text-xs font-bold text-slate-700 max-w-[200px] sm:max-w-[400px] truncate" id="file-name">CV_Alif_Muhammad.pdf</p>
+                                            <p class="text-[10px] text-slate-400" id="file-size">1.2 MB</p>
+                                        </div>
+                                    </div>
+                                    <button type="button" onclick="removeSelectedFile(event)" class="text-slate-400 hover:text-primary transition-colors p-1"><i class="fa-solid fa-trash-can"></i></button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-2">Pesan Pengantar / Cover Letter (Opsional)</label>
+                                <textarea class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs font-medium focus:outline-none focus:border-primary text-slate-800 h-28 resize-none" placeholder="Tulis pesan pengantar singkat mengenai ketertarikan Anda dan mengapa Anda cocok dengan peran ini..."></textarea>
+                            </div>
+
+                            <div class="pt-4 border-t border-slate-100 flex justify-end shrink-0 gap-3">
+                                <a href="mockup_career.html" class="px-6 py-3 rounded-full text-slate-500 hover:bg-slate-50 text-xs font-bold transition-all text-center flex items-center justify-center">
+                                    Batal
+                                </a>
+                                <button type="submit" class="btn-primary px-8 py-3 rounded-full font-bold text-xs shadow-md flex items-center gap-2">
+                                    Kirim Lamaran <i class="fa-solid fa-paper-plane text-[10px]"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Loading Screen (Hidden) -->
+                    <div id="apply-loading-view" class="hidden py-16 flex flex-col items-center justify-center text-center">
+                        <div class="w-16 h-16 border-4 border-slate-100 border-t-primary rounded-full animate-spin mb-6"></div>
+                        <h4 class="font-extrabold text-dark text-base mb-2">Mengirimkan Berkas Lamaran...</h4>
+                        <p class="text-slate-400 text-xs max-w-xs mx-auto">Kami sedang mengenkripsi data Anda dan mengunggah CV Anda dengan aman ke sistem internal.</p>
+                    </div>
+
+                    <!-- Success Screen (Hidden) -->
+                    <div id="apply-success-view" class="hidden py-12 flex flex-col items-center justify-center text-center">
+                        <div class="w-20 h-20 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-full flex items-center justify-center text-4xl mb-6 shadow-sm shadow-emerald-100 animate-bounce">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                        <h4 class="font-black text-dark text-xl mb-3">Lamaran Berhasil Terkirim!</h4>
+                        <p class="text-slate-500 text-xs leading-relaxed max-w-sm mx-auto mb-8">
+                            Terima kasih atas minat Anda bergabung bersama <strong class="text-slate-800">PT Abadi Insan Manfaat</strong>. Berkas Anda telah sukses kami terima.
+                        </p>
+                        
+                        <div class="p-4 bg-slate-50 border border-slate-100 rounded-2xl text-left max-w-sm w-full text-[11px] text-slate-500 mb-8 space-y-2">
+                            <p class="font-bold text-slate-700 text-xs mb-1">💡 Langkah Selanjutnya:</p>
+                            <p class="flex gap-2"><span class="font-bold text-primary">1.</span> Tim HR & Talent Acquisition kami akan meninjau CV serta portofolio Anda dalam waktu 3-5 hari kerja.</p>
+                            <p class="flex gap-2"><span class="font-bold text-primary">2.</span> Kandidat yang memenuhi syarat akan dihubungi langsung via WhatsApp atau Email untuk jadwal interview awal.</p>
+                        </div>
+
+                        <a href="mockup_career.html" class="btn-corp px-8 py-3 rounded-full font-bold text-xs inline-block text-center">
+                            Kembali ke Halaman Karir
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Column: Sticky Summary -->
+                <div class="lg:col-span-4 space-y-6">
+                    <div class="bg-white rounded-2xl p-6 border border-slate-200/60 shadow-sm">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Anda Melamar Untuk Posisi</h3>
+                        <h4 class="text-base font-black text-dark mb-4 animate-pulse" id="job-display-title">B2B Corporate Marketing Specialist</h4>
+                        
+                        <div class="space-y-4 border-t border-slate-100 pt-4 text-xs font-semibold text-slate-500">
+                            <div class="flex gap-2.5">
+                                <i class="fa-solid fa-building text-primary w-4 text-center"></i>
+                                <span>PT Abadi Insan Manfaat</span>
+                            </div>
+                            <div class="flex gap-2.5">
+                                <i class="fa-solid fa-map-pin text-primary w-4 text-center"></i>
+                                <span id="job-display-loc">Bandung / Hybrid</span>
+                            </div>
+                            <div class="flex gap-2.5">
+                                <i class="fa-solid fa-briefcase text-primary w-4 text-center"></i>
+                                <span id="job-display-type">Full-Time</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER (Synced & General B2C/B2B Layout) -->
+    <footer class="bg-dark pt-16 border-t border-slate-800 text-slate-400 mt-16 shrink-0">
+        <div class="max-w-[1200px] mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+            <!-- Kolom 1 -->
+            <div class="pr-4">
+                <a href="../index.html" class="text-2xl font-bold tracking-tight flex items-center gap-2 mb-8 text-white">
+                    <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM Logo" class="h-14 md:h-16 w-auto">
+                </a>
+                <p class="text-sm leading-relaxed mb-6">Mitra strategis Anda dalam pemetaan potensi diri, konsultasi profesional, dan pemeliharaan kesehatan mental terpadu.</p>
+            </div>
+
+            <!-- Kolom 2 -->
+            <div>
+                <h4 class="font-extrabold text-white text-lg mb-6 tracking-tight">Layanan Utama</h4>
+                <ul class="space-y-3 font-medium text-sm border-l-2 border-slate-700 pl-4">
+                    <li><a href="../index.html#layanan-individu" class="hover:text-primary transition-colors">Asesmen & Talents Mapping</a></li>
+                    <li><a href="../index.html#layanan-individu" class="hover:text-primary transition-colors">Konseling Psikolog & Terapi</a></li>
+                    <li><a href="../index.html#layanan-individu" class="hover:text-primary transition-colors">Visual Coaching & Finansial</a></li>
+                    <li><a href="../index.html#layanan-individu" class="hover:text-primary transition-colors">Webinar & E-Course Reset</a></li>
+                    <li><a href="mockup_perusahaan.html" class="hover:text-primary transition-colors">Solusi Manajemen SDM B2B</a></li>
+                </ul>
+            </div>
+
+            <!-- Kolom 3 -->
+            <div>
+                <h4 class="font-extrabold text-white text-lg mb-6 tracking-tight">Perusahaan</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li><a href="mockup_tentang_theaim.html" class="hover:text-white transition-colors">Tentang TheAIM</a></li>
+                    <li><a href="../index.html" class="hover:text-white transition-colors">Untuk Individu / B2C</a></li>
+                    <li><a href="mockup_artikel.html" class="hover:text-white transition-colors">Update Artikel</a></li>
+                    <li><a href="mockup_career.html" class="hover:text-white text-primary transition-colors">Karir</a></li>
+                </ul>
+            </div>
+
+            <!-- Kolom 4 -->
+            <div>
+                <h4 class="font-extrabold text-white text-lg mb-6 tracking-tight">Hubungi Kami</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li class="flex items-center gap-3">
+                        <i class="fa-solid fa-headset text-slate-600 border border-slate-700 p-2 rounded-md"></i>
+                        <a href="https://wa.me/6281999554599" target="_blank" class="hover:text-white transition-colors text-white font-bold">0819-9955-4599</a>
+                    </li>
+                    <li class="flex items-center gap-3 mt-4">
+                        <i class="fa-solid fa-building text-slate-600 border border-slate-700 p-2 rounded-md"></i>
+                        <span>PT Abadi Insan Manfaat<br>Bandung, Indonesia</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="bg-darker py-6 px-4 border-t border-slate-800">
+            <div class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-center items-center gap-6 text-xs text-slate-500 font-medium">
+                <p>&copy; 2026 PT Abadi Insan Manfaat. All rights reserved.</p>
+                <div class="hidden sm:block">|</div>
+                <div class="space-x-4">
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ╔══════════════════════════════╗ -->
+    <!-- ║         JAVASCRIPT           ║ -->
+    <!-- ╚══════════════════════════════╝ -->
+    <script>
+        // Parse Query Parameter
+        window.onload = () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const jobTitle = urlParams.get('job');
+            
+            if (jobTitle) {
+                document.getElementById('job-display-title').innerText = decodeURIComponent(jobTitle);
+                
+                // Set metadata depending on parameter
+                const titleLower = jobTitle.toLowerCase();
+                const displayLoc = document.getElementById('job-display-loc');
+                const displayType = document.getElementById('job-display-type');
+                
+                if (titleLower.includes('psychologist')) {
+                    displayLoc.innerText = "Remote / Hybrid";
+                    displayType.innerText = "Part-Time";
+                } else if (titleLower.includes('designer') || titleLower.includes('content') || titleLower.includes('ui/ux')) {
+                    displayLoc.innerText = "Bandung / Hybrid";
+                    displayType.innerText = "Internship";
+                } else if (titleLower.includes('specialist') && titleLower.includes('development') || titleLower.includes('hr')) {
+                    displayLoc.innerText = "Bandung (WFO)";
+                    displayType.innerText = "Full-Time";
+                } else {
+                    displayLoc.innerText = "Bandung / Hybrid";
+                    displayType.innerText = "Full-Time";
+                }
+            }
+        }
+
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('menu-icon');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                icon.classList.replace('fa-bars', 'fa-xmark');
+            } else {
+                menu.classList.add('hidden');
+                icon.classList.replace('fa-xmark', 'fa-bars');
+            }
+        }
+
+        // File Uploader Handler
+        function triggerFileInput() {
+            document.getElementById('cv-file').click();
+        }
+
+        function handleFileSelected(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            // Size checking (5MB limit)
+            if (file.size > 5 * 1024 * 1024) {
+                alert("Ukuran file melebihi 5MB. Silakan upload file CV yang lebih kecil.");
+                input.value = "";
+                return;
+            }
+
+            // Type checking
+            if (file.type !== "application/pdf" && !file.name.endsWith('.pdf')) {
+                alert("Format file salah. Hanya berkas berformat PDF yang diperbolehkan.");
+                input.value = "";
+                return;
+            }
+
+            // Render file info
+            document.getElementById('file-name').innerText = file.name;
+            document.getElementById('file-size').innerText = (file.size / (1024 * 1024)).toFixed(2) + " MB";
+            
+            document.getElementById('drop-zone').classList.add('hidden');
+            document.getElementById('file-details').classList.remove('hidden');
+        }
+
+        function removeSelectedFile(event) {
+            if (event) event.stopPropagation();
+            document.getElementById('cv-file').value = "";
+            document.getElementById('drop-zone').classList.remove('hidden');
+            document.getElementById('file-details').classList.add('hidden');
+        }
+
+        // Drag & Drop
+        const dropZone = document.getElementById('drop-zone');
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropZone.classList.add('border-primary', 'bg-red-50/30');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('border-primary', 'bg-red-50/30');
+            }, false);
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            if (files.length > 0) {
+                const fileInput = document.getElementById('cv-file');
+                fileInput.files = files;
+                handleFileSelected(fileInput);
+            }
+        }, false);
+
+        // Submit form handler
+        function submitApplication(event) {
+            event.preventDefault();
+            
+            // Switch to loading
+            document.getElementById('apply-form-view').classList.add('hidden');
+            document.getElementById('apply-loading-view').classList.remove('hidden');
+
+            // Simulate server upload
+            setTimeout(() => {
+                document.getElementById('apply-loading-view').classList.add('hidden');
+                document.getElementById('apply-success-view').classList.remove('hidden');
+                
+                // Clear Form Fields
+                document.getElementById('apply-form').reset();
+            }, 2000);
+        }
+    </script>
+</body>
+
+</html>

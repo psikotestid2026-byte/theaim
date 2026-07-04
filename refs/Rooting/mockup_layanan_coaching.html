@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coaching - TheAIM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626', // Merah
+                        secondary: '#fbbf24', // Kuning
+                        dark: '#18181b', // Hitam
+                        light: '#ffffff', // Putih
+                    },
+                    fontFamily: {
+                        sans: ['Lexend', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #ffffff; overflow-x: hidden; }
+        
+        .btn-primary {
+            background-color: #dc2626;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(220, 38, 38, 0.3);
+        }
+        
+        .btn-outline {
+            border: 2px solid #18181b;
+            color: #18181b;
+            transition: all 0.3s ease;
+        }
+        .btn-outline:hover {
+            background-color: #18181b;
+            color: white;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+        
+        .dashed-card {
+            border: 2px dashed #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        .dashed-card:hover {
+            border-color: #dc2626;
+            background-color: #fef2f2;
+            transform: translateY(-4px);
+        }
+
+        /* Rate Card Styles */
+        .rate-card {
+            background: #ffffff;
+            border: 1px solid #fee2e2;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        .rate-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px -12px rgba(220, 38, 38, 0.15);
+            border-color: #fecaca;
+        }
+        .rate-badge {
+            background: #fef2f2;
+            color: #dc2626;
+            padding: 6px 16px;
+            border-radius: 99px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid #fee2e2;
+        }
+        .price-tag {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #18181b;
+            letter-spacing: -2px;
+            line-height: 1;
+        }
+        .price-currency {
+            font-size: 1.25rem;
+            color: #dc2626;
+            font-weight: 800;
+            margin-right: 2px;
+        }
+        .feature-icon {
+            width: 20px;
+            height: 20px;
+            background: #fef2f2;
+            color: #dc2626;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-center: center;
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body class="font-sans text-dark flex flex-col min-h-screen">
+    
+    <!-- NAVIGATION -->
+    <nav class="sticky top-0 z-50 w-full glass-panel flex items-center px-4 py-4 lg:px-8 border-b border-gray-100">
+        <div class="max-w-[1400px] mx-auto w-full flex justify-between items-center">
+            
+            <a href="../index.html" class="text-2xl font-bold tracking-tight flex items-center gap-2">
+                <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM" class="h-14 md:h-16 w-auto">
+            </a>
+            
+            <div class="hidden lg:flex items-center space-x-2 font-medium text-[15px] text-gray-700">
+                <a href="../index.html" class="px-4 py-2 rounded-lg text-primary font-semibold transition-colors">Beranda</a>
+                
+                <!-- Layanan Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg group-hover:bg-slate-100 transition-colors focus:outline-none">
+                        Layanan <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-64 bg-white rounded-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)] border border-slate-100 py-2 flex flex-col">
+                            <!-- Assessment -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Assessment <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Talents Mapping</a>
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Tes Psikologi (Psikotes)</a>
+                                        <a href="mockup_layanan_mental_health.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Mental Health Check Up</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Konsultasi & Coaching -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Konsultasi & Coaching <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_konseling.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konseling dengan Psikolog</a>
+                                        <a href="mockup_layanan_relaksasi.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Therapy (SEFT)</a>
+                                        <a href="mockup_layanan_visual_coaching.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Visual Coaching</a>
+                                        <a href="mockup_layanan_consultation.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konsultasi Keuangan</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Digital Product -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Digital Product <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-72 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_ecourse.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">E-Course Life Reset: 7 Days Re-Discover Yourself</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Webinar & Workshop -->
+                            <a href="mockup_layanan_workshop.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Webinar & Workshop</a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="mockup_perusahaan.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Untuk Perusahaan</a>
+                <a href="mockup_artikel.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Artikel & Aktivitas</a>
+                <a href="mockup_career.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Karir</a>
+                
+                <!-- Tentang Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg group-hover:bg-gray-100 transition-colors focus:outline-none">
+                        Tentang Kami <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute right-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-56 bg-white rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-gray-100 py-3 overflow-hidden flex flex-col">
+                            <a href="mockup_tentang_theaim.html" class="px-6 py-3 text-sm text-gray-500 hover:bg-gray-50 hover:text-primary transition-colors">Tentang TheAIM</a>
+                            <a href="mockup_tentang_ecosystem.html" class="px-6 py-3 text-sm text-gray-500 hover:bg-gray-50 hover:text-primary transition-colors">TheAIM Ecosystem</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <a href="#" class="btn-outline px-7 py-2.5 rounded-full font-semibold text-sm hidden md:block tracking-wide">
+                Masuk
+            </a>
+            
+            <button class="md:hidden text-2xl text-dark">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 1. HERO COACHING -->
+    <section class="relative pt-24 pb-16 lg:pt-36 lg:pb-24 px-4 overflow-hidden border-b border-gray-50">
+        <div class="max-w-[1250px] mx-auto grid lg:grid-cols-2 gap-12 lg:gap-8 items-center relative z-10">
+            <!-- Teks Kiri -->
+            <div class="order-2 lg:order-1 text-center lg:text-left flex flex-col">
+                <h1 class="text-4xl md:text-5xl lg:text-[3.5rem] font-extrabold leading-[1.15] text-dark mb-6 tracking-tight">
+                    Dari Satu Sesi Coaching <br class="hidden lg:block">
+                    <span class="text-primary">Transformasi Kamu</span> Dimulai
+                </h1>
+                
+                <p class="text-base md:text-lg text-gray-500 leading-relaxed mb-10 max-w-xl mx-auto lg:mx-0 font-medium">
+                    Melalui sesi coaching yang dipersonalisasi, kamu akan berdiskusi dan belajar mengelola energi & emosi, membangun boundary yang sehat serta menciptakan workflow yang sesuai dengan nilai-nilai untuk meningkatkan produktivitas tanpa mengorbankan kesehatan mental.
+                </p>
+                
+                <div class="flex justify-center lg:justify-start mb-12">
+                    <a href="#" class="btn-primary px-10 py-4 rounded-full font-bold text-[15px] shadow-lg shadow-red-200">
+                        Mulai Coaching
+                    </a>
+                </div>
+
+                <!-- 3 Stats -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 lg:gap-4 mt-auto border-t border-gray-100 pt-8">
+                    <div class="flex items-start gap-4 lg:flex-col lg:gap-2">
+                        <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-primary shrink-0">
+                            <i class="fa-solid fa-user-check"></i>
+                        </div>
+                        <p class="text-sm font-semibold text-gray-600 text-left">Dipercaya oleh lebih dari 1.000+ pengguna.</p>
+                    </div>
+                    <div class="flex items-start gap-4 lg:flex-col lg:gap-2">
+                        <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-primary shrink-0">
+                            <i class="fa-solid fa-handshake"></i>
+                        </div>
+                        <p class="text-sm font-semibold text-gray-600 text-left">Telah bermitra dengan 20+ Client perusahaan.</p>
+                    </div>
+                    <div class="flex items-start gap-4 lg:flex-col lg:gap-2">
+                        <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-primary shrink-0">
+                            <i class="fa-solid fa-medal"></i>
+                        </div>
+                        <p class="text-sm font-semibold text-gray-600 text-left">Didukung oleh 30+ Coach berlisensi & profesional</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visual Kanan -->
+            <div class="order-1 lg:order-2 flex justify-center relative px-8 lg:px-0">
+                <div class="relative w-full max-w-[450px] aspect-square rounded-full bg-primary flex items-end justify-center pt-8 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=600&auto=format&fit=crop" alt="Coach Professional" class="w-[90%] object-cover object-top relative z-10 drop-shadow-2xl">
+                    
+                    <!-- Decorative Dots/Pattern -->
+                    <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 24px 24px;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    </section>
+
+    <!-- INVESTMENT RATE CARD -->
+    <section id="rate-card" class="py-24 px-4 bg-gray-50 relative overflow-hidden">
+        <!-- Decorative Background -->
+        <div class="absolute top-0 right-0 w-1/3 h-1/3 bg-red-50 rounded-full blur-[120px] opacity-60"></div>
+        <div class="absolute bottom-0 left-0 w-1/4 h-1/4 bg-red-50 rounded-full blur-[100px] opacity-40"></div>
+        
+        <div class="max-w-[1100px] mx-auto relative z-10">
+            <div class="text-center mb-16">
+                <span class="rate-badge mb-4 inline-block">Exclusive Session</span>
+                <h2 class="text-3xl md:text-5xl font-extrabold text-dark tracking-tight mb-4">Investment Rate Card</h2>
+                <p class="text-gray-500 font-medium max-w-2xl mx-auto">Sesi eksklusif dan privat langsung bersama Coach Alif untuk transformasi hidup dan hubungan yang lebih bermakna.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 lg:gap-12 items-stretch">
+                <!-- Personal Coaching -->
+                <div class="rate-card rounded-[3rem] p-10 md:p-12 flex flex-col shadow-sm">
+                    <div class="flex justify-between items-start mb-10">
+                        <div>
+                            <h3 class="text-2xl font-black text-dark mb-1">Personal Coaching</h3>
+                            <p class="text-gray-400 text-xs font-bold uppercase tracking-widest">Individual Session</p>
+                        </div>
+                        <div class="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center text-primary text-3xl shadow-sm">
+                            <i class="fa-solid fa-user-astronaut"></i>
+                        </div>
+                    </div>
+
+                    <div class="mb-10 flex items-baseline">
+                        <span class="price-currency">Rp</span>
+                        <span class="price-tag">400</span>
+                        <span class="text-gray-400 font-bold text-xl ml-1">.000<span class="text-xs font-medium block">/ Sesi</span></span>
+                    </div>
+
+                    <div class="space-y-5 mb-12 flex-grow">
+                        <div class="flex items-start gap-4">
+                            <div class="feature-icon mt-1 shrink-0"><i class="fa-solid fa-check"></i></div>
+                            <div>
+                                <p class="text-dark font-bold text-sm">Sesi Eksklusif 90 - 120 Menit</p>
+                                <p class="text-gray-400 text-xs mt-0.5">Waktu privat untuk eksplorasi mendalam.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="feature-icon mt-1 shrink-0"><i class="fa-solid fa-check"></i></div>
+                            <div>
+                                <p class="text-dark font-bold text-sm">Pembahasan Topik Spesifik:</p>
+                                <ul class="text-gray-400 text-[11px] mt-1 space-y-0.5 list-disc list-inside">
+                                    <li>Career Path & Life Transformation</li>
+                                    <li>Overcoming Mental Block & Stress</li>
+                                    <li>Leadership & Personal Growth</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="feature-icon mt-1 shrink-0"><i class="fa-solid fa-check"></i></div>
+                            <div>
+                                <p class="text-dark font-bold text-sm">Coaching Note & Advice dari Coach</p>
+                                <p class="text-gray-400 text-xs mt-0.5">Rangkuman sesi dan saran konkret pasca coaching.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="feature-icon mt-1 shrink-0"><i class="fa-solid fa-gift text-[#fbbf24]"></i></div>
+                            <div>
+                                <p class="text-dark font-bold text-sm">FREE 1 Alat Tes (Personality/Strength)</p>
+                                <p class="text-gray-400 text-xs mt-0.5">Akses gratis untuk satu instrumen tes pilihan.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="feature-icon mt-1 shrink-0"><i class="fa-solid fa-check"></i></div>
+                            <div>
+                                <p class="text-dark font-bold text-sm">Deep Mental Block Clearing</p>
+                                <p class="text-gray-400 text-xs mt-0.5">Menggunakan metode Visual Coaching terbaru.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="feature-icon mt-1 shrink-0"><i class="fa-solid fa-check"></i></div>
+                            <div>
+                                <p class="text-dark font-bold text-sm">7 Hari Priority WhatsApp Support</p>
+                                <p class="text-gray-400 text-xs mt-0.5">Pendampingan intensif pasca sesi.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="#" class="btn-primary w-full py-5 rounded-2xl font-black text-center uppercase tracking-widest shadow-xl shadow-red-100">Booking Personal</a>
+                </div>
+
+                <!-- Couple Coaching -->
+                <div class="rate-card rounded-[3rem] p-10 md:p-12 flex flex-col shadow-sm border-2 border-primary/10">
+                    <div class="absolute top-0 right-0 bg-secondary text-dark text-[10px] font-black uppercase px-6 py-2 rounded-bl-2xl shadow-sm">Popular for Growth</div>
+                    
+                    <div class="flex justify-between items-start mb-10">
+                        <div>
+                            <h3 class="text-2xl font-black text-dark mb-1">Couple Coaching</h3>
+                            <p class="text-gray-400 text-xs font-bold uppercase tracking-widest">Dual Session</p>
+                        </div>
+                        <div class="w-16 h-16 bg-red-600 rounded-2xl flex items-center justify-center text-white text-3xl shadow-lg">
+                            <i class="fa-solid fa-heart-pulse"></i>
+                        </div>
+                    </div>
+
+                    <div class="mb-10 flex items-baseline">
+                        <span class="price-currency">Rp</span>
+                        <span class="price-tag">550</span>
+                        <span class="text-gray-400 font-bold text-xl ml-1">.000<span class="text-xs font-medium block">/ Sesi</span></span>
+                    </div>
+
+                    <div class="space-y-5 mb-12 flex-grow">
+                        <div class="flex items-start gap-4">
+                            <div class="feature-icon mt-1 shrink-0"><i class="fa-solid fa-check"></i></div>
+                            <div>
+                                <p class="text-dark font-bold text-sm">Sesi Eksklusif 90 - 120 Menit</p>
+                                <p class="text-gray-400 text-xs mt-0.5">Ruang aman untuk diskusi dua arah yang sehat.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="feature-icon mt-1 shrink-0"><i class="fa-solid fa-check"></i></div>
+                            <div>
+                                <p class="text-dark font-bold text-sm">Pembahasan Topik Spesifik:</p>
+                                <ul class="text-gray-400 text-[11px] mt-1 space-y-0.5 list-disc list-inside">
+                                    <li>Kecocokan Pranikah & Konflik Rumah Tangga</li>
+                                    <li>Talents Mapping for Couple</li>
+                                    <li>Analisis Peluang Bisnis Bersama</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="feature-icon mt-1 shrink-0"><i class="fa-solid fa-check"></i></div>
+                            <div>
+                                <p class="text-dark font-bold text-sm">Coaching Note & Advice dari Coach</p>
+                                <p class="text-gray-400 text-xs mt-0.5">Rangkuman sesi dan saran konkret pasca coaching.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="feature-icon mt-1 shrink-0"><i class="fa-solid fa-gift text-[#fbbf24]"></i></div>
+                            <div>
+                                <p class="text-dark font-bold text-sm">FREE 1 Alat Tes (Personality/Strength)</p>
+                                <p class="text-gray-400 text-xs mt-0.5">Akses gratis untuk satu instrumen tes pilihan.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="feature-icon mt-1 shrink-0"><i class="fa-solid fa-check"></i></div>
+                            <div>
+                                <p class="text-dark font-bold text-sm">Conflict & Communication Strategy</p>
+                                <p class="text-gray-400 text-xs mt-0.5">Solusi konkret untuk dinamika hubungan.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="feature-icon mt-1 shrink-0"><i class="fa-solid fa-check"></i></div>
+                            <div>
+                                <p class="text-dark font-bold text-sm">Joint Action Plan & 7 Days Support</p>
+                                <p class="text-gray-400 text-xs mt-0.5">Langkah bersama menuju hubungan harmonis.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="#" class="btn-primary w-full py-5 rounded-2xl font-black text-center uppercase tracking-widest shadow-xl shadow-red-100">Booking Couple</a>
+                </div>
+            </div>
+
+            <!-- Profile Note -->
+            <div class="mt-16 bg-white border border-gray-100 rounded-3xl p-6 flex flex-col md:flex-row items-center gap-6 shadow-sm max-w-3xl mx-auto">
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop" alt="Coach Alif" class="w-20 h-20 rounded-2xl object-cover grayscale">
+                <div class="text-center md:text-left flex-grow">
+                    <p class="text-dark font-bold">Exclusive Lead Coach: Coach Alif</p>
+                    <p class="text-gray-500 text-sm">Program ini saat ini ditangani secara eksklusif dan personal oleh Coach Alif (CEO TheAIM) untuk menjamin kualitas transformasi terbaik.</p>
+                </div>
+                <div class="shrink-0">
+                    <span class="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 px-4 py-2 rounded-full font-bold text-xs">
+                        <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> Available for Booking
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. YANG AKAN KAMU DAPATKAN -->
+    <section class="py-24 px-4 bg-dark relative text-white border-y-8 border-primary">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: url('https://www.transparenttextures.com/patterns/cubes.png');"></div>
+        
+        <div class="max-w-[1200px] mx-auto relative z-10 text-center">
+            <h2 class="text-3xl md:text-4xl font-extrabold mb-6 tracking-tight">Yang Akan Kamu Dapatkan <br> di Sesi Coaching 1 on 1</h2>
+            <p class="text-gray-300 max-w-3xl mx-auto mb-16 text-[15px] font-medium leading-relaxed">
+                Kami menciptakan lingkungan yang hangat & aman, dimana kamu bisa terbuka tanpa takut. Dengan pendampingan penuh empati, kami membantu kamu menemukan kekuatan untuk maju dengan Wellness dan produktivitas yang seharusnya.
+            </p>
+
+            <div class="grid md:grid-cols-3 gap-6 text-left">
+                <!-- Card 1 -->
+                <div class="bg-white text-dark p-8 rounded-[2rem] shadow-xl hover:-translate-y-2 transition-transform h-full flex flex-col">
+                    <div class="text-5xl font-black text-gray-200 mb-4 tracking-tighter">01</div>
+                    <h3 class="font-bold text-xl mb-3 leading-tight">Personality Assessment</h3>
+                    <p class="text-gray-500 text-sm font-medium leading-relaxed mt-auto">Memetakan tipe kepribadianmu untuk mengoptimalkan potensi, pola pikir, dan penempatan diri di lingkungan personal dan profesional.</p>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-white text-dark p-8 rounded-[2rem] shadow-xl hover:-translate-y-2 transition-transform h-full flex flex-col">
+                    <div class="text-5xl font-black text-gray-200 mb-4 tracking-tighter">02</div>
+                    <h3 class="font-bold text-xl mb-3 leading-tight">Sesi Coaching 1-on-1</h3>
+                    <p class="text-gray-500 text-sm font-medium leading-relaxed mt-auto">Obrolan mendalam bersama professional coach untuk bantu kamu mengendalikan diri berbasis people personality centric development.</p>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-white text-dark p-8 rounded-[2rem] shadow-xl hover:-translate-y-2 transition-transform h-full flex flex-col">
+                    <div class="text-5xl font-black text-gray-200 mb-4 tracking-tighter">03</div>
+                    <h3 class="font-bold text-xl mb-3 leading-tight">Action plan personal <br>& reflektif</h3>
+                    <p class="text-gray-500 text-sm font-medium leading-relaxed mt-auto">Rencana dan langkah konkret yang relevan dari professional coach (psikolog/non-psikolog) yang kamu percaya.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. TOPIK COACHING (Grid 9 Kotak) -->
+    <section class="py-24 px-4 bg-gray-50">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-2xl md:text-4xl font-extrabold text-dark tracking-tight">Mengenal Beberapa Topik <br class="hidden md:block"> Coaching & Sharing Program</h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Item 1 -->
+                <div class="dashed-card bg-white p-8 rounded-3xl">
+                    <div class="w-12 h-12 bg-red-50 text-primary rounded-xl flex items-center justify-center text-xl mb-6"><i class="fa-solid fa-heart-crack"></i></div>
+                    <h3 class="font-bold text-dark text-lg mb-3">Toxic Relationship</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed font-medium">Rasa sakit yang kamu tahan: Ketika orang yang seharusnya menyayangimu malah membuatmu merasa kecil, tidak berharga, dan selalu salah.</p>
+                </div>
+                <!-- Item 2 -->
+                <div class="dashed-card bg-white p-8 rounded-3xl">
+                    <div class="w-12 h-12 bg-red-50 text-primary rounded-xl flex items-center justify-center text-xl mb-6"><i class="fa-solid fa-person-praying"></i></div>
+                    <h3 class="font-bold text-dark text-lg mb-3">Kesepian</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed font-medium">Betapa dalam lukanya: Saat hatimu berteriak dalam kesunyian, merasa tidak ada yang benar-benar memahami jiwa terdalammu.</p>
+                </div>
+                <!-- Item 3 -->
+                <div class="dashed-card bg-white p-8 rounded-3xl">
+                    <div class="w-12 h-12 bg-red-50 text-primary rounded-xl flex items-center justify-center text-xl mb-6"><i class="fa-solid fa-face-frown-open"></i></div>
+                    <h3 class="font-bold text-dark text-lg mb-3">Kecemasan Berlebihan</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed font-medium">Hatimu tidak perlu menahan sendiri: Pikiran yang berputar tanpa henti, kekhawatiran yang membelenggu, ketakutan akan masa depan.</p>
+                </div>
+                <!-- Item 4 -->
+                <div class="dashed-card bg-white p-8 rounded-3xl">
+                    <div class="w-12 h-12 bg-red-50 text-primary rounded-xl flex items-center justify-center text-xl mb-6"><i class="fa-solid fa-weight-hanging"></i></div>
+                    <h3 class="font-bold text-dark text-lg mb-3">Beban Terlalu Berat (Stress)</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed font-medium">Totalitas perjuanganmu: Saat bahu lelah memikul beban, napas tersengal mengejar waktu, dan hati merindukan ketenangan.</p>
+                </div>
+                <!-- Item 5 -->
+                <div class="dashed-card bg-white p-8 rounded-3xl">
+                    <div class="w-12 h-12 bg-red-50 text-primary rounded-xl flex items-center justify-center text-xl mb-6"><i class="fa-solid fa-brain"></i></div>
+                    <h3 class="font-bold text-dark text-lg mb-3">Trauma Masa Lalu</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed font-medium">Luka yang tak terlihat paling dalam sakitnya: Kenangan yang masih meninggalkan bekas, rasa sakit yang tak kunjung sembuh.</p>
+                </div>
+                <!-- Item 6 -->
+                <div class="dashed-card bg-white p-8 rounded-3xl">
+                    <div class="w-12 h-12 bg-red-50 text-primary rounded-xl flex items-center justify-center text-xl mb-6"><i class="fa-solid fa-house-chimney-crack"></i></div>
+                    <h3 class="font-bold text-dark text-lg mb-3">Hubungan Keluarga</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed font-medium">Hati terluka paling dalam saat dari keluarga: Tempat pulang yang seharusnya memberikan kehangatan, namun rasanya tidak ingin pulang.</p>
+                </div>
+                <!-- Item 7 -->
+                <div class="dashed-card bg-white p-8 rounded-3xl">
+                    <div class="w-12 h-12 bg-red-50 text-primary rounded-xl flex items-center justify-center text-xl mb-6"><i class="fa-solid fa-heart"></i></div>
+                    <h3 class="font-bold text-dark text-lg mb-3">Hubungan Asmara</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed font-medium">Cinta seharusnya indah, bukan menyakiti: Ketika hubungan menjadi rumit, hati terluka, dan cinta terasa berat.</p>
+                </div>
+                <!-- Item 8 -->
+                <div class="dashed-card bg-white p-8 rounded-3xl">
+                    <div class="w-12 h-12 bg-red-50 text-primary rounded-xl flex items-center justify-center text-xl mb-6"><i class="fa-solid fa-users-slash"></i></div>
+                    <h3 class="font-bold text-dark text-lg mb-3">Penerimaan Sosial</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed font-medium">Lelah berpura-pura menjadi orang lain: Rasa takut ditolak, cemas akan penilaian, dan rindu untuk diterima apa adanya.</p>
+                </div>
+                <!-- Item 9 -->
+                <div class="dashed-card bg-white p-8 rounded-3xl">
+                    <div class="w-12 h-12 bg-red-50 text-primary rounded-xl flex items-center justify-center text-xl mb-6"><i class="fa-solid fa-briefcase"></i></div>
+                    <h3 class="font-bold text-dark text-lg mb-3">Hubungan Pekerjaan</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed font-medium">Bekerja seharusnya bermakna, bukan menyiksa: Konflik yang menguras, tekanan yang membelenggu, dan membutuhkan ketenangan.</p>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <button class="bg-white border text-sm md:text-base border-gray-200 text-dark px-8 py-3.5 rounded-full hover:bg-gray-100 transition-all font-bold shadow-sm">
+                    Lihat Semua Topik
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. PROFIL COACH -->
+    <section class="py-24 px-4 bg-white border-b border-gray-100">
+        <div class="max-w-[1000px] mx-auto bg-white rounded-[2.5rem] p-8 md:p-12 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] border border-gray-100 relative overflow-hidden flex flex-col md:flex-row items-center gap-10">
+            <!-- Decorative dots -->
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-red-50 rounded-full opacity-50 z-0"></div>
+            
+            <!-- Photo Coach -->
+            <div class="w-full md:w-2/5 shrink-0 relative z-10 flex justify-center">
+                <div class="relative w-full max-w-[280px] rounded-3xl overflow-hidden border-4 border-white shadow-xl dashed-card !border-gray-200 !p-2 bg-white">
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=600&auto=format&fit=crop" alt="Coach Profile" class="w-full aspect-[4/5] object-cover rounded-2xl">
+                    <div class="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur py-3 px-4 rounded-xl text-center shadow-sm">
+                        <h4 class="font-bold text-dark text-sm leading-tight">Coach Alif</h4>
+                        <p class="text-[10px] text-gray-500 font-bold mt-1">Professional Coach & Trainer</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Teks -->
+            <div class="w-full md:w-3/5 relative z-10 text-center md:text-left">
+                <h2 class="text-2xl md:text-3xl font-extrabold text-dark mb-4 leading-tight">Kenali Dirimu Lewat Coaching bersama <span class="text-primary">Coach Profesional.</span></h2>
+                <p class="text-gray-500 mb-8 leading-relaxed font-medium">Coach TheAIM siap menemani perjalanan pengembangan dirimu secara personal dan profesional. Semua Coach kami tersertifikasi dan berpengalaman di berbagai bidang, untuk bantu kamu mencapai titik wellness dan produktivitas terbaik.</p>
+                <a href="#" class="btn-primary inline-block px-8 py-3.5 rounded-full font-bold shadow-md">
+                    Mulai Coaching
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. FINAL CTA BANNER -->
+    <section class="py-20 px-4 bg-white">
+        <div class="max-w-[1200px] mx-auto bg-gradient-to-br from-primary to-[#b91c1c] rounded-[2.5rem] overflow-hidden flex flex-col md:flex-row items-center relative shadow-2xl">
+            <!-- Background pattern inside banner -->
+            <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: url('https://www.transparenttextures.com/patterns/cubes.png');"></div>
+            
+            <div class="w-full md:w-5/12 h-[300px] md:h-[400px] relative">
+                <img src="https://images.unsplash.com/photo-1542744094-24638ea0b3b5?q=80&w=600&auto=format&fit=crop" alt="Excited Person" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-r from-transparent to-primary md:to-transparent"></div>
+            </div>
+
+            <div class="w-full md:w-7/12 p-8 md:p-12 lg:p-16 relative z-10 text-center md:text-left">
+                <h2 class="text-2xl md:text-3xl lg:text-4xl font-black text-white mb-6 leading-tight drop-shadow-md">
+                    Lelah dengan pikiran yang tak kunjung berhenti? Hubungan yang tegang? Stress yang menggerogoti? Saatnya ambil kendali kembali.
+                </h2>
+                <a href="#" class="inline-block bg-white text-primary px-8 py-4 rounded-full font-bold hover:bg-gray-100 transition-colors shadow-lg mt-4">
+                    Mulai Coaching <i class="fa-solid fa-arrow-right ml-2 text-sm"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: FOOTER -->
+    <footer class="bg-gray-50 pt-16 border-t border-gray-200">
+        <div class="max-w-[1200px] mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 text-[#334155]">
+            
+            <!-- Kolom 1: Profil & Alamat -->
+            <div class="pr-4">
+                <a href="#" class="text-2xl font-bold tracking-tight flex items-center gap-2 mb-8 text-dark">
+                    <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM Logo" class="h-14 md:h-16 w-auto">
+                </a>
+                
+                <!-- Alamat Dihapus -->
+            </div>
+
+            <!-- Kolom 2: Layanan -->
+            <div>
+                <h4 class="font-extrabold text-dark text-lg mb-6 tracking-tight">Layanan</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li><a href="#" class="hover:text-primary transition-colors">Talents Mapping Assesmen</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Coaching</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Consultation</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Therapy</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Workshop & Training</a></li>
+                </ul>
+            </div>
+
+            <!-- Kolom 3: Tentang Kami -->
+            <div>
+                <h4 class="font-extrabold text-dark text-lg mb-6 tracking-tight">Tentang Kami</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li><a href="#" class="hover:text-primary transition-colors">Tentang TheAIM</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Talent Ecosystem</a></li>
+                    <li><a href="mockup_perusahaan.html" class="hover:text-primary transition-colors">Solusi Untuk Perusahaan</a></li>
+                    <li><a href="mockup_artikel.html" class="hover:text-primary transition-colors">Artikel & Aktivitas</a>
+                <a href="mockup_career.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Karir</a></li>
+                </ul>
+            </div>
+
+            <!-- Kolom 4: Kontak -->
+            <div>
+                <h4 class="font-extrabold text-dark text-lg mb-6 tracking-tight">Kontak Kami</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li class="flex items-center gap-3">
+                        <i class="fa-solid fa-phone text-primary"></i>
+                        <a href="#" class="hover:text-primary transition-colors">081999554599</a>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i class="fa-regular fa-envelope text-primary"></i>
+                        <a href="mailto:ptabadiinsanmanfaat@gmail.com" class="hover:text-primary transition-colors">ptabadiinsanmanfaat@gmail.com</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Bottom Bar Footer -->
+        <div class="bg-dark py-6 px-4 text-white">
+            <div class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-center items-center gap-6">
+                <!-- Copyright & Links -->
+                <div class="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 text-xs text-gray-400 font-medium">
+                    <p>&copy; 2026 PT Abadi Insan Manfaat. All right reserved</p>
+                    <div class="hidden sm:block text-gray-600">|</div>
+                    <a href="#" class="hover:text-white transition-colors">Term & Condition</a>
+                    <div class="hidden sm:block text-gray-600">|</div>
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

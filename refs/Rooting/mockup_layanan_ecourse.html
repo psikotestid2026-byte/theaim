@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Reset E-Course - TheAIM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626', // Merah
+                        secondary: '#fbbf24', // Kuning
+                        dark: '#18181b', // Hitam
+                        light: '#ffffff', // Putih
+                    },
+                    fontFamily: {
+                        sans: ['Lexend', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #ffffff; overflow-x: hidden; }
+        
+        .btn-primary {
+            background-color: #dc2626;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(220, 38, 38, 0.3);
+        }
+        
+        .btn-warning {
+            background-color: #fbbf24;
+            color: #18181b;
+            transition: all 0.3s ease;
+        }
+        .btn-warning:hover {
+            background-color: #f59e0b;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(251, 191, 36, 0.4);
+        }
+
+        .btn-outline {
+            border: 2px solid #18181b;
+            color: #18181b;
+            transition: all 0.3s ease;
+        }
+        .btn-outline:hover {
+            background-color: #18181b;
+            color: white;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+        
+        .dashed-card {
+            border: 2px dashed #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        .dashed-card:hover {
+            border-color: #dc2626;
+            background-color: #fef2f2;
+            transform: translateY(-4px);
+        }
+
+        /* Bento Grid Specific styles */
+        .bento-item {
+            position: relative;
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.05);
+            background: #f8fafc;
+        }
+        .bento-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .bento-item:hover .bento-img {
+            transform: scale(1.05);
+        }
+        .bento-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 40px 20px 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+        
+        /* Sales Popup */
+        .sales-popup {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            background: rgba(255, 255, 255, 0.98);
+            border-left: 4px solid #fbbf24;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transform: translateX(-150%);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
+        .sales-popup.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        @media (max-width: 768px) {
+            .sales-popup {
+                bottom: auto;
+                top: 16px;
+                left: 16px;
+                right: 16px;
+                transform: translateY(-150%);
+            }
+            .sales-popup.show {
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body class="font-sans text-dark flex flex-col min-h-screen">
+    
+    <!-- NAVIGATION -->
+    <nav class="sticky top-0 z-50 w-full glass-panel flex items-center px-4 py-4 lg:px-8 border-b border-gray-100">
+        <div class="max-w-[1400px] mx-auto w-full flex justify-between items-center">
+            
+            <a href="../index.html" class="text-2xl font-bold tracking-tight flex items-center gap-2">
+                <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM" class="h-14 md:h-16 w-auto">
+            </a>
+            
+            <div class="hidden lg:flex items-center space-x-2 font-medium text-[15px] text-gray-700">
+                <a href="../index.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Beranda</a>
+                
+                <!-- Layanan Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg group-hover:bg-slate-100 transition-colors focus:outline-none">
+                        Layanan <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-64 bg-white rounded-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)] border border-slate-100 py-2 flex flex-col">
+                            <!-- Assessment -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Assessment <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Talents Mapping</a>
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Tes Psikologi (Psikotes)</a>
+                                        <a href="mockup_layanan_mental_health.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Mental Health Check Up</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Konsultasi & Coaching -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Konsultasi & Coaching <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_konseling.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konseling dengan Psikolog</a>
+                                        <a href="mockup_layanan_relaksasi.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Therapy (SEFT)</a>
+                                        <a href="mockup_layanan_visual_coaching.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Visual Coaching</a>
+                                        <a href="mockup_layanan_consultation.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konsultasi Keuangan</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Digital Product -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Digital Product <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-72 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_ecourse.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">E-Course Life Reset: 7 Days Re-Discover Yourself</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Webinar & Workshop -->
+                            <a href="mockup_layanan_workshop.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Webinar & Workshop</a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="mockup_perusahaan.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Untuk Perusahaan</a>
+                <a href="mockup_artikel.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Artikel & Aktivitas</a>
+                <a href="mockup_career.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Karir</a>
+                
+                <!-- Tentang Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg group-hover:bg-gray-100 transition-colors focus:outline-none">
+                        Tentang Kami <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute right-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-56 bg-white rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-gray-100 py-3 overflow-hidden flex flex-col">
+                            <a href="mockup_tentang_theaim.html" class="px-6 py-3 text-sm text-gray-500 hover:bg-gray-50 hover:text-primary transition-colors">Tentang TheAIM</a>
+                            <a href="mockup_tentang_ecosystem.html" class="px-6 py-3 text-sm text-gray-500 hover:bg-gray-50 hover:text-primary transition-colors">TheAIM Ecosystem</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <a href="#" class="btn-outline px-7 py-2.5 rounded-full font-semibold text-sm hidden md:block tracking-wide">
+                Masuk
+            </a>
+            
+            <button class="md:hidden text-2xl text-dark">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 1. HERO SECTION -->
+    <section class="bg-dark text-white pt-24 pb-20 px-4 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-dark to-[#27272a] z-0"></div>
+        <div class="absolute top-[-20%] left-[-10%] w-[50%] h-[100%] bg-primary rounded-full blur-[150px] opacity-20 z-0 pointer-events-none"></div>
+
+        <div class="max-w-[800px] mx-auto text-center relative z-10">
+            <span class="inline-block border border-secondary text-secondary bg-secondary/10 font-bold text-xs tracking-widest uppercase px-4 py-1.5 rounded-sm mb-6">
+                Mini Course · 7 Hari · Akses Langsung
+            </span>
+            
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-black mb-6 leading-[1.1] tracking-tight">
+                Bingung Mau Jadi Apa?<br>
+                <span class="text-secondary">Temukan Arah Hidupmu</span><br>
+                dalam <span class="text-primary">7 Hari</span>
+            </h1>
+            
+            <p class="text-gray-300 text-base md:text-lg mb-10 max-w-[650px] mx-auto leading-relaxed">
+                Untuk kamu yang mulai lelah menjalani hidup yang terasa bukan milik sendiri. Temukan akar masalahnya, gali potensi aslimu, dan rancang peta kehidupanmu secara sadar. <br><br>
+                <strong class="text-white">Program ini bukan sekadar motivasi. Ini adalah kompasmu.</strong>
+            </p>
+
+            <div class="flex flex-wrap justify-center gap-4 bg-white/5 border border-white/10 p-4 rounded-2xl mb-10 backdrop-blur-sm">
+                <div class="flex items-center gap-2 text-sm text-gray-200">
+                    <i class="fa-solid fa-circle-check text-secondary"></i> 7 Modul Video
+                </div>
+                <div class="flex items-center gap-2 text-sm text-gray-200">
+                    <i class="fa-solid fa-circle-check text-secondary"></i> Workbook Eksklusif
+                </div>
+                <div class="flex items-center gap-2 text-sm text-gray-200">
+                    <i class="fa-solid fa-circle-check text-secondary"></i> Gratis Strength Test
+                </div>
+                <div class="flex items-center gap-2 text-sm text-gray-200">
+                    <i class="fa-solid fa-circle-check text-secondary"></i> Akses Selamanya
+                </div>
+            </div>
+
+            <div>
+                <a href="#pricing" class="btn-warning inline-block px-10 py-4 rounded-full font-bold text-lg shadow-[0_0_30px_rgba(251,191,36,0.3)] hover:shadow-[0_0_40px_rgba(251,191,36,0.5)] transition-all">
+                    🚀 Temukan Diri Saya — Rp 79.000
+                </a>
+                <p class="text-xs text-gray-400 mt-4 italic">Bisa langsung dimulai hari ini juga. Mumpung sedang harga promo.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. APA YANG KAMU DAPATKAN -->
+    <section class="py-24 px-4 bg-gray-50 border-y border-gray-200">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="text-center mb-16">
+                <span class="text-primary font-bold tracking-widest text-xs uppercase mb-2 block">Value Utama</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-dark tracking-tight">Perlengkapan Lengkap untuk <br><span class="text-primary">Keluar dari Kebingungan</span></h2>
+                <p class="text-gray-500 mt-4 max-w-2xl mx-auto">Dirancang praktis, berfokus pada hasil nyata di akhir 7 hari.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
+                    <div class="w-14 h-14 rounded-2xl bg-red-50 text-primary flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-film"></i>
+                    </div>
+                    <h3 class="font-bold text-dark text-xl mb-3">7 Modul Video Ringkas</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Dari mindset hingga tujuan konkret. Langsung ke intinya tanpa basa-basi yang membosankan.</p>
+                </div>
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
+                    <div class="w-14 h-14 rounded-2xl bg-red-50 text-primary flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-gamepad"></i>
+                    </div>
+                    <h3 class="font-bold text-dark text-xl mb-3">Sistem Berbasis Game</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Kerjakan tantangan harian, isi progress. Mengusir rasa bosan dari sekadar belajar materi pasif.</p>
+                </div>
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
+                    <div class="w-14 h-14 rounded-2xl bg-red-50 text-primary flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-book-open"></i>
+                    </div>
+                    <h3 class="font-bold text-dark text-xl mb-3">Workbook Interaktif</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Berisi pertanyaan tajam untuk menggali diri yang mungkin belum pernah kamu tanyakan sebelumnya.</p>
+                </div>
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
+                    <div class="w-14 h-14 rounded-2xl bg-red-50 text-primary flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                    </div>
+                    <h3 class="font-bold text-dark text-xl mb-3">Template Life Map</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Di akhir hari ke-7, kamu akan memiliki Individual Development Plan (IDP) yang realistis.</p>
+                </div>
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
+                    <div class="w-14 h-14 rounded-2xl bg-red-50 text-primary flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-people-group"></i>
+                    </div>
+                    <h3 class="font-bold text-dark text-xl mb-3">Survivor Group</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Komunitas internal yang mengerti perjalanan prosesmu. Ruang aman untuk sharing dan bertumbuh.</p>
+                </div>
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-yellow-200 bg-yellow-50 hover:shadow-lg transition-shadow relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-secondary text-dark text-xs font-bold px-3 py-1 rounded-bl-lg">GRATIS !</div>
+                    <div class="w-14 h-14 rounded-2xl bg-white text-secondary flex items-center justify-center text-2xl mb-6 shadow-sm">
+                        <i class="fa-solid fa-gift"></i>
+                    </div>
+                    <h3 class="font-bold text-dark text-xl mb-3">Bonus: Strength Test</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Alat tes teruji senilai ratusan ribu rupiah untuk mengungkap kombinasi kekuatan bawaan lahirmu.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. SNEAK PEEK -->
+    <section class="py-24 px-4 bg-white relative">
+        <div class="max-w-[1000px] mx-auto">
+            <div class="text-center mb-16">
+                <span class="text-primary font-bold tracking-widest text-xs uppercase mb-2 block">Inside Look</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-dark tracking-tight">Intip Isi <span class="text-primary">Materi Life Reset</span></h2>
+                <p class="text-gray-500 mt-4 max-w-2xl mx-auto">Format e-course elegan dengan interface premium yang memudahkan dalam belajar maupun praktik refleksi.</p>
+            </div>
+
+            <!-- Bento Grid 5 Images -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                <div class="bento-item col-span-2 row-span-2 md:aspect-[4/3] aspect-square group">
+                    <img src="../Life Reset/1.png" alt="Cover" class="bento-img">
+                    <div class="bento-label"><span class="bg-white/20 backdrop-blur-md px-3 py-1 rounded border border-white/20">Layout Premium</span></div>
+                </div>
+                <div class="bento-item col-span-2 md:aspect-[16/9] aspect-video group">
+                    <img src="../Life Reset/12.png" alt="Materi" class="bento-img object-center">
+                    <div class="bento-label"><span class="bg-white/20 backdrop-blur-md px-3 py-1 rounded border border-white/20">Materi Terstruktur</span></div>
+                </div>
+                <div class="bento-item col-span-1 md:aspect-square aspect-square group">
+                    <img src="../Life Reset/11.png" alt="Workbook" class="bento-img">
+                    <div class="bento-label !p-4 !text-xs"><span class="bg-white/20 backdrop-blur-md px-2 py-1 rounded border border-white/20">Workbook Praktis</span></div>
+                </div>
+                <div class="bento-item col-span-1 md:aspect-square aspect-square group">
+                    <img src="../Life Reset/8.png" alt="Elegan" class="bento-img">
+                    <div class="bento-label !p-4 !text-xs"><span class="bg-white/20 backdrop-blur-md px-2 py-1 rounded border border-white/20">User Friendly</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. KURIKULUM (TIMELINE) -->
+    <section class="py-24 px-4 bg-dark text-white border-y-8 border-primary relative">
+        <div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: url('https://www.transparenttextures.com/patterns/cubes.png');"></div>
+        
+        <div class="max-w-[700px] mx-auto relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">Apa yang Terjadi <br><span class="text-secondary">Setiap Harinya?</span></h2>
+                <p class="text-gray-400 mt-4 leading-relaxed font-medium">Terstruktur langkah demi langkah selama 1 minggu untuk output konkrit berupa kesadaran dan The Life Map.</p>
+            </div>
+
+            <div class="relative border-l-2 border-gray-700 ml-6 md:ml-8 pb-4">
+                
+                <!-- D0 -->
+                <div class="relative pl-10 md:pl-16 mb-12">
+                    <div class="absolute -left-[20px] top-1 w-10 h-10 bg-dark border-4 border-gray-600 rounded-full flex items-center justify-center font-bold text-xs text-gray-400">D0</div>
+                    <h3 class="text-xl font-bold text-white mb-2">Prolog: Kenali Titik Masalahmu</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Pemetaan awal, membongkar ilusi, dan perkenalan dengan sistem gamifikasi yang akan membuatmu tetap konsisten selama pembelajaran.</p>
+                </div>
+                
+                <!-- D1 -->
+                <div class="relative pl-10 md:pl-16 mb-12">
+                    <div class="absolute -left-[20px] top-1 w-10 h-10 bg-dark border-4 border-gray-600 rounded-full flex items-center justify-center font-bold text-xs text-gray-400">D1</div>
+                    <h3 class="text-xl font-bold text-white mb-2">Growth Mindset Activation</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Mempelajari cara kerja otak menghadapi perubahan dan bagaimana kita mentransisikan cara berpikir sebelum mengambil tindakan besar.</p>
+                </div>
+
+                <!-- D2 -->
+                <div class="relative pl-10 md:pl-16 mb-12">
+                    <div class="absolute -left-[20px] top-1 w-10 h-10 bg-secondary border-4 border-dark rounded-full flex items-center justify-center font-bold text-xs text-dark shadow-[0_0_15px_rgba(251,191,36,0.5)]">D2</div>
+                    <h3 class="text-xl font-bold text-secondary mb-2">Menemukan Life Values</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Rahasia agar tidak salah mengambil keputusan adalah menemukan kompas paling dasar dirimu. Kita akan membedah The Core Values.</p>
+                </div>
+
+                <!-- D3 -->
+                <div class="relative pl-10 md:pl-16 mb-12">
+                    <div class="absolute -left-[20px] top-1 w-10 h-10 bg-dark border-4 border-gray-600 rounded-full flex items-center justify-center font-bold text-xs text-gray-400">D3</div>
+                    <h3 class="text-xl font-bold text-white mb-2">Unlock Hidden Potential</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Eksplorasi kapasitas diri yang selama ini mungkin terkubur karena terlalu sibuk memenuhi ekspektasi sosial atau ketakutan masa lalu.</p>
+                </div>
+
+                <!-- D4 -->
+                <div class="relative pl-10 md:pl-16 mb-12">
+                    <div class="absolute -left-[20px] top-1 w-10 h-10 bg-dark border-4 border-gray-600 rounded-full flex items-center justify-center font-bold text-xs text-gray-400">D4</div>
+                    <h3 class="text-xl font-bold text-white mb-2">Strength Typology</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Menjalankan assessment khusus untuk membaca pola kekuatan alamimu (bukan sekadar tes MBTI generik) untuk optimalisasi karir/hidup.</p>
+                </div>
+
+                <!-- D5 -->
+                <div class="relative pl-10 md:pl-16 mb-12">
+                    <div class="absolute -left-[20px] top-1 w-10 h-10 bg-dark border-4 border-gray-600 rounded-full flex items-center justify-center font-bold text-xs text-gray-400">D5</div>
+                    <h3 class="text-xl font-bold text-white mb-2">Building The Purpose</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Sintesis dari modul 1 hingga 4. Mengemas nilai, potensi, dan kekuatan menjadi satu tujuan utama yang terukur dan menginspirasimu.</p>
+                </div>
+
+                <!-- D6 -->
+                <div class="relative pl-10 md:pl-16 mb-12">
+                    <div class="absolute -left-[20px] top-1 w-10 h-10 bg-primary border-4 border-dark rounded-full flex items-center justify-center font-bold text-xs text-white shadow-[0_0_15px_rgba(220,38,38,0.5)]">D6</div>
+                    <h3 class="text-xl font-bold text-primary mb-2">Drafting Your Life Map</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Menciptakan The Individual Development Plan. Sebuah peta visual perjalanan hidup atau karir yang konkret, detail, dan berpaku pada realita.</p>
+                </div>
+
+                <!-- D7 -->
+                <div class="relative pl-10 md:pl-16">
+                    <div class="absolute -left-[20px] top-1 w-10 h-10 bg-dark border-4 border-gray-600 rounded-full flex items-center justify-center font-bold text-xs text-gray-400">D7</div>
+                    <h3 class="text-xl font-bold text-white mb-2">Make It Real</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Menutup program dengan menentukan pijakan langkah pertama dan eksekusi. Konversi blueprint menjadi gerak yang sesungguhnya.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. LEARNING FACILITATOR & VALUE -->
+    <section class="py-24 px-4 bg-white relative">
+        <div class="max-w-[1200px] mx-auto grid lg:grid-cols-2 gap-16 lg:gap-12 items-center">
+            
+            <!-- Facilitator Info -->
+            <div class="bg-gray-50 rounded-[2.5rem] p-8 md:p-12 border border-gray-200">
+                <span class="text-primary font-bold tracking-widest text-xs uppercase mb-4 block">Fasilitator Program</span>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-dark mb-8 leading-tight">Dibimbing Spesialis <br>Pengembangan Potensi</h2>
+                
+                <div class="flex items-center gap-6 mb-8">
+                    <img src="../Life Reset/coach-alif Large.png" alt="Coach Alif" class="w-24 h-24 rounded-full border-4 border-white shadow-xl object-cover bg-gray-200">
+                    <div>
+                        <h4 class="font-bold text-xl text-dark">Coach Alif</h4>
+                        <p class="text-sm font-medium text-gray-500">Life & Career Coach · HR Consultant</p>
+                        <div class="flex gap-2 mt-2">
+                            <a href="https://www.linkedin.com/in/alifyaihya/" target="_blank" class="w-8 h-8 rounded-full bg-gray-200 text-dark flex items-center justify-center text-sm hover:bg-primary hover:text-white transition-colors"><i class="fa-brands fa-linkedin-in"></i></a>
+                            <a href="https://www.instagram.com/alifyaihya/" target="_blank" class="w-8 h-8 rounded-full bg-gray-200 text-dark flex items-center justify-center text-sm hover:bg-primary hover:text-white transition-colors"><i class="fa-brands fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-gray-600 text-[15px] leading-relaxed mb-6">
+                    Seorang <strong>Life & Career Coach</strong> sekaligus <strong>HR Consultant</strong> yang sangat memahami pola 'overthinking' kebingungan karir & arah hidup, karena pernah bertumbuh dan berhasil keluar dari fase yang sama di awal perjalanannya.
+                </p>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white p-4 rounded-2xl border border-gray-100 flex flex-col justify-center items-center text-center shadow-sm">
+                        <span class="text-3xl font-black text-secondary mb-1">10+</span>
+                        <span class="text-xs font-bold text-gray-500 uppercase">Tahun Pengalaman</span>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl border border-gray-100 flex flex-col justify-center items-center text-center shadow-sm">
+                        <span class="text-3xl font-black text-secondary mb-1">500+</span>
+                        <span class="text-xs font-bold text-gray-500 uppercase">Training Berjalan</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Value Comparison -->
+            <div>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-dark mb-6 tracking-tight">Nilai Sesungguhnya Jika<br>Aspek Program Dibeli Terpisah</h2>
+                
+                <div class="space-y-4 mb-8">
+                    <div class="flex justify-between items-center py-4 border-b border-gray-200">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-check text-green-500"></i>
+                            <span class="font-medium text-dark text-sm md:text-base">7 Days Re-Discover Yourself Course</span>
+                        </div>
+                        <span class="font-bold text-gray-400">Rp 500.000</span>
+                    </div>
+                    <div class="flex justify-between items-center py-4 border-b border-gray-200">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-check text-green-500"></i>
+                            <span class="font-medium text-dark text-sm md:text-base">Template & Workbook</span>
+                        </div>
+                        <span class="font-bold text-gray-400">Rp 750.000</span>
+                    </div>
+                    <div class="flex justify-between items-center py-4 border-b border-gray-200">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-check text-green-500"></i>
+                            <span class="font-medium text-dark text-sm md:text-base">Support Community Access</span>
+                        </div>
+                        <span class="font-bold text-gray-400">Rp 250.000</span>
+                    </div>
+                    <div class="flex justify-between items-center py-4 border-b border-gray-200">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-check text-green-500"></i>
+                            <span class="font-medium text-dark text-sm md:text-base">🎁 Premium Strength Test</span>
+                        </div>
+                        <span class="font-bold text-gray-400">Rp 500.000</span>
+                    </div>
+                </div>
+
+                <div class="bg-red-50 border border-red-100 rounded-2xl p-6 flex justify-between items-center">
+                    <span class="font-bold text-dark text-lg">Total Normal:</span>
+                    <span class="text-2xl md:text-3xl font-black text-primary line-through decoration-4 opacity-70">Rp 2.000.000</span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 6. PRICING & CHECKOUT SCARCITY -->
+    <section id="pricing" class="py-24 px-4 bg-gray-50 border-t border-gray-200">
+        <div class="max-w-[800px] mx-auto">
+            <div class="bg-white rounded-[2.5rem] p-8 md:p-14 shadow-2xl border-4 border-primary text-center relative overflow-hidden flex flex-col items-center">
+                
+                <div class="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-secondary via-primary to-secondary"></div>
+                
+                <h2 class="text-3xl md:text-4xl font-extrabold text-dark tracking-tight mb-2">Penawaran Spesial</h2>
+                <p class="text-gray-500 font-medium mb-10 max-w-lg mx-auto">Nilai investasinya lebih terjangkau dari dua kali makan siang, tetapi dampaknya berlaku sepanjang sisa karirmu.</p>
+                
+                <!-- Countdown -->
+                <div class="bg-dark text-white p-4 rounded-2xl inline-flex gap-4 mb-8 shadow-lg">
+                    <div class="flex flex-col items-center min-w-[60px]">
+                        <span id="cd-hours" class="text-3xl font-black text-secondary">23</span>
+                        <span class="text-[10px] uppercase font-bold tracking-wider text-gray-400">Jam</span>
+                    </div>
+                    <div class="text-2xl font-bold text-gray-600">:</div>
+                    <div class="flex flex-col items-center min-w-[60px]">
+                        <span id="cd-mins" class="text-3xl font-black text-secondary">59</span>
+                        <span class="text-[10px] uppercase font-bold tracking-wider text-gray-400">Menit</span>
+                    </div>
+                    <div class="text-2xl font-bold text-gray-600">:</div>
+                    <div class="flex flex-col items-center min-w-[60px]">
+                        <span id="cd-secs" class="text-3xl font-black text-secondary">59</span>
+                        <span class="text-[10px] uppercase font-bold tracking-wider text-gray-400">Detik</span>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <span class="text-lg text-gray-400 font-bold line-through decoration-red-500">Rp 399.000</span>
+                </div>
+                
+                <div class="mb-8">
+                    <span class="text-xl font-bold text-dark align-top">Rp</span>
+                    <span class="text-7xl md:text-[6rem] font-black tracking-tighter text-dark leading-none">79<span class="text-4xl">.000</span></span>
+                </div>
+
+                <div class="w-full max-w-sm mx-auto mb-10">
+                    <a href="https://lynk.id/coachalif/yen2kvyp58yy/checkout" target="_blank" class="w-full flex items-center justify-center gap-3 btn-primary py-5 rounded-full font-bold text-lg uppercase tracking-wide shadow-xl shadow-red-200">
+                        Ambil Promo Sekarang <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="flex justify-center items-center gap-6 text-2xl text-gray-300">
+                    <i class="fa-brands fa-cc-visa" title="Visa"></i>
+                    <i class="fa-brands fa-cc-mastercard" title="Mastercard"></i>
+                    <i class="fa-solid fa-building-columns" title="Bank Transfer"></i>
+                    <i class="fa-solid fa-wallet" title="E-Wallet"></i>
+                </div>
+                <p class="text-xs font-semibold text-gray-400 mt-4"><i class="fa-solid fa-lock text-gray-300 mr-1"></i> Transaksi terenkripsi 100% aman via Lynk.id Payment Gateway</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-50 pt-16 border-t border-gray-200">
+        <div class="max-w-[1200px] mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 text-[#334155]">
+            
+            <div class="pr-4">
+                <a href="#" class="text-2xl font-bold tracking-tight flex items-center gap-2 mb-8 text-dark">
+                    <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM Logo" class="h-14 md:h-16 w-auto">
+                </a>
+            </div>
+
+            <div>
+                <h4 class="font-extrabold text-dark text-lg mb-6 tracking-tight">Layanan</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li><a href="#" class="hover:text-primary transition-colors">Talents Mapping Assesmen</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Coaching</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Consultation</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Therapy</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Workshop & Training</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-extrabold text-dark text-lg mb-6 tracking-tight">Tentang Kami</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li><a href="#" class="hover:text-primary transition-colors">Tentang TheAIM</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Talent Ecosystem</a></li>
+                    <li><a href="mockup_perusahaan.html" class="hover:text-primary transition-colors">Solusi Untuk Perusahaan</a></li>
+                    <li><a href="mockup_artikel.html" class="hover:text-primary transition-colors">Artikel & Aktivitas</a>
+                <a href="mockup_career.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Karir</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-extrabold text-dark text-lg mb-6 tracking-tight">Kontak Kami</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li class="flex items-center gap-3">
+                        <i class="fa-solid fa-phone text-primary"></i>
+                        <a href="#" class="hover:text-primary transition-colors">081999554599</a>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i class="fa-regular fa-envelope text-primary"></i>
+                        <a href="mailto:ptabadiinsanmanfaat@gmail.com" class="hover:text-primary transition-colors">ptabadiinsanmanfaat@gmail.com</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="bg-dark py-6 px-4 text-white">
+            <div class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-center items-center gap-6">
+                <!-- Copyright & Links -->
+                <div class="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 text-xs text-gray-400 font-medium">
+                    <p>&copy; 2026 PT Abadi Insan Manfaat. All right reserved</p>
+                    <div class="hidden sm:block text-gray-600">|</div>
+                    <a href="#" class="hover:text-white transition-colors">Term & Condition</a>
+                    <div class="hidden sm:block text-gray-600">|</div>
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- FAKE SALES POPUP -->
+    <div class="sales-popup rounded-2xl py-3 px-4 flex items-center justify-between gap-4 border border-gray-100" id="salesPopup">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-yellow-50 flex items-center justify-center text-secondary border border-yellow-100 shrink-0">
+                <i class="fa-solid fa-eye text-sm"></i>
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <strong class="text-sm font-bold text-dark" id="spName">14 orang</strong>
+                </div>
+                <p class="text-xs text-gray-500 mt-0.5" id="spAction">Sedang melihat penawaran ini</p>
+                <div class="text-[10px] text-gray-400 mt-1 font-semibold" id="spTime" style="display:none;"></div>
+            </div>
+        </div>
+        <i class="fa-solid fa-xmark text-gray-300 hover:text-gray-500 cursor-pointer text-sm p-1" onclick="document.getElementById('salesPopup').classList.remove('show')"></i>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script>
+        // 1. COUNTDOWN TIMER
+        function getEndTime() {
+            const key = 'theaim_lr_cd';
+            let end = localStorage.getItem(key);
+            if (!end) {
+                end = Date.now() + 23 * 60 * 60 * 1000 + 59 * 60 * 1000 + 59 * 1000;
+                localStorage.setItem(key, end);
+            }
+            return parseInt(end);
+        }
+
+        const endTime = getEndTime();
+
+        function updateCountdown() {
+            const remaining = endTime - Date.now();
+            if (remaining <= 0) {
+                document.getElementById('cd-hours').textContent = '00';
+                document.getElementById('cd-mins').textContent = '00';
+                document.getElementById('cd-secs').textContent = '00';
+                return;
+            }
+            const h = Math.floor(remaining / 3600000);
+            const m = Math.floor((remaining % 3600000) / 60000);
+            const s = Math.floor((remaining % 60000) / 1000);
+            document.getElementById('cd-hours').textContent = String(h).padStart(2, '0');
+            document.getElementById('cd-mins').textContent = String(m).padStart(2, '0');
+            document.getElementById('cd-secs').textContent = String(s).padStart(2, '0');
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        // 2. FAKE SALES POPUP
+        const popup = document.getElementById('salesPopup');
+        const spName = document.getElementById('spName');
+
+        function triggerPopup() {
+            // Generate random number of viewers between 8 and 36
+            const randomViewers = Math.floor(Math.random() * 28) + 8; 
+
+            spName.textContent = `${randomViewers} orang`;
+
+            popup.classList.add('show');
+            setTimeout(() => { popup.classList.remove('show'); }, 6000);
+        }
+
+        setTimeout(() => {
+            triggerPopup();
+            setInterval(triggerPopup, Math.floor(Math.random() * 10000) + 15000); // Popup every 15-25 seconds
+        }, 5000);
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talents Mapping - TheAIM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626', // Merah
+                        secondary: '#fbbf24', // Kuning
+                        dark: '#18181b', // Hitam
+                        light: '#ffffff', // Putih
+                    },
+                    fontFamily: {
+                        sans: ['Lexend', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #ffffff; overflow-x: hidden; }
+        
+        .btn-primary {
+            background-color: #dc2626;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(220, 38, 38, 0.3);
+        }
+        
+        .btn-warning {
+            background-color: #fbbf24;
+            color: #18181b;
+            transition: all 0.3s ease;
+        }
+        .btn-warning:hover {
+            background-color: #f59e0b;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(251, 191, 36, 0.4);
+        }
+
+        .btn-dark {
+            background-color: #18181b;
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+        .btn-dark:hover {
+            background-color: #000000;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-outline {
+            border: 2px solid #18181b;
+            color: #18181b;
+            transition: all 0.3s ease;
+        }
+        .btn-outline:hover {
+            background-color: #18181b;
+            color: white;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Ribbon Effect for Best Value */
+        .ribbon-wrapper {
+            position: absolute;
+            right: -5px;
+            top: -5px;
+            z-index: 10;
+            overflow: hidden;
+            width: 100px;
+            height: 100px;
+        }
+        .ribbon {
+            font-size: 10px;
+            font-weight: 800;
+            color: #18181b;
+            text-align: center;
+            text-transform: uppercase;
+            transform: rotate(45deg);
+            position: relative;
+            padding: 5px 0;
+            left: -5px;
+            top: 20px;
+            width: 140px;
+            background-color: #fbbf24;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body class="font-sans text-dark flex flex-col min-h-screen">
+    
+    <!-- NAVIGATION -->
+    <nav class="sticky top-0 z-50 w-full glass-panel flex items-center px-4 py-4 lg:px-8 border-b border-gray-100">
+        <div class="max-w-[1400px] mx-auto w-full flex justify-between items-center">
+            
+            <a href="../index.html" class="text-2xl font-bold tracking-tight flex items-center gap-2">
+                <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM" class="h-14 md:h-16 w-auto">
+            </a>
+            
+            <div class="hidden lg:flex items-center space-x-2 font-medium text-[15px] text-gray-700">
+                <a href="../index.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Beranda</a>
+                
+                <!-- Layanan Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg group-hover:bg-slate-100 transition-colors focus:outline-none">
+                        Layanan <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-64 bg-white rounded-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)] border border-slate-100 py-2 flex flex-col">
+                            <!-- Assessment -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Assessment <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Talents Mapping</a>
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Tes Psikologi (Psikotes)</a>
+                                        <a href="mockup_layanan_mental_health.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Mental Health Check Up</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Konsultasi & Coaching -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Konsultasi & Coaching <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_konseling.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konseling dengan Psikolog</a>
+                                        <a href="mockup_layanan_relaksasi.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Therapy (SEFT)</a>
+                                        <a href="mockup_layanan_visual_coaching.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Visual Coaching</a>
+                                        <a href="mockup_layanan_consultation.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konsultasi Keuangan</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Digital Product -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Digital Product <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-72 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_ecourse.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">E-Course Life Reset: 7 Days Re-Discover Yourself</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Webinar & Workshop -->
+                            <a href="mockup_layanan_workshop.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Webinar & Workshop</a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="mockup_perusahaan.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Untuk Perusahaan</a>
+                <a href="mockup_artikel.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Artikel & Aktivitas</a>
+                <a href="mockup_career.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Karir</a>
+                
+                <!-- Tentang Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg group-hover:bg-gray-100 transition-colors focus:outline-none">
+                        Tentang Kami <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute right-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-56 bg-white rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-gray-100 py-3 overflow-hidden flex flex-col">
+                            <a href="mockup_tentang_theaim.html" class="px-6 py-3 text-sm text-gray-500 hover:bg-gray-50 hover:text-primary transition-colors">Tentang TheAIM</a>
+                            <a href="mockup_tentang_ecosystem.html" class="px-6 py-3 text-sm text-gray-500 hover:bg-gray-50 hover:text-primary transition-colors">TheAIM Ecosystem</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <a href="mockup_pendaftaran.html?layanan=talents_mapping" class="btn-outline px-7 py-2.5 rounded-full font-semibold text-sm hidden md:block tracking-wide">
+                Masuk
+            </a>
+            
+            <button class="md:hidden text-2xl text-dark">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 1. HERO SECTION -->
+    <section class="bg-primary text-white pt-24 pb-20 px-4 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-tr from-[#991b1b] to-primary z-0"></div>
+        <!-- Decorative Pattern -->
+        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 32px 32px;"></div>
+
+        <div class="max-w-[900px] mx-auto text-center relative z-10">
+            <span class="inline-block border border-white/30 text-white bg-white/10 font-bold text-xs tracking-widest uppercase px-4 py-1.5 rounded-full mb-6 backdrop-blur-sm">
+                Layanan Assessment
+            </span>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-black mb-6 leading-tight tracking-tight drop-shadow-md">
+                Kenali Potensi Diri<br>Hasilkan Strategi Pasti
+            </h1>
+            <p class="text-white/80 text-base md:text-lg mb-10 max-w-[650px] mx-auto leading-relaxed font-medium">
+                Berhenti menebak-nebak masa depan. Temukan susunan kekuatan bawaan lahirmu melalui metode psikologi teruji Talents Mapping dan petakan ulang arah karier, pendidikan, serta kehidupan sosialmu secara presisi.
+            </p>
+            <a href="#pricing" class="btn-warning inline-block px-10 py-4 rounded-full font-bold text-lg shadow-[0_10px_20px_rgba(0,0,0,0.15)]">
+                Daftar Assessment Sekarang <i class="fa-solid fa-arrow-down ml-2"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- 2. MASALAH APA SAJA (DIBAHAS) -->
+    <section class="py-24 px-4 bg-white relative">
+        <div class="max-w-[1100px] mx-auto text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-dark tracking-tight leading-tight">Masalah apa saja yang bisa dibahas?</h2>
+        </div>
+
+        <div class="max-w-[1000px] mx-auto flex flex-col md:flex-row items-center gap-12 lg:gap-20">
+            <!-- Visual Kiri -->
+            <div class="w-full md:w-1/2 relative">
+                <div class="aspect-square rounded-[2.5rem] overflow-hidden shadow-2xl">
+                    <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=600&auto=format&fit=crop" alt="Pemecahan Masalah" class="w-full h-full object-cover">
+                </div>
+                <!-- Dekoratif -->
+                <div class="absolute -z-10 top-8 -left-8 w-full h-full bg-red-50 rounded-[2.5rem]"></div>
+            </div>
+
+            <!-- List Kanan -->
+            <div class="w-full md:w-1/2 flex flex-col gap-5 text-left">
+                <div class="flex items-start gap-4">
+                    <i class="fa-regular fa-comment text-2xl text-green-500 mt-1 shrink-0 px-1"></i>
+                    <p class="font-medium text-[15px] md:text-base text-gray-700 leading-relaxed">Mengenali Bakat dan Potensi, serta Cara Mengembangkannya</p>
+                </div>
+                <div class="flex items-start gap-4">
+                    <i class="fa-regular fa-comment text-2xl text-green-500 mt-1 shrink-0 px-1"></i>
+                    <p class="font-medium text-[15px] md:text-base text-gray-700 leading-relaxed">Mengenali Tujuan Hidup yang sesuai bakat dan potensi</p>
+                </div>
+                <div class="flex items-start gap-4">
+                    <i class="fa-regular fa-comment text-2xl text-green-500 mt-1 shrink-0 px-1"></i>
+                    <p class="font-medium text-[15px] md:text-base text-gray-700 leading-relaxed">Mengetahui pilihan Karier & Pengembangannya</p>
+                </div>
+                <div class="flex items-start gap-4">
+                    <i class="fa-regular fa-comment text-2xl text-green-500 mt-1 shrink-0 px-1"></i>
+                    <p class="font-medium text-[15px] md:text-base text-gray-700 leading-relaxed">Mengetahui Rencana Study S2/S3 & Pilihan Jurusannya</p>
+                </div>
+                <div class="flex items-start gap-4">
+                    <i class="fa-regular fa-comment text-2xl text-green-500 mt-1 shrink-0 px-1"></i>
+                    <p class="font-medium text-[15px] md:text-base text-gray-700 leading-relaxed">Memahami Gaya Komunikasi Personal berdasarkan bakat</p>
+                </div>
+                <div class="flex items-start gap-4">
+                    <i class="fa-regular fa-comment text-2xl text-green-500 mt-1 shrink-0 px-1"></i>
+                    <p class="font-medium text-[15px] md:text-base text-gray-700 leading-relaxed">Mengetahui Peran Yang Tepat Terutama Dalam Karier & Sosial</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ALUR PROSES ASSESSMENT -->
+    <section class="py-20 px-4 bg-gray-50 border-t border-gray-100">
+        <div class="max-w-[1100px] mx-auto">
+            <div class="text-center mb-16 max-w-2xl mx-auto">
+                <span class="text-primary font-black tracking-widest text-xs uppercase mb-3 block">Step-By-Step</span>
+                <h2 class="text-3xl font-extrabold text-dark tracking-tight mb-4">Bagaimana Proses Asesmen Berjalan?</h2>
+                <p class="text-gray-500 font-medium text-sm md:text-base">Proses pengerjaan Talents Mapping dirancang sistematis, cepat, dan sepenuhnya online.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-4 gap-6 relative">
+                <!-- Line decorator for desktop -->
+                <div class="hidden md:block absolute top-1/2 left-8 right-8 h-[2px] bg-red-100 -translate-y-16 z-0"></div>
+                
+                <!-- Step 1 -->
+                <div class="bg-white p-6 rounded-3xl border border-gray-100 relative z-10 text-center flex flex-col items-center hover:shadow-lg transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-2xl bg-primary text-white flex items-center justify-center font-bold text-lg mb-6 shadow-md shadow-primary/20 group-hover:scale-110 transition-transform">1</div>
+                    <h3 class="font-extrabold text-dark text-base mb-2">Registrasi & Akses</h3>
+                    <p class="text-xs text-gray-500 leading-relaxed font-medium">Lakukan registrasi dan pembayaran untuk mendapatkan kode voucher unik serta tautan masuk portal tes.</p>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="bg-white p-6 rounded-3xl border border-gray-100 relative z-10 text-center flex flex-col items-center hover:shadow-lg transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-2xl bg-primary text-white flex items-center justify-center font-bold text-lg mb-6 shadow-md shadow-primary/20 group-hover:scale-110 transition-transform">2</div>
+                    <h3 class="font-extrabold text-dark text-base mb-2">Pengisian Online</h3>
+                    <p class="text-xs text-gray-500 leading-relaxed font-medium">Kerjakan 170 pernyataan online secara santai dan jujur. Pengerjaan biasanya memakan waktu ±30-40 menit.</p>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="bg-white p-6 rounded-3xl border border-gray-100 relative z-10 text-center flex flex-col items-center hover:shadow-lg transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-2xl bg-primary text-white flex items-center justify-center font-bold text-lg mb-6 shadow-md shadow-primary/20 group-hover:scale-110 transition-transform">3</div>
+                    <h3 class="font-extrabold text-dark text-base mb-2">Unduh Laporan</h3>
+                    <p class="text-xs text-gray-500 leading-relaxed font-medium">Laporan lengkap analisis 34 urutan bakat bawaan Anda akan langsung dikirimkan dalam format PDF secara instan.</p>
+                </div>
+                
+                <!-- Step 4 -->
+                <div class="bg-white p-6 rounded-3xl border border-gray-100 relative z-10 text-center flex flex-col items-center hover:shadow-lg transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-2xl bg-primary text-white flex items-center justify-center font-bold text-lg mb-6 shadow-md shadow-primary/20 group-hover:scale-110 transition-transform">4</div>
+                    <h3 class="font-extrabold text-dark text-base mb-2">Sesi Konsultasi</h3>
+                    <p class="text-xs text-gray-500 leading-relaxed font-medium">Jadwalkan konsultasi 1-on-1 bersama Coach tersertifikasi untuk membedah hasil dan menyusun peta jalan karier Anda.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. OUTPUT LAPORAN (HASIL TES) -->
+    <section class="py-24 px-4 bg-white border-y border-gray-200">
+        <div class="max-w-[900px] mx-auto text-center">
+            <div class="text-center mb-10">
+                <span class="text-primary font-black tracking-widest text-xs uppercase mb-2 block">Output Assessment</span>
+                <h2 class="text-3xl font-extrabold text-dark tracking-tight mb-4">Apa Saja yang Kamu Dapat?</h2>
+                <p class="text-gray-500 font-medium text-sm md:text-base max-w-2xl mx-auto">
+                    Setelah mengisi asesmen, Anda akan mendapatkan laporan PDF komprehensif berisi peta bakat dan panduan karier. Berikut gambarannya:
+                </p>
+            </div>
+            
+            <div class="w-full max-w-[450px] mx-auto bg-white rounded-xl p-3 shadow-lg relative z-10 mb-16 border border-gray-100 inline-block">
+                <img src="../Gambar2/FTMA.png" alt="Contoh Hasil Peta Bakat" class="w-full h-auto object-contain rounded">
+            </div>
+
+            <div class="flex flex-col gap-4 text-left max-w-[650px] mx-auto mb-16">
+                <!-- Checkmarks -->
+                <div class="flex items-start gap-4">
+                    <i class="fa-solid fa-check text-green-600 mt-1.5 shrink-0"></i>
+                    <p class="font-medium text-[15px] text-gray-700 leading-relaxed"><strong class="text-dark">34 Urutan bakat</strong>, termasuk 7 bakat kuat dan 7 bakat lemah, untuk mengenali kekuatan dan kelemahan diri.</p>
+                </div>
+                <div class="flex items-start gap-4">
+                    <i class="fa-solid fa-check text-green-600 mt-1.5 shrink-0"></i>
+                    <p class="font-medium text-[15px] text-gray-700 leading-relaxed"><strong class="text-dark">Peta Bakat</strong>, mengenali kategori kepribadian</p>
+                </div>
+                <div class="flex items-start gap-4">
+                    <i class="fa-solid fa-check text-green-600 mt-1.5 shrink-0"></i>
+                    <p class="font-medium text-[15px] text-gray-700 leading-relaxed"><strong class="text-dark">14 Potensi Kekuatan</strong>, untuk menemukan peran yang sesuai</p>
+                </div>
+                <div class="flex items-start gap-4">
+                    <i class="fa-solid fa-check text-green-600 mt-1.5 shrink-0"></i>
+                    <p class="font-medium text-[15px] text-gray-700 leading-relaxed"><strong class="text-dark">Strength Cluster Map</strong>, mengenali aktivitas kuat sesuai minat & bakat</p>
+                </div>
+                <div class="flex items-start gap-4">
+                    <i class="fa-solid fa-check text-green-600 mt-1.5 shrink-0"></i>
+                    <p class="font-medium text-[15px] text-gray-700 leading-relaxed">Rekomendasi <strong class="text-dark">Personal Branding</strong> sesuai bakat</p>
+                </div>
+                <div class="flex items-start gap-4">
+                    <i class="fa-solid fa-check text-green-600 mt-1.5 shrink-0"></i>
+                    <p class="font-medium text-[15px] text-gray-700 leading-relaxed">Rekomendasi <strong class="text-dark">Arahan Hidup dan Karier</strong> yang sesuai dengan potensi diri</p>
+                </div>
+                <div class="flex items-start gap-4">
+                    <i class="fa-solid fa-check text-green-600 mt-1.5 shrink-0"></i>
+                    <p class="font-medium text-[15px] text-gray-700 leading-relaxed">Rekomendasi cara mengatasi kelemahan diri</p>
+                </div>
+            </div>
+
+            <!-- Jaminan Keamanan Data -->
+            <div class="mt-8 mb-12 p-6 rounded-2xl bg-red-50/50 border border-primary/20 flex flex-col md:flex-row items-center gap-4 text-left max-w-[650px] mx-auto shadow-sm">
+                <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xl flex-shrink-0">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-dark text-base mb-1">Jaminan Keamanan & Kerahasiaan Data Klien</h4>
+                    <p class="text-xs md:text-sm text-gray-500 leading-relaxed font-medium">
+                        Hasil Talents Mapping Anda sepenuhnya aman. Kami menjamin kerahasiaan profil pribadi Anda dan tidak akan membagikan hasil peta kekuatan/kelemahan Anda kepada pihak ketiga mana pun tanpa persetujuan eksplisit dari Anda.
+                    </p>
+                </div>
+            </div>
+
+            <a href="../Hasil%20TM%20Alifya_Ihya_Muhammad.pdf" target="_blank" class="btn-primary inline-block bg-[#1d4ed8] hover:bg-[#1e40af] text-white px-10 py-4 rounded-full font-bold shadow-lg">
+                <i class="fa-regular fa-file-pdf mr-2"></i> Lihat Contoh Hasil Test
+            </a>
+        </div>
+    </section>
+
+    <!-- 4. PRICING PACKAGES (3 PAKET) -->
+    <section id="pricing" class="py-24 px-4 bg-gray-50 relative">
+        <div class="max-w-[1200px] mx-auto">
+            
+            <div class="text-center mb-16">
+                <h2 class="text-2xl md:text-4xl font-extrabold text-dark tracking-tight leading-tight mb-4">
+                    Pilih Paket Sesuai Kebutuhanmu
+                </h2>
+                <p class="text-gray-500 font-medium max-w-2xl mx-auto">Mulai dari assessment mandiri hingga sesi pro consultation eksklusif — semua tersedia, sesuai kebutuhanmu saat ini.</p>
+            </div>
+
+            <!-- LAYER 1: BELUM PERNAH TES -->
+            <div class="mb-16">
+                <div class="text-center mb-8">
+                    <h3 class="text-xl md:text-2xl font-black text-dark inline-block border-b-4 border-primary pb-2 px-4 mb-2 tracking-tight">Belum Pernah Ikut Tes Talents Mapping?</h3>
+                    <p class="text-gray-500 text-sm font-medium">Ambil paket assessment untuk mengetahui peta bakatmu dari nol.</p>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-[1100px] mx-auto items-stretch">
+                    <!-- 1. Assessment Only -->
+                    <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden flex flex-col h-full transform hover:scale-[1.02] transition-transform">
+                        <div class="bg-secondary py-7 text-center border-b border-yellow-400">
+                            <p class="text-[11px] font-bold text-dark/60 uppercase tracking-widest mb-1">Paket Assessment</p>
+                            <h3 class="text-2xl font-black text-dark">Assessment Only</h3>
+                        </div>
+                        
+                        <div class="p-8 flex flex-col flex-grow">
+                            <div class="text-center mb-8">
+                                <span class="text-sm font-bold text-dark align-top mt-2 inline-block">Rp</span>
+                                <span class="text-5xl font-black text-dark tracking-tighter">399<span class="text-2xl">K</span></span>
+                            </div>
+
+                            <div class="space-y-3.5 flex-grow mb-8">
+                                <div class="flex items-start gap-3 border-b border-gray-100 pb-3">
+                                    <i class="fa-regular fa-circle-check text-green-500 shrink-0 mt-0.5"></i>
+                                    <span class="text-sm font-semibold text-dark text-left leading-tight">Full Assessment Talents Mapping</span>
+                                </div>
+                                <div class="flex items-start gap-3 border-b border-gray-100 pb-3">
+                                    <i class="fa-regular fa-circle-check text-green-500 shrink-0 mt-0.5"></i>
+                                    <span class="text-sm font-semibold text-dark text-left leading-tight">Handout Hasil Assessment Lengkap</span>
+                                </div>
+                                <div class="flex items-start gap-3 border-b border-gray-100 pb-3 opacity-50">
+                                    <i class="fa-solid fa-circle-minus text-primary shrink-0 mt-0.5"></i>
+                                    <span class="text-sm font-medium text-gray-400 line-through text-left leading-tight">Konsultasi Hasil Personal Profile Talents Mapping</span>
+                                </div>
+                                <div class="flex items-start gap-3 opacity-50">
+                                    <i class="fa-solid fa-circle-minus text-primary shrink-0 mt-0.5"></i>
+                                    <span class="text-sm font-medium text-gray-400 line-through text-left leading-tight">Sesi Pro Consultation 60 Menit (Online / Offline Bandung)</span>
+                                </div>
+                            </div>
+                            <a href="mockup_pendaftaran.html?layanan=talents_mapping&paket=assessment_only&harga=399000" class="w-full block bg-secondary hover:bg-yellow-500 text-dark font-bold py-3.5 rounded-full transition-colors text-center shadow-sm">
+                                Daftar Sekarang
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 2. Assessment + Pro Consultation (Best Value) -->
+                    <div class="bg-white rounded-2xl shadow-xl border-2 border-primary overflow-hidden flex flex-col h-full transform hover:-translate-y-2 relative transition-transform z-10">
+                        <div class="ribbon-wrapper"><div class="ribbon">Best Value</div></div>
+                        <div class="bg-primary py-7 text-center text-white border-b border-red-700">
+                            <p class="text-[11px] font-bold text-white/60 uppercase tracking-widest mb-1">Paket Lengkap</p>
+                            <h3 class="text-2xl font-black">Assessment + Pro Consul</h3>
+                        </div>
+                        
+                        <div class="p-8 flex flex-col flex-grow">
+                            <div class="text-center mb-8">
+                                <span class="text-sm font-bold text-dark align-top mt-2 inline-block">Rp</span>
+                                <span class="text-5xl font-black text-dark tracking-tighter">599<span class="text-2xl">K</span></span>
+                            </div>
+
+                            <div class="space-y-3.5 flex-grow mb-8">
+                                <div class="flex items-start gap-3 border-b border-gray-100 pb-3">
+                                    <i class="fa-regular fa-circle-check text-green-500 shrink-0 mt-0.5"></i>
+                                    <span class="text-sm font-semibold text-dark text-left leading-tight">Full Assessment Talents Mapping</span>
+                                </div>
+                                <div class="flex items-start gap-3 border-b border-gray-100 pb-3">
+                                    <i class="fa-regular fa-circle-check text-green-500 shrink-0 mt-0.5"></i>
+                                    <span class="text-sm font-semibold text-dark text-left leading-tight">Handout Hasil Assessment Lengkap</span>
+                                </div>
+                                <div class="flex items-start gap-3 border-b border-gray-100 pb-3">
+                                    <i class="fa-regular fa-circle-check text-green-500 shrink-0 mt-0.5"></i>
+                                    <span class="text-sm font-semibold text-dark text-left leading-tight">Konsultasi Hasil Personal Profile Talents Mapping</span>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <i class="fa-regular fa-circle-check text-green-500 shrink-0 mt-0.5"></i>
+                                    <span class="text-sm font-semibold text-dark text-left leading-tight">Sesi Pro Consultation 60 Menit (Online / Offline Bandung)</span>
+                                </div>
+                            </div>
+                            <a href="mockup_pendaftaran.html?layanan=talents_mapping&paket=assessment_pro_consul&harga=599000" class="w-full block bg-primary hover:bg-[#b91c1c] text-white font-bold py-4 rounded-full transition-colors text-center shadow-lg shadow-red-200">
+                                Daftar Sekarang
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 3. Assessment + Coach Alif -->
+                    <div class="bg-white rounded-2xl shadow-xl border-2 border-secondary overflow-hidden flex flex-col h-full transform hover:-translate-y-2 relative transition-transform z-10">
+                        <div class="ribbon-wrapper"><div class="ribbon" style="background-color: #18181b; color: white;">Premium</div></div>
+                        <div class="bg-gradient-to-br from-gray-900 to-black py-7 text-center text-white border-b border-gray-800">
+                            <p class="text-[11px] font-bold text-secondary uppercase tracking-widest mb-1">Paket Eksklusif</p>
+                            <h3 class="text-2xl font-black text-secondary leading-tight">Assessment +<br>Coach Alif</h3>
+                        </div>
+                        
+                        <div class="p-8 flex flex-col flex-grow">
+                            <div class="text-center mb-8">
+                                <span class="text-sm font-bold text-dark align-top mt-2 inline-block">Rp</span>
+                                <span class="text-5xl font-black text-dark tracking-tighter">799<span class="text-2xl">K</span></span>
+                            </div>
+
+                            <div class="space-y-3.5 flex-grow mb-8">
+                                <div class="flex items-start gap-3 border-b border-gray-100 pb-3">
+                                    <i class="fa-regular fa-circle-check text-green-500 shrink-0 mt-0.5"></i>
+                                    <span class="text-sm font-semibold text-dark text-left leading-tight">Full Assessment Talents Mapping</span>
+                                </div>
+                                <div class="flex items-start gap-3 border-b border-gray-100 pb-3">
+                                    <i class="fa-regular fa-circle-check text-green-500 shrink-0 mt-0.5"></i>
+                                    <span class="text-sm font-semibold text-dark text-left leading-tight">Handout Hasil Assessment Lengkap</span>
+                                </div>
+                                <div class="flex items-start gap-3 border-b border-gray-100 pb-3">
+                                    <i class="fa-regular fa-circle-check text-green-500 shrink-0 mt-0.5"></i>
+                                    <span class="text-sm font-semibold text-dark text-left leading-tight">Konsultasi Hasil Personal Profile Talents Mapping</span>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <i class="fa-regular fa-circle-check text-green-500 shrink-0 mt-0.5"></i>
+                                    <span class="text-sm font-semibold text-dark text-left leading-tight">Sesi Pro Consultation 60 Menit bersama Coach Alif (Online / Offline Bandung)</span>
+                                </div>
+                            </div>
+                            <a href="mockup_pendaftaran.html?layanan=talents_mapping&paket=assessment_coach_alif&harga=799000" class="w-full block bg-dark hover:bg-black text-white font-bold py-4 rounded-full transition-colors text-center shadow-lg">
+                                Daftar Sekarang
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Separator -->
+            <div class="max-w-[300px] mx-auto flex items-center justify-center my-16 opacity-30">
+                <div class="h-px bg-gray-400 flex-grow"></div>
+                <i class="fa-solid fa-star text-gray-400 mx-4"></i>
+                <div class="h-px bg-gray-400 flex-grow"></div>
+            </div>
+
+            <!-- LAYER 2: SUDAH PERNAH TES -->
+            <div class="mb-8">
+                <div class="text-center mb-8">
+                    <h3 class="text-xl md:text-2xl font-black text-dark inline-block border-b-4 border-primary pb-2 px-4 mb-2 tracking-tight">Sudah Memiliki Hasil Peta Bakat?</h3>
+                    <p class="text-gray-500 text-sm font-medium">Pilih sesi konsultasi lanjutan untuk membedah lebih dalam strategimu bersama Ahli.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6 lg:gap-8 max-w-4xl mx-auto items-stretch justify-center">
+                    <!-- 3. Pro Consultation Only -->
+                    <div class="bg-dark rounded-2xl shadow-xl border border-gray-800 overflow-hidden flex flex-col h-full transform hover:scale-[1.02] relative transition-transform">
+                        <div class="bg-[#1f1f22] py-7 text-center text-white border-b border-gray-700">
+                            <p class="text-[11px] font-bold text-white/40 uppercase tracking-widest mb-1">Paket Konsultasi</p>
+                            <h3 class="text-2xl font-black text-secondary">Pro Consul Only</h3>
+                        </div>
+                        
+                        <div class="p-8 flex flex-col flex-grow bg-white">
+                            <div class="text-center mb-8">
+                                <span class="text-sm font-bold text-dark align-top mt-2 inline-block">Rp</span>
+                                <span class="text-5xl font-black text-dark tracking-tighter">299<span class="text-2xl">K</span></span>
+                            </div>
+
+                            <div class="space-y-3.5 flex-grow mb-8">
+                                <div class="flex items-start gap-3 border-b border-gray-100 pb-3">
+                                    <i class="fa-regular fa-circle-check text-green-500 shrink-0 mt-0.5"></i>
+                                    <span class="text-sm font-semibold text-dark text-left leading-tight">Konsultasi Hasil Personal Profile Talents Mapping</span>
+                                </div>
+                                <div class="flex items-start gap-3 border-b border-gray-100 pb-3">
+                                    <i class="fa-regular fa-circle-check text-green-500 shrink-0 mt-0.5"></i>
+                                    <span class="text-sm font-semibold text-dark text-left leading-tight">Sesi Pro Consultation 60 Menit (Online / Offline Bandung)</span>
+                                </div>
+                                <div class="flex items-start gap-3 border-b border-gray-100 pb-3 opacity-50">
+                                    <i class="fa-solid fa-circle-minus text-primary shrink-0 mt-0.5"></i>
+                                    <span class="text-sm font-medium text-gray-400 line-through text-left leading-tight">Full Assessment Talents Mapping</span>
+                                </div>
+                                <div class="flex items-start gap-3 opacity-50">
+                                    <i class="fa-solid fa-circle-minus text-primary shrink-0 mt-0.5"></i>
+                                    <span class="text-sm font-medium text-gray-400 line-through text-left leading-tight">Handout Hasil Assessment Lengkap</span>
+                                </div>
+                            </div>
+                            <a href="mockup_pendaftaran.html?layanan=talents_mapping&paket=pro_consul_only&harga=299000" class="w-full block bg-dark hover:bg-black text-white font-bold py-4 rounded-full transition-colors text-center shadow-lg">
+                                Daftar Sekarang
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 4. Consultation with Coach Alif -->
+                    <div class="bg-gradient-to-br from-gray-900 to-black rounded-2xl shadow-xl border border-secondary overflow-hidden flex flex-col h-full transform hover:-translate-y-1 relative transition-transform">
+                        <div class="bg-black py-7 text-center text-white border-b border-[#333]">
+                            <p class="text-[11px] font-bold text-secondary uppercase tracking-widest mb-1">Paket Premium</p>
+                            <h3 class="text-2xl font-black text-white">With Coach Alif</h3>
+                        </div>
+                        
+                        <div class="p-8 flex flex-col flex-grow">
+                            <div class="text-center mb-8">
+                                <span class="text-sm font-bold text-white align-top mt-2 inline-block">Rp</span>
+                                <span class="text-5xl font-black text-white tracking-tighter">499<span class="text-2xl">K</span></span>
+                            </div>
+
+                            <div class="space-y-3.5 flex-grow mb-8">
+                                <div class="flex items-start gap-3 border-b border-gray-800 pb-3">
+                                    <i class="fa-regular fa-circle-check text-secondary shrink-0 mt-0.5"></i>
+                                    <span class="text-sm font-semibold text-white text-left leading-tight">Review Strategis & Analisa Mendalam Talents Mapping</span>
+                                </div>
+                                <div class="flex items-start gap-3 border-b border-gray-800 pb-3">
+                                    <i class="fa-regular fa-circle-check text-secondary shrink-0 mt-0.5"></i>
+                                    <span class="text-sm font-semibold text-white text-left leading-tight">Sesi Mentoring Langsung bersama Coach Alif (90 Menit)</span>
+                                </div>
+                                <div class="flex items-start gap-3 border-b border-gray-800 pb-3 opacity-50">
+                                    <i class="fa-solid fa-circle-minus text-red-500 shrink-0 mt-0.5"></i>
+                                    <span class="text-sm font-medium text-gray-500 line-through text-left leading-tight">Full Assessment Talents Mapping</span>
+                                </div>
+                                <div class="flex items-start gap-3 opacity-50">
+                                    <i class="fa-solid fa-circle-minus text-red-500 shrink-0 mt-0.5"></i>
+                                    <span class="text-sm font-medium text-gray-500 line-through text-left leading-tight">Handout Hasil Assessment Lengkap</span>
+                                </div>
+                            </div>
+                            <a href="mockup_pendaftaran.html?layanan=talents_mapping&paket=pro_consul_coach_alif&harga=499000" class="w-full block bg-secondary hover:bg-yellow-500 text-dark font-bold py-4 rounded-full transition-colors text-center shadow-[0_0_15px_rgba(251,191,36,0.3)]">
+                                Pilih Coach Alif
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-[11px] text-gray-500 text-center font-bold mt-6 uppercase tracking-widest">*Untuk seluruh paket di atas, diwajibkan Memiliki Peta Bakat</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section class="py-24 px-4 bg-white border-t border-gray-150">
+        <div class="max-w-[800px] mx-auto">
+            <div class="text-center mb-16">
+                <span class="text-primary font-black tracking-widest text-xs uppercase mb-3 block">Pertanyaan Umum</span>
+                <h2 class="text-3xl font-extrabold text-dark tracking-tight mb-4">Frequently Asked Questions</h2>
+                <p class="text-gray-500 font-medium text-sm md:text-base">Temukan jawaban atas pertanyaan yang paling sering ditanyakan mengenai asesmen Talents Mapping.</p>
+            </div>
+            
+            <div class="space-y-4">
+                <!-- FAQ 1 -->
+                <details class="group bg-gray-50 border border-gray-100 rounded-2xl p-6 transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex justify-between items-center font-bold text-dark text-[15px] md:text-base cursor-pointer list-none">
+                        <span>Berapa batas usia minimal untuk mengikuti tes ini?</span>
+                        <span class="transition group-open:rotate-180">
+                            <i class="fa-solid fa-chevron-down text-sm text-gray-400"></i>
+                        </span>
+                    </summary>
+                    <p class="text-xs md:text-sm text-gray-500 leading-relaxed font-medium mt-4 pt-4 border-t border-gray-200/60">
+                        Batas usia minimal pengerjaan Talents Mapping adalah <strong>15 tahun (setara kelas 3 SMP atau kelas 1 SMA)</strong>. Hal ini dikarenakan struktur kepribadian dan minat aktivitas bawaan anak sudah mulai terbentuk dan stabil pada fase remaja akhir tersebut.
+                      </p>
+                </details>
+                
+                <!-- FAQ 2 -->
+                <details class="group bg-gray-50 border border-gray-100 rounded-2xl p-6 transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex justify-between items-center font-bold text-dark text-[15px] md:text-base cursor-pointer list-none">
+                        <span>Apakah pengisian tes dibatasi oleh waktu?</span>
+                        <span class="transition group-open:rotate-180">
+                            <i class="fa-solid fa-chevron-down text-sm text-gray-400"></i>
+                        </span>
+                    </summary>
+                    <p class="text-xs md:text-sm text-gray-500 leading-relaxed font-medium mt-4 pt-4 border-t border-gray-200/60">
+                        Tidak ada batas waktu pengerjaan yang kaku, namun rata-rata orang menyelesaikannya dalam waktu <strong>30 hingga 45 menit</strong>. Kami sangat merekomendasikan pengisian secara spontan, jujur, dan tidak berlama-lama memikirkan satu jawaban demi menjaga keakuratan hasil peta bakat Anda.
+                    </p>
+                </details>
+                
+                <!-- FAQ 3 -->
+                <details class="group bg-gray-50 border border-gray-100 rounded-2xl p-6 transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex justify-between items-center font-bold text-dark text-[15px] md:text-base cursor-pointer list-none">
+                        <span>Berapa lama masa berlaku hasil analisis Talents Mapping?</span>
+                        <span class="transition group-open:rotate-180">
+                            <i class="fa-solid fa-chevron-down text-sm text-gray-400"></i>
+                        </span>
+                    </summary>
+                    <p class="text-xs md:text-sm text-gray-500 leading-relaxed font-medium mt-4 pt-4 border-t border-gray-200/60">
+                        Talents Mapping mengukur bakat bawaan (<em>talent</em>) yang secara neurologis bersifat relatif permanen dan stabil sepanjang hayat setelah usia dewasa. Namun demikian, jika Anda mengalami perubahan peran kehidupan yang ekstrem (seperti perubahan karier drastis atau musibah besar), re-assessment disarankan untuk melihat bagaimana Anda beradaptasi.
+                    </p>
+                </details>
+
+                <!-- FAQ 4 -->
+                <details class="group bg-gray-50 border border-gray-100 rounded-2xl p-6 transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex justify-between items-center font-bold text-dark text-[15px] md:text-base cursor-pointer list-none">
+                        <span>Bagaimana cara menjadwalkan konsultasi setelah tes selesai?</span>
+                        <span class="transition group-open:rotate-180">
+                            <i class="fa-solid fa-chevron-down text-sm text-gray-400"></i>
+                        </span>
+                    </summary>
+                    <p class="text-xs md:text-sm text-gray-500 leading-relaxed font-medium mt-4 pt-4 border-t border-gray-200/60">
+                        Setelah laporan PDF terbit, admin kami akan menghubungi Anda melalui WhatsApp untuk melakukan konfirmasi jadwal konsultasi. Sesi berdurasi 60-90 menit dapat dilangsungkan secara online (via Google Meet/Zoom) atau offline di kantor pusat kami di Bandung sesuai kesepakatan.
+                    </p>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-50 pt-16 border-t border-gray-200">
+        <div class="max-w-[1200px] mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 text-[#334155]">
+            
+            <div class="pr-4">
+                <a href="mockup_pendaftaran.html?layanan=talents_mapping" class="text-2xl font-bold tracking-tight flex items-center gap-2 mb-8 text-dark">
+                    <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM Logo" class="h-14 md:h-16 w-auto">
+                </a>
+            </div>
+
+            <div>
+                <h4 class="font-extrabold text-dark text-lg mb-6 tracking-tight">Layanan</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li><a href="mockup_layanan_assessment.html" class="text-primary font-bold">Talents Mapping Assesmen</a></li>
+                    <li><a href="mockup_layanan_coaching.html" class="hover:text-primary transition-colors">Coaching</a></li>
+                    <li><a href="mockup_layanan_consultation.html" class="hover:text-primary transition-colors">Consultation</a></li>
+                    <li><a href="mockup_layanan_relaksasi.html" class="hover:text-primary transition-colors">Therapy (SEFT)</a></li>
+                    <li><a href="mockup_layanan_workshop.html" class="hover:text-primary transition-colors">Workshop & Training</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-extrabold text-dark text-lg mb-6 tracking-tight">Tentang Kami</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li><a href="mockup_tentang_theaim.html" class="hover:text-primary transition-colors">Tentang TheAIM</a></li>
+                    <li><a href="mockup_tentang_ecosystem.html" class="hover:text-primary transition-colors">Talent Ecosystem</a></li>
+                    <li><a href="mockup_perusahaan.html" class="hover:text-primary transition-colors">Solusi Untuk Perusahaan</a></li>
+                    <li><a href="mockup_artikel.html" class="hover:text-primary transition-colors">Artikel & Aktivitas</a>
+                <a href="mockup_career.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Karir</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-extrabold text-dark text-lg mb-6 tracking-tight">Kontak Kami</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li class="flex items-center gap-3">
+                        <i class="fa-solid fa-phone text-primary"></i>
+                        <a href="mockup_pendaftaran.html?layanan=talents_mapping" class="hover:text-primary transition-colors">081999554599</a>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i class="fa-regular fa-envelope text-primary"></i>
+                        <a href="mailto:ptabadiinsanmanfaat@gmail.com" class="hover:text-primary transition-colors">ptabadiinsanmanfaat@gmail.com</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="bg-dark py-6 px-4 text-white">
+            <div class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-center items-center gap-6">
+                <!-- Copyright & Links -->
+                <div class="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 text-xs text-gray-400 font-medium">
+                    <p>&copy; 2026 PT Abadi Insan Manfaat. All right reserved</p>
+                    <div class="hidden sm:block text-gray-600">|</div>
+                    <a href="mockup_pendaftaran.html?layanan=talents_mapping" class="hover:text-white transition-colors">Term & Condition</a>
+                    <div class="hidden sm:block text-gray-600">|</div>
+                    <a href="mockup_pendaftaran.html?layanan=talents_mapping" class="hover:text-white transition-colors">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

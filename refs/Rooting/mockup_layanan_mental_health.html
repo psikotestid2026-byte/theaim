@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Check Up - TheAIM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626', // Merah TheAIM (tetap dipertahankan untuk brand core)
+                        secondary: '#fbbf24', // Kuning TheAIM
+                        dark: '#18181b', // Hitam
+                        light: '#ffffff', // Putih
+                        mhBlue: '#0ea5e9', // Calming Sky Blue for Mental Health
+                        mhDarkBlue: '#0f172a', // Deep slate blue for contrast
+                    },
+                    fontFamily: {
+                        sans: ['Lexend', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f8fafc; overflow-x: hidden; } /* Latar belakang slate yang sangat halus */
+        
+        /* Tema Tombol Biru Khusus Halaman Mental Health */
+        .btn-blue {
+            background-color: #0284c7; /* Tailwind sky-600 */
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-blue:hover {
+            background-color: #0369a1; /* Tailwind sky-700 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(2, 132, 199, 0.4);
+        }
+
+        .btn-outline-blue {
+            border: 2px solid #0f172a;
+            color: #0f172a;
+            transition: all 0.3s ease;
+        }
+        .btn-outline-blue:hover {
+            background-color: #0f172a;
+            color: white;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .enneagram-card {
+            background-color: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(14, 165, 233, 0.06);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #f1f5f9;
+        }
+        .enneagram-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(14, 165, 233, 0.12);
+            border-color: #bae6fd;
+        }
+        
+    </style>
+</head>
+<body class="font-sans text-dark flex flex-col min-h-screen">
+    
+    <!-- NAVIGATION (Standard TheAIM dengan Active State pada Mental Health) -->
+    <nav class="sticky top-0 z-50 w-full glass-panel flex items-center px-4 py-4 lg:px-8 border-b border-gray-100">
+        <div class="max-w-[1400px] mx-auto w-full flex justify-between items-center">
+            
+            <a href="../index.html" class="text-2xl font-bold tracking-tight flex items-center gap-2">
+                <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM" class="h-14 md:h-16 w-auto">
+            </a>
+            
+            <div class="hidden lg:flex items-center space-x-2 font-medium text-[15px] text-gray-700">
+                <a href="../index.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Beranda</a>
+                
+                <!-- Layanan Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg group-hover:bg-slate-100 transition-colors focus:outline-none">
+                        Layanan <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-64 bg-white rounded-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)] border border-slate-100 py-2 flex flex-col">
+                            <!-- Assessment -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Assessment <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Talents Mapping</a>
+                                        <a href="mockup_layanan_assessment.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Tes Psikologi (Psikotes)</a>
+                                        <a href="mockup_layanan_mental_health.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Mental Health Check Up</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Konsultasi & Coaching -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Konsultasi & Coaching <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-64 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_konseling.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konseling dengan Psikolog</a>
+                                        <a href="mockup_layanan_relaksasi.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Therapy (SEFT)</a>
+                                        <a href="mockup_layanan_visual_coaching.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Visual Coaching</a>
+                                        <a href="mockup_layanan_consultation.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Konsultasi Keuangan</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Digital Product -->
+                            <div class="relative group/sub">
+                                <div class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex justify-between items-center cursor-pointer">
+                                    Digital Product <i class="fa-solid fa-caret-right text-slate-400"></i>
+                                </div>
+                                <div class="absolute left-full top-0 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200">
+                                    <div class="w-72 bg-white rounded-xl shadow-lg border border-slate-100 py-2 flex flex-col ml-[-4px]">
+                                        <a href="mockup_layanan_ecourse.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">E-Course Life Reset: 7 Days Re-Discover Yourself</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Webinar & Workshop -->
+                            <a href="mockup_layanan_workshop.html" class="px-6 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">Webinar & Workshop</a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="mockup_perusahaan.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Untuk Perusahaan</a>
+                <a href="mockup_artikel.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Artikel & Aktivitas</a>
+                <a href="mockup_career.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Karir</a>
+                
+                <!-- Tentang Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg group-hover:bg-gray-100 transition-colors focus:outline-none">
+                        Tentang Kami <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute right-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="w-56 bg-white rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-gray-100 py-3 overflow-hidden flex flex-col">
+                            <a href="mockup_tentang_theaim.html" class="px-6 py-3 text-sm text-gray-500 hover:bg-gray-50 hover:text-primary transition-colors">Tentang TheAIM</a>
+                            <a href="mockup_tentang_ecosystem.html" class="px-6 py-3 text-sm text-gray-500 hover:bg-gray-50 hover:text-primary transition-colors">TheAIM Ecosystem</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <a href="#" class="btn-outline-blue px-7 py-2.5 rounded-full font-semibold text-sm hidden md:block tracking-wide">
+                Masuk / Daftar
+            </a>
+            
+            <button class="md:hidden text-2xl text-dark">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 1. HERO SECTION (Mental Health Focused) -->
+    <section class="bg-gradient-to-br from-white to-sky-50 pt-16 pb-24 px-4 overflow-hidden relative">
+        <!-- Floating abstract shapes -->
+        <div class="absolute top-0 right-0 w-3/4 h-full bg-sky-100/50 rounded-l-full -z-10 translate-x-1/3"></div>
+        <div class="absolute bottom-0 left-10 w-64 h-64 bg-blue-100/40 rounded-full blur-3xl -z-10"></div>
+        
+        <div class="max-w-[1200px] mx-auto flex flex-col md:flex-row items-center gap-12">
+            
+            <!-- Teks Kiri -->
+            <div class="w-full md:w-[55%] text-left relative z-10 z-[5]">
+                <div class="inline-flex items-center gap-2 bg-sky-100 text-sky-700 px-4 py-1.5 rounded-full font-bold text-xs mb-6 border border-sky-200">
+                    <i class="fa-solid fa-heart-pulse"></i> Layanan Mental Health Check Up
+                </div>
+                
+                <h1 class="text-4xl md:text-5xl lg:text-[3.5rem] font-black mb-6 leading-[1.1] tracking-tight text-mhDarkBlue">
+                    <span class="text-mhBlue">Check Up Mentalmu,</span><br>
+                    Kenali Pola Emosi<br>Terdalammu.
+                </h1>
+                
+                <p class="text-gray-600 text-[15px] md:text-lg mb-10 leading-relaxed font-medium max-w-[500px]">
+                    Berhentilah menduga-duga saat stress melanda. Setiap hasil asesmen dilengkapi dengan sesi <strong class="text-mhDarkBlue">coaching personal</strong> untuk memastikan interpretasi dan langkah pemulihan mental yang akurat dan tepat.
+                </p>
+                
+                <a href="#booking" class="btn-blue inline-flex items-center justify-center px-8 py-3.5 rounded-full font-bold text-base shadow-[0_10px_20px_rgba(2,132,199,0.2)]">
+                    Mulai Asesmen Sekarang <i class="fa-solid fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+            
+            <!-- Gambar Kanan (Lingkaran Biru) -->
+            <div class="w-full md:w-[45%] relative z-10">
+                <div class="relative w-full aspect-square max-w-[500px] mx-auto">
+                    <!-- Lingkaran Dashed Biru -->
+                    <div class="absolute inset-4 rounded-full border-2 border-dashed border-sky-400 rotate-12 bg-sky-500 z-0"></div>
+                    <!-- Foto -->
+                    <div class="absolute inset-0 z-10 rounded-full overflow-hidden flex items-end justify-center pt-8">
+                        <!-- Menggunakan foto wanita tenang dengan kacamata/buku -->
+                        <img src="https://images.unsplash.com/photo-1544717302-de2939b7ef71?q=80&w=800&auto=format&fit=crop" alt="Kenyamanan Mental Health" class="w-full h-full object-cover object-top scale-110">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. INTRO ENNEAGRAM SEBAGAI TOOLS MENTAL HEALTH -->
+    <section class="py-24 px-4 bg-mhDarkBlue text-white relative">
+        <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] mix-blend-overlay"></div>
+        <div class="absolute right-0 top-0 text-[350px] font-black text-white/5 pointer-events-none select-none leading-none -mt-10 mr-10">
+            9
+        </div>
+
+        <div class="max-w-[1000px] mx-auto md:flex gap-12 items-center">
+            
+            <div class="w-full md:w-1/2 mb-12 md:mb-0 relative z-10 hidden md:block">
+                <!-- Visual Enneagram Geometris -->
+                <div class="aspect-square relative max-w-[400px] mx-auto bg-white/5 rounded-full border border-white/10 flex items-center justify-center p-8 backdrop-blur-md shadow-2xl">
+                    <img src="../Foto2/enneagram%20the%20aim.png" alt="Enneagram TheAIM" class="rounded-full w-full h-full object-cover bg-white">
+                </div>
+            </div>
+
+            <div class="w-full md:w-1/2 relative z-10">
+                <span class="text-sky-400 font-bold tracking-widest text-sm uppercase mb-4 block">Enneagram Psychological Test</span>
+                <h2 class="text-3xl md:text-4xl font-bold leading-snug mb-6 text-white">
+                    People Personality <br>Centric Development
+                </h2>
+                <div class="w-16 h-1.5 bg-sky-500 rounded-full mb-8"></div>
+                
+                <p class="text-gray-300 text-[15px] mb-5 leading-relaxed font-light">
+                    Enneagram bukan sekadar tes kepribadian untuk melihat minat atau bakat. Alat ini dirancang untuk <strong class="text-white">memahami manusia berdasarkan motivasi terdalam, cara berpikir, dan pola emosi</strong> masing-masing.
+                </p>
+                <p class="text-gray-300 text-[15px] mb-5 leading-relaxed font-light">
+                    Sistem ini membagi respons emosional ke dalam 9 tipe utama, yang bisa bantu kamu memahami secara konkret:
+                </p>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-start gap-3">
+                        <i class="fa-solid fa-check text-sky-400 mt-1 pb-1"></i>
+                        <span class="text-white font-medium text-[15px]">Kenapa kamu bereaksi / bertindak seperti itu</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i class="fa-solid fa-check text-sky-400 mt-1 pb-1"></i>
+                        <span class="text-white font-medium text-[15px]">Apa sebenarnya yang membuat kamu cepat stres</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i class="fa-solid fa-check text-sky-400 mt-1 pb-1"></i>
+                        <span class="text-white font-medium text-[15px]">Gimana cara sehat merespons trauma atau tekanan</span>
+                    </li>
+                </ul>
+                <p class="text-sky-200 text-sm italic font-medium">
+                    "Dengan kenal tipe Enneagram-mu, kamu bisa lebih siap dalam membawa diri, meregulasi emosi, dan membangun relasi."
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 3. THE 9 TYPES GRID (Fokus pada Ketakutan/Akar Stres) -->
+    <section class="py-24 px-4 relative overflow-hidden bg-white">
+        <!-- Background grid texture -->
+        <div class="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEuNSIgZmlsbD0ibm9uZSI+PHBhdGggZD0iTTAgNjBMMjkuNSA2MFoiLz48cGF0aCBkPSJNMzAgMjkuNVY2MCIvPjwvZz48L3N2Zz4=')]"></div>
+
+        <div class="max-w-[1200px] mx-auto relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-black text-mhDarkBlue tracking-tight">
+                    Apa Saja <span class="text-mhBlue">Sembilan Pola Emosi</span> &<br>Akar Stres Utama?
+                </h2>
+                <p class="text-gray-500 mt-4 max-w-2xl mx-auto font-medium">Setiap tipe memiliki ketakutan bawah sadarnya masing-masing yang sering kali menjadi sumber kelelahan mental tanpa kita sadari.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- Card 1 -->
+                <div class="enneagram-card group">
+                    <h3 class="text-lg font-bold text-mhDarkBlue mb-3 flex items-center gap-2">
+                        <span class="bg-red-100 text-red-600 w-7 h-7 rounded-full flex items-center justify-center text-xs">1</span> 
+                        The Perfectionist
+                    </h3>
+                    <p class="text-[13px] text-gray-500 leading-relaxed font-medium">
+                        The Perfectionist sangat menekankan pentingnya mengikuti aturan dan melakukan sesuatu dengan benar. <span class="text-mhDarkBlue font-bold block mt-2">Ketakutan Terbesar:</span> Takut menjadi tidak sempurna dan korup. Sering berakhir depresi karena cenderung terlalu keras pada diri sendiri dan orang lain.
+                    </p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="enneagram-card group">
+                    <h3 class="text-lg font-bold text-mhDarkBlue mb-3 flex items-center gap-2">
+                        <span class="bg-orange-100 text-orange-600 w-7 h-7 rounded-full flex items-center justify-center text-xs">2</span> 
+                        The Helper
+                    </h3>
+                    <p class="text-[13px] text-gray-500 leading-relaxed font-medium">
+                        The Helper cenderung ingin disukai dan berkorban agar bisa membantu orang lain merasa diterima. <span class="text-mhDarkBlue font-bold block mt-2">Ketakutan Terbesar:</span> Masa tersulit mentalnya hadir karena takut diabaikan dan merasa tidak dicintai/diinginkan oleh orang terdekat.
+                    </p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="enneagram-card group">
+                    <h3 class="text-lg font-bold text-mhDarkBlue mb-3 flex items-center gap-2">
+                        <span class="bg-yellow-100 text-yellow-600 w-7 h-7 rounded-full flex items-center justify-center text-xs">3</span> 
+                        The Achiever
+                    </h3>
+                    <p class="text-[13px] text-gray-500 leading-relaxed font-medium">
+                        The Achiever biasanya ingin sukses, selalu produktif, diakui orang lain, dan berupaya sekuat tenaga menjaga citra publik mereka. <span class="text-mhDarkBlue font-bold block mt-2">Ketakutan Terbesar:</span> Mereka sangat takut gagal dan merasa hidupnya tidak berharga tanpa prestasi.
+                    </p>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="enneagram-card group">
+                    <h3 class="text-lg font-bold text-mhDarkBlue mb-3 flex items-center gap-2">
+                        <span class="bg-lime-100 text-lime-600 w-7 h-7 rounded-full flex items-center justify-center text-xs">4</span> 
+                        The Individualist
+                    </h3>
+                    <p class="text-[13px] text-gray-500 leading-relaxed font-medium">
+                        The Individualist biasanya sangat ingin menjadi unik, otentik, dan seringkali mengalami emosi yang sangat mendalam dan melankolis. <span class="text-mhDarkBlue font-bold block mt-2">Ketakutan Terbesar:</span> Takut menjadi biasa-biasa saja, tidak memiliki identitas khusus, atau hampa eksistensi.
+                    </p>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="enneagram-card group">
+                    <h3 class="text-lg font-bold text-mhDarkBlue mb-3 flex items-center gap-2">
+                        <span class="bg-green-100 text-green-600 w-7 h-7 rounded-full flex items-center justify-center text-xs">5</span> 
+                        The Thinker
+                    </h3>
+                    <p class="text-[13px] text-gray-500 leading-relaxed font-medium">
+                        The Thinker seringkali menarik diri untuk mencari pemahaman, objektivitas, dan kenyamanan melalui isolasi informasi. <span class="text-mhDarkBlue font-bold block mt-2">Ketakutan Terbesar:</span> Takut merasa tidak kompeten, ketidaktahuan, hingga kewalahan karena tuntutan gangguan orang lain.
+                    </p>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="enneagram-card group">
+                    <h3 class="text-lg font-bold text-mhDarkBlue mb-3 flex items-center gap-2">
+                        <span class="bg-emerald-100 text-emerald-600 w-7 h-7 rounded-full flex items-center justify-center text-xs">6</span> 
+                        The Loyalist
+                    </h3>
+                    <p class="text-[13px] text-gray-500 leading-relaxed font-medium">
+                        The Loyalist sangat bertumpu pada keamanan dan membutuhkan validasi atau dukungan untuk meminimalisir rasa cemas dalam menghadapi ketidakpastian. <span class="text-mhDarkBlue font-bold block mt-2">Ketakutan Terbesar:</span> Kehilangan stabilitas atau tak mampu hadapi bahaya sendirian.
+                    </p>
+                </div>
+
+                <!-- Card 7 -->
+                <div class="enneagram-card group">
+                    <h3 class="text-lg font-bold text-mhDarkBlue mb-3 flex items-center gap-2">
+                        <span class="bg-teal-100 text-teal-600 w-7 h-7 rounded-full flex items-center justify-center text-xs">7</span> 
+                        The Enthusiast
+                    </h3>
+                    <p class="text-[13px] text-gray-500 leading-relaxed font-medium">
+                        The Enthusiast selalu sibuk, penuh pesona, suka bersenang-senang, dan konstan mencari pengalaman baru agar tidak sempat merasa bosan. <span class="text-mhDarkBlue font-bold block mt-2">Ketakutan Terbesar:</span> Menghindari terperangkap dalam rasa sakit mental, depresi, atau kehilangan kebebasan absolut.
+                    </p>
+                </div>
+
+                <!-- Card 8 -->
+                <div class="enneagram-card group">
+                    <h3 class="text-lg font-bold text-mhDarkBlue mb-3 flex items-center gap-2">
+                        <span class="bg-cyan-100 text-cyan-600 w-7 h-7 rounded-full flex items-center justify-center text-xs">8</span> 
+                        The Challenger
+                    </h3>
+                    <p class="text-[13px] text-gray-500 leading-relaxed font-medium">
+                        The Challenger melihat diri mereka sebagai pelindung yang kuat dan mandiri. Mereka secara natural berusaha mengendalikan lingkungan di sekitarnya. <span class="text-mhDarkBlue font-bold block mt-2">Ketakutan Terbesar:</span> Sangat takut dikendalikan oleh pihak luar, dianggap rentan/lemah, atau dikhianati.
+                    </p>
+                </div>
+
+                <!-- Card 9 -->
+                <div class="enneagram-card group">
+                    <h3 class="text-lg font-bold text-mhDarkBlue mb-3 flex items-center gap-2">
+                        <span class="bg-blue-100 text-blue-600 w-7 h-7 rounded-full flex items-center justify-center text-xs">9</span> 
+                        The Peacemaker
+                    </h3>
+                    <p class="text-[13px] text-gray-500 leading-relaxed font-medium">
+                        The Peacemaker sangat menghindari konflik demi menjaga kedamaian/harmoni, sehingga rela memendam pendapat aslinya demi menghindari pecahnya hubungan. <span class="text-mhDarkBlue font-bold block mt-2">Ketakutan Terbesar:</span> Terjadinya perpecahan (separation) dan ditinggalkan sendirian.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ALUR PROSES MENTAL HEALTH CHECK UP -->
+    <section class="py-20 px-4 bg-sky-50/50 border-t border-gray-100">
+        <div class="max-w-[1100px] mx-auto">
+            <div class="text-center mb-16 max-w-2xl mx-auto">
+                <span class="text-mhBlue font-black tracking-widest text-xs uppercase mb-3 block">Step-By-Step</span>
+                <h2 class="text-3xl font-extrabold text-mhDarkBlue tracking-tight mb-4">Bagaimana Alur Check Up Mental Berjalan?</h2>
+                <p class="text-gray-500 font-medium text-sm md:text-base">Perjalanan pemetaan diri dan pemulihan mental Anda terbagi dalam 4 langkah terstruktur.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-4 gap-6 relative">
+                <!-- Line decorator for desktop -->
+                <div class="hidden md:block absolute top-1/2 left-8 right-8 h-[2px] bg-sky-200 -translate-y-16 z-0"></div>
+                
+                <!-- Step 1 -->
+                <div class="bg-white p-6 rounded-3xl border border-sky-100/50 relative z-10 text-center flex flex-col items-center hover:shadow-lg transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-2xl bg-mhBlue text-white flex items-center justify-center font-bold text-lg mb-6 shadow-md shadow-mhBlue/20 group-hover:scale-110 transition-transform">1</div>
+                    <h3 class="font-extrabold text-mhDarkBlue text-base mb-2">Registrasi & Akses</h3>
+                    <p class="text-xs text-gray-500 leading-relaxed font-medium">Lakukan pendaftaran melalui WhatsApp Admin untuk mendapatkan tautan pengerjaan tes Enneagram online.</p>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="bg-white p-6 rounded-3xl border border-sky-100/50 relative z-10 text-center flex flex-col items-center hover:shadow-lg transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-2xl bg-mhBlue text-white flex items-center justify-center font-bold text-lg mb-6 shadow-md shadow-mhBlue/20 group-hover:scale-110 transition-transform">2</div>
+                    <h3 class="font-extrabold text-mhDarkBlue text-base mb-2">Tes Enneagram Online</h3>
+                    <p class="text-xs text-gray-500 leading-relaxed font-medium">Isi kuesioner respon emosi online secara spontan dan jujur. Pengerjaan membutuhkan waktu ±30-40 menit.</p>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="bg-white p-6 rounded-3xl border border-sky-100/50 relative z-10 text-center flex flex-col items-center hover:shadow-lg transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-2xl bg-mhBlue text-white flex items-center justify-center font-bold text-lg mb-6 shadow-md shadow-mhBlue/20 group-hover:scale-110 transition-transform">3</div>
+                    <h3 class="font-extrabold text-mhDarkBlue text-base mb-2">Analisis Profil Stres</h3>
+                    <p class="text-xs text-gray-500 leading-relaxed font-medium">Dapatkan laporan PDF mendalam mengenai profil kepribadian Anda, pemicu stres utama, dan kecenderungan respon emosi.</p>
+                </div>
+                
+                <!-- Step 4 -->
+                <div class="bg-white p-6 rounded-3xl border border-sky-100/50 relative z-10 text-center flex flex-col items-center hover:shadow-lg transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-2xl bg-mhBlue text-white flex items-center justify-center font-bold text-lg mb-6 shadow-md shadow-mhBlue/20 group-hover:scale-110 transition-transform">4</div>
+                    <h3 class="font-extrabold text-mhDarkBlue text-base mb-2">Sesi Regulasi Emosi</h3>
+                    <p class="text-xs text-gray-500 leading-relaxed font-medium">Lakukan sesi coaching 1-on-1 bersama Coach tersertifikasi untuk memahami hasil grafik stres dan merumuskan mekanisme koping.</p>
+                </div>
+            </div>
+
+            <!-- Jaminan Kerahasiaan -->
+            <div class="mt-16 p-6 rounded-2xl bg-white border border-sky-100 flex flex-col md:flex-row items-center gap-4 text-left max-w-3xl mx-auto shadow-sm">
+                <div class="w-12 h-12 rounded-full bg-sky-50 text-sky-600 flex items-center justify-center text-xl flex-shrink-0">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-mhDarkBlue text-base mb-1">Jaminan Kerahasiaan & Keamanan Data (100% Confidential)</h4>
+                    <p class="text-xs md:text-sm text-gray-500 leading-relaxed font-medium">
+                        Hasil check-up mental dan seluruh percakapan selama sesi coaching Anda dilindungi sepenuhnya. Data Anda bersifat rahasia pribadi dan disimpan dalam lingkungan aman yang tidak akan diakses oleh pihak luar tanpa persetujuan Anda.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. PILIHAN PAKET CHECK-UP -->
+    <section id="booking" class="py-24 px-4 bg-white">
+        <div class="max-w-[1100px] mx-auto">
+            <div class="text-center mb-16 max-w-2xl mx-auto">
+                <span class="text-mhBlue font-black tracking-widest text-sm uppercase mb-3 block">Investasi Mental Health</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-mhDarkBlue tracking-tight mb-4">Pilih Paket Sesuai Kesiapan Anda</h2>
+                <p class="text-gray-500 font-medium">Temukan akar stres Anda sebelum menjadi trauma. Pilih paket evaluasi mandiri atau dengan bimbingan Coach.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-7">
+                <!-- Paket 1: Basic -->
+                <div class="bg-white rounded-3xl p-8 shadow-sm flex flex-col border border-gray-100 hover:shadow-lg transition-all duration-300">
+                    <div class="w-14 h-14 bg-sky-50 rounded-2xl flex items-center justify-center text-mhBlue text-2xl mb-6">
+                        <i class="fa-solid fa-file-pdf"></i>
+                    </div>
+                    <span class="text-xs font-black uppercase tracking-widest text-mhBlue mb-2 block">Mandiri</span>
+                    <h3 class="text-xl font-bold text-mhDarkBlue mb-1">Basic Check-Up</h3>
+                    <div class="flex items-end gap-1 mb-4 border-b border-gray-100 pb-4">
+                        <span class="text-lg font-bold text-mhDarkBlue">Rp</span>
+                        <span class="text-3xl font-black text-mhDarkBlue tracking-tight">199<span class="text-lg text-gray-400">rb</span></span>
+                    </div>
+                    <p class="text-sm text-gray-500 font-medium leading-relaxed mb-6 flex-grow">
+                        Sempurna untuk Anda yang ingin pemetaan mandiri mengenai profil stres dan tipe Enneagram dasar.
+                    </p>
+                    <ul class="space-y-3 mb-8 text-sm font-medium text-gray-600">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-mhBlue text-xs"></i> Akses Tes Enneagram Online</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-mhBlue text-xs"></i> Laporan Profil Stres (PDF)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-xmark text-gray-300 text-xs"></i> Tanpa Sesi Konsultasi</li>
+                    </ul>
+                    <a href="mockup_pendaftaran.html" class="block w-full text-center border-2 border-mhBlue text-mhBlue font-bold py-3.5 rounded-xl hover:bg-mhBlue hover:text-white transition-all duration-300">
+                        Pilih Basic
+                    </a>
+                </div>
+
+                <!-- Paket 2: Deep Check-Up (Highlighted) -->
+                <div class="bg-gradient-to-br from-[#0284c7] to-[#0369a1] rounded-3xl p-8 shadow-xl flex flex-col relative overflow-hidden text-white border-transparent transform md:-translate-y-4">
+                    <div class="absolute -top-0 -right-0 bg-secondary text-dark text-xs font-black uppercase tracking-widest px-5 py-2 rounded-bl-2xl rounded-tr-2xl shadow-md">
+                        🔥 Terpopuler
+                    </div>
+                    <div class="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center text-white text-2xl mb-6">
+                        <i class="fa-solid fa-user-doctor"></i>
+                    </div>
+                    <span class="text-xs font-black uppercase tracking-widest text-sky-200 mb-2 block">Personal & Coaching</span>
+                    <h3 class="text-xl font-bold mb-1">Deep Check-Up</h3>
+                    <div class="flex items-end gap-1 mb-4 border-b border-white/20 pb-4">
+                        <span class="text-lg font-bold text-white">Rp</span>
+                        <span class="text-3xl font-black text-white tracking-tight">299<span class="text-lg text-sky-200">rb</span></span>
+                    </div>
+                    <p class="text-sm text-white/80 font-medium leading-relaxed mb-6 flex-grow">
+                        Diagnosa menyeluruh ditambah bimbingan profesional untuk merumuskan langkah pemulihan (coping mechanism).
+                    </p>
+                    <ul class="space-y-3 mb-8 text-sm font-medium text-white/90">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-secondary text-xs"></i> Akses Tes Enneagram Online</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-secondary text-xs"></i> Laporan Profil Stres Lengkap</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-secondary text-xs"></i> 1x Sesi Coaching (60 Menit)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-secondary text-xs"></i> Panduan Regulasi Emosi</li>
+                    </ul>
+                    <a href="mockup_pendaftaran.html" class="block w-full text-center bg-white text-mhBlue font-bold py-3.5 rounded-xl hover:bg-secondary hover:text-dark transition-all duration-300 shadow-lg">
+                        Pilih Deep Check-Up
+                    </a>
+                </div>
+
+                <!-- Paket 3: Couple Check-Up -->
+                <div class="bg-white rounded-3xl p-8 shadow-sm flex flex-col border border-gray-100 hover:shadow-lg transition-all duration-300">
+                    <div class="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-600 text-2xl mb-6">
+                        <i class="fa-solid fa-people-arrows"></i>
+                    </div>
+                    <span class="text-xs font-black uppercase tracking-widest text-purple-600 mb-2 block">Berdua</span>
+                    <h3 class="text-xl font-bold text-mhDarkBlue mb-1">Relational Check-Up</h3>
+                    <div class="flex items-end gap-1 mb-4 border-b border-gray-100 pb-4">
+                        <span class="text-lg font-bold text-mhDarkBlue">Rp</span>
+                        <span class="text-3xl font-black text-mhDarkBlue tracking-tight">499<span class="text-lg text-gray-400">rb</span></span>
+                    </div>
+                    <p class="text-sm text-gray-500 font-medium leading-relaxed mb-6 flex-grow">
+                        Pahami pemicu konflik dalam hubungan Anda berdasarkan perbedaan tipe Enneagram dan gaya resolusi konflik.
+                    </p>
+                    <ul class="space-y-3 mb-8 text-sm font-medium text-gray-600">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-500 text-xs"></i> Tes Enneagram (Untuk 2 Orang)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-500 text-xs"></i> Laporan Analisis Konflik Pasangan</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-500 text-xs"></i> 1x Sesi Coaching Berdua (120 Menit)</li>
+                    </ul>
+                    <a href="mockup_pendaftaran.html" class="block w-full text-center border-2 border-purple-500 text-purple-600 font-bold py-3.5 rounded-xl hover:bg-purple-500 hover:text-white transition-all duration-300">
+                        Pilih Untuk Pasangan
+                    </a>
+                </div>
+            </div>
+
+            <!-- Banner Pesan Sekarang tambahan -->
+            <div class="mt-16 bg-[#0f172a] rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between shadow-2xl relative overflow-hidden">
+                <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] mix-blend-overlay"></div>
+                <div class="relative z-10 md:w-2/3 mb-6 md:mb-0">
+                    <h3 class="text-2xl font-bold text-white mb-2">Masih Bingung Memilih Paket?</h3>
+                    <p class="text-gray-400 font-medium text-sm">Tim kami siap membantu merekomendasikan layanan yang paling tepat sesuai dengan kondisi Anda. Silakan hubungi kami untuk konsultasi awal (gratis).</p>
+                </div>
+                <div class="relative z-10 md:w-1/3 flex justify-end">
+                    <a href="https://wa.me/6281999554599" class="inline-flex items-center justify-center gap-2 bg-white text-mhDarkBlue px-6 py-3 rounded-full font-bold hover:bg-secondary transition-colors whitespace-nowrap">
+                        <i class="fa-brands fa-whatsapp text-lg"></i> Hubungi Admin
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section class="py-24 px-4 bg-gray-50 border-t border-gray-100">
+        <div class="max-w-[800px] mx-auto">
+            <div class="text-center mb-16">
+                <span class="text-mhBlue font-black tracking-widest text-xs uppercase mb-3 block">Pertanyaan Umum</span>
+                <h2 class="text-3xl font-extrabold text-mhDarkBlue tracking-tight mb-4">Frequently Asked Questions</h2>
+                <p class="text-gray-500 font-medium text-sm md:text-base">Temukan jawaban atas pertanyaan yang paling sering diajukan mengenai Mental Health Check Up.</p>
+            </div>
+            
+            <div class="space-y-4">
+                <!-- FAQ 1 -->
+                <details class="group bg-white border border-sky-100/50 rounded-2xl p-6 transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex justify-between items-center font-bold text-mhDarkBlue text-[15px] md:text-base cursor-pointer list-none">
+                        <span>Apakah Mental Health Check Up ini sama dengan diagnosis klinis?</span>
+                        <span class="transition group-open:rotate-180">
+                            <i class="fa-solid fa-chevron-down text-sm text-mhBlue"></i>
+                        </span>
+                    </summary>
+                    <p class="text-xs md:text-sm text-gray-500 leading-relaxed font-medium mt-4 pt-4 border-t border-slate-200/60">
+                        Tidak. Layanan ini adalah langkah <strong>skrining dan pemetaan pola emosi bawaan (Enneagram)</strong>, bukan pengganti diagnosis medis klinis (seperti depresi mayor, bipolar, atau skizofrenia). Jika Anda terindikasi membutuhkan penanganan medis klinis, Coach kami akan memberikan rekomendasi rujukan ke Psikolog Klinis atau Psikiater rekanan kami.
+                    </p>
+                </details>
+                
+                <!-- FAQ 2 -->
+                <details class="group bg-white border border-sky-100/50 rounded-2xl p-6 transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex justify-between items-center font-bold text-mhDarkBlue text-[15px] md:text-base cursor-pointer list-none">
+                        <span>Bagaimana metode tes Enneagram yang digunakan?</span>
+                        <span class="transition group-open:rotate-180">
+                            <i class="fa-solid fa-chevron-down text-sm text-mhBlue"></i>
+                        </span>
+                    </summary>
+                    <p class="text-xs md:text-sm text-gray-500 leading-relaxed font-medium mt-4 pt-4 border-t border-slate-200/60">
+                        Tes dilakukan secara online melalui portal kuesioner psikometrik teruji yang terdiri dari serangkaian pernyataan pilihan ganda. Pengerjaannya memakan waktu sekitar <strong>30-40 menit</strong> dan disarankan dilakukan di situasi yang tenang dan bebas gangguan.
+                    </p>
+                </details>
+                
+                <!-- FAQ 3 -->
+                <details class="group bg-white border border-sky-100/50 rounded-2xl p-6 transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex justify-between items-center font-bold text-mhDarkBlue text-[15px] md:text-base cursor-pointer list-none">
+                        <span>Apa peran Coach dalam sesi review hasil tes?</span>
+                        <span class="transition group-open:rotate-180">
+                            <i class="fa-solid fa-chevron-down text-sm text-mhBlue"></i>
+                        </span>
+                    </summary>
+                    <p class="text-xs md:text-sm text-gray-500 leading-relaxed font-medium mt-4 pt-4 border-t border-slate-200/60">
+                        Laporan Enneagram menghasilkan profil yang mendalam. Peran Coach tersertifikasi adalah <strong>membantu Anda menerjemahkan grafik motivasi dan stres tersebut</strong>, memverifikasi kesesuaian tipe, serta merumuskan strategi regulasi emosi (<em>stress coping mechanism</em>) yang praktis untuk kehidupan sehari-hari Anda.
+                    </p>
+                </details>
+
+                <!-- FAQ 4 -->
+                <details class="group bg-white border border-sky-100/50 rounded-2xl p-6 transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex justify-between items-center font-bold text-mhDarkBlue text-[15px] md:text-base cursor-pointer list-none">
+                        <span>Apakah hasil tes kepribadian Enneagram dapat berubah seiring waktu?</span>
+                        <span class="transition group-open:rotate-180">
+                            <i class="fa-solid fa-chevron-down text-sm text-mhBlue"></i>
+                        </span>
+                    </summary>
+                    <p class="text-xs md:text-sm text-gray-500 leading-relaxed font-medium mt-4 pt-4 border-t border-slate-200/60">
+                        Secara teori dasar Enneagram, tipe kepribadian inti seseorang <strong>tidak berubah</strong> sepanjang hidup. Namun, tingkat kedewasaan (<em>levels of development</em>), cara Anda menghadapi stres (arah disintegrasi), dan kekuatan integrasi Anda dapat berkembang secara signifikan seiring proses kedewasaan Anda.
+                    </p>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER (Standard TheAIM Template) -->
+    <footer class="bg-gray-50 pt-16 border-t border-gray-200">
+        <div class="max-w-[1200px] mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 text-[#334155]">
+            
+            <div class="pr-4">
+                <a href="#" class="text-2xl font-bold tracking-tight flex items-center gap-2 mb-8 text-dark">
+                    <img src="../Logo2/Logo%20theaim.id.png" alt="TheAIM Logo" class="h-14 md:h-16 w-auto">
+                </a>
+                <p class="text-sm text-gray-500 leading-relaxed">
+                    Platform pengukur potensi & solusi kesehatan mental perorangan, hingga level korporasi dengan pendekatan praktis psikologis terapik.
+                </p>
+            </div>
+
+            <div>
+                <h4 class="font-extrabold text-dark text-lg mb-6 tracking-tight">Layanan</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li><a href="mockup_layanan_assessment.html" class="hover:text-primary transition-colors">Talents Mapping Assesmen</a></li>
+                    <li><a href="mockup_layanan_mental_health.html" class="text-primary font-bold">Mental Health Check Up</a></li>
+                    <li><a href="mockup_layanan_coaching.html" class="hover:text-primary transition-colors">Coaching</a></li>
+                    <li><a href="mockup_layanan_consultation.html" class="hover:text-primary transition-colors">Consultation</a></li>
+                    <li><a href="mockup_layanan_relaksasi.html" class="hover:text-primary transition-colors">Therapy (SEFT)</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-extrabold text-dark text-lg mb-6 tracking-tight">Tentang Kami</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li><a href="mockup_tentang_theaim.html" class="hover:text-primary transition-colors">Tentang TheAIM</a></li>
+                    <li><a href="mockup_tentang_ecosystem.html" class="hover:text-primary transition-colors">Talent Ecosystem</a></li>
+                    <li><a href="mockup_perusahaan.html" class="hover:text-primary transition-colors">Solusi Untuk Perusahaan</a></li>
+                    <li><a href="mockup_artikel.html" class="hover:text-primary transition-colors">Artikel & Aktivitas</a>
+                <a href="mockup_career.html" class="px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Karir</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-extrabold text-dark text-lg mb-6 tracking-tight">Kontak Kami</h4>
+                <ul class="space-y-4 font-medium text-sm">
+                    <li class="flex items-center gap-3">
+                        <i class="fa-solid fa-phone text-primary"></i>
+                        <a href="https://wa.me/6281999554599" class="hover:text-primary transition-colors">081999554599</a>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i class="fa-regular fa-envelope text-primary"></i>
+                        <a href="mailto:ptabadiinsanmanfaat@gmail.com" class="hover:text-primary transition-colors">ptabadiinsanmanfaat@gmail.com</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="bg-dark py-6 px-4 text-white">
+            <div class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-center items-center gap-6">
+                <div class="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 text-xs text-gray-400 font-medium">
+                    <p>&copy; 2026 PT Abadi Insan Manfaat. All right reserved</p>
+                    <div class="hidden sm:block text-gray-600">|</div>
+                    <a href="#" class="hover:text-white transition-colors">Term & Condition</a>
+                    <div class="hidden sm:block text-gray-600">|</div>
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
