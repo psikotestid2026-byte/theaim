@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
+import { eq } from "drizzle-orm";
 import * as schema from "./schema";
 import * as dotenv from "dotenv";
 
@@ -57,7 +58,7 @@ async function main() {
     }).returning();
 
     const existingPkg = await db.select().from(schema.servicePackages)
-      .where(sql`${schema.servicePackages.service_id} = ${svc[0].id}`)
+      .where(eq(schema.servicePackages.service_id, svc[0].id))
       .limit(1);
 
     if (existingPkg.length === 0) {
