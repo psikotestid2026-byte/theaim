@@ -25,5 +25,5 @@ export async function getDistinctTestCodes(): Promise<string[]> {
   const rows = await sql`
     SELECT DISTINCT test_code FROM test_items ORDER BY test_code
   `;
-  return rows.map((r: { test_code: string }) => r.test_code);
+  return rows.map((r: any) => r.test_code as string);
 }
