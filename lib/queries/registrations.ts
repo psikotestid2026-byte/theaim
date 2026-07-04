@@ -9,14 +9,15 @@ export async function createRegistration(input: {
   full_name: string;
   whatsapp_number: string;
   notes?: string;
+  price_quoted?: number | string | null;
 }): Promise<Registration> {
   const rows = await sql`
     INSERT INTO registrations
-      (registration_code, customer_id, service_id, package_id, full_name, whatsapp_number, notes, status)
+      (registration_code, customer_id, service_id, package_id, full_name, whatsapp_number, notes, price_quoted, status)
     VALUES
       (${input.registration_code}, ${input.customer_id}, ${input.service_id},
        ${input.package_id ?? null}, ${input.full_name}, ${input.whatsapp_number},
-       ${input.notes ?? null}, 'pending_confirmation')
+       ${input.notes ?? null}, ${input.price_quoted ?? null}, 'pending_confirmation')
     RETURNING *
   `;
   return rows[0] as Registration;

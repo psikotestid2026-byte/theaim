@@ -62,7 +62,9 @@ export default function PaymentFlow({ registration, methods, instructionsByMetho
   }
 
   const instructions = selectedMethod ? (instructionsByMethod[selectedMethod.id] ?? []) : [];
-  const amount = registration.price_quoted ? Number(registration.price_quoted) : null;
+  const baseAmount = registration.price_quoted ? Number(registration.price_quoted) : null;
+  const adminFee = selectedMethod?.admin_fee_flat ? Number(selectedMethod.admin_fee_flat) : 0;
+  const amount = baseAmount ? baseAmount + adminFee : null;
 
   if (step === "success") {
     return (
@@ -115,6 +117,7 @@ export default function PaymentFlow({ registration, methods, instructionsByMetho
           <p className="text-3xl font-black text-red-600 tracking-tight">
             {amount ? formatIDR(amount) : "Akan dikonfirmasi admin"}
           </p>
+          {adminFee > 0 && <p className="text-xs text-slate-500 mt-1">Termasuk biaya admin {formatIDR(adminFee)}</p>}
           {paymentCode && <p className="text-xs text-slate-500 mt-1">Kode: <strong>{paymentCode}</strong></p>}
         </div>
 
@@ -193,6 +196,9 @@ export default function PaymentFlow({ registration, methods, instructionsByMetho
             {amount ? formatIDR(amount) : "Akan Dikonfirmasi"}
           </span>
         </div>
+        {adminFee > 0 && amount && (
+           <p className="text-[11px] text-slate-500 mt-1 text-right italic">Termasuk admin fee {formatIDR(adminFee)}</p>
+        )}
         {!amount && (
           <p className="text-[11px] text-slate-500 mt-2 italic">* Harga akan dikonfirmasi oleh admin setelah verifikasi jadwal.</p>
         )}

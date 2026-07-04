@@ -3,11 +3,12 @@ import { createRegistration, getNextRegistrationSeq } from "@/lib/queries/regist
 import { findOrCreateCustomer } from "@/lib/queries/customers";
 import { updateRegistrationStatus } from "@/lib/queries/registrations";
 import { generateRegistrationCode } from "@/lib/utils";
+import { getPackageById } from "@/lib/queries/service-packages";
 import { z } from "zod";
 
 const schema = z.object({
-  service_id: z.number().int().positive(),
-  package_id: z.number().int().positive().optional(),
+  service_id: z.coerce.number().int().positive(),
+  package_id: z.coerce.number().int().positive().optional(),
   full_name: z.string().min(2),
   whatsapp_number: z.string().min(8),
   notes: z.string().optional(),
@@ -26,6 +27,14 @@ export async function POST(req: NextRequest) {
     const seq = await getNextRegistrationSeq();
     const code = generateRegistrationCode(seq);
 
+    let priceQuoted = null;
+    if (data.package_id) {
+      const pkg = await getPackageById(data.package_id);
+      if (pkg && pkg.price_amount) {
+        priceQuoted = pkg.price_amount;
+      }
+    }
+
     const registration = await createRegistration({
       registration_code: code,
       customer_id: customer.id,
@@ -34,6 +43,7 @@ export async function POST(req: NextRequest) {
       full_name: data.full_name,
       whatsapp_number: data.whatsapp_number,
       notes: data.notes,
+      price_quoted: priceQuoted,
     });
 
     // Auto-advance to payment_pending status

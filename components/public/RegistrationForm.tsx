@@ -135,9 +135,15 @@ export default function RegistrationForm({ services, packagesByService, preselec
             type="tel"
             required
             value={whatsapp}
-            onChange={e => setWhatsapp(e.target.value)}
+            onChange={e => {
+              let val = e.target.value.replace(/\D/g, "");
+              if (val.startsWith("62")) val = val.slice(2);
+              if (val.startsWith("0")) val = val.slice(1);
+              setWhatsapp(val);
+            }}
             placeholder="81234567890"
-            className="form-input pl-16"
+            className="form-input"
+            style={{ paddingLeft: "3.5rem" }}
           />
         </div>
         <p className="text-[11px] text-slate-500 mt-2">ℹ️ Pastikan nomor aktif. Informasi lanjutan akan dikirimkan ke nomor ini.</p>
