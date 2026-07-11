@@ -301,3 +301,75 @@ export const adminUsers = pgTable("admin_users", {
 
 export const seqRegistrations = pgTable("seq_registrations", { id: bigserial("id", { mode: "number" }).primaryKey() });
 export const seqPayments = pgTable("seq_payments", { id: bigserial("id", { mode: "number" }).primaryKey() });
+export const notificationTemplates = pgTable("notification_templates", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  event_trigger: varchar("event_trigger", { length: 50 }).notNull(),
+  channel: varchar("channel", { length: 20 }).notNull(),
+  message_content: text("message_content").notNull(),
+  is_active: boolean("is_active").default(true).notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const notificationLogs = pgTable("notification_logs", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  template_id: integer("template_id").references(() => notificationTemplates.id),
+  registration_id: integer("registration_id").references(() => registrations.id),
+  recipient: varchar("recipient", { length: 150 }).notNull(),
+  channel: varchar("channel", { length: 20 }).notNull(),
+  request_payload: jsonb("request_payload"),
+  response_payload: jsonb("response_payload"),
+  status: varchar("status", { length: 20 }).default("pending").notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const partnershipSubmissions = pgTable("partnership_submissions", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  pic_full_name: varchar("pic_full_name", { length: 150 }).notNull(),
+  pic_whatsapp_number: varchar("pic_whatsapp_number", { length: 20 }).notNull(),
+  organization_name: varchar("organization_name", { length: 150 }).notNull(),
+  collaboration_title: varchar("collaboration_title", { length: 200 }).notNull(),
+  idea_description: text("idea_description").notNull(),
+  expected_role: text("expected_role"),
+  collaboration_goal: text("collaboration_goal"),
+  estimated_timeline: varchar("estimated_timeline", { length: 100 }),
+  proposal_file_url: varchar("proposal_file_url", { length: 255 }),
+  previous_relation: varchar("previous_relation", { length: 10 }).default("no").notNull(),
+  status: varchar("status", { length: 20 }).default("submitted").notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const proposalDownloadLeads = pgTable("proposal_download_leads", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  full_name: varchar("full_name", { length: 150 }).notNull(),
+  whatsapp_number: varchar("whatsapp_number", { length: 20 }).notNull(),
+  company_name: varchar("company_name", { length: 150 }),
+  position: varchar("position", { length: 100 }),
+  proposal_type: varchar("proposal_type", { length: 50 }).default("corporate_b2b").notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const ecourseModules = pgTable("ecourse_modules", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  service_id: integer("service_id").references(() => services.id, { onDelete: "cascade" }).notNull(),
+  day_number: integer("day_number").notNull(),
+  title: varchar("title", { length: 150 }).notNull(),
+  content_body: text("content_body"),
+  video_url: varchar("video_url", { length: 255 }),
+  worksheet_file_url: varchar("worksheet_file_url", { length: 255 }),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const ecourseEnrollments = pgTable("ecourse_enrollments", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  registration_id: integer("registration_id").references(() => registrations.id),
+  customer_id: integer("customer_id").references(() => customers.id).notNull(),
+  service_id: integer("service_id").references(() => services.id).notNull(),
+  access_granted_at: timestamp("access_granted_at").defaultNow().notNull(),
+  progress_day: integer("progress_day").default(0).notNull(),
+  status: varchar("status", { length: 20 }).default("active").notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});

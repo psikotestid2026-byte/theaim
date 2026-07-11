@@ -174,6 +174,255 @@ async function main() {
     }
   ]).onConflictDoNothing();
 
+  // --- NEW SEED DATA ---
+
+  // 1. Customers
+  const custs = await db.insert(schema.customers).values([
+    { full_name: "Budi Santoso", whatsapp_number: "081234567890", email: "budi@example.com", city: "Bandung" },
+    { full_name: "Siti Aminah", whatsapp_number: "089876543210", email: "siti@example.com", city: "Jakarta" },
+    { full_name: "Andi Permana", whatsapp_number: "081122334455", email: "andi@example.com", city: "Surabaya" },
+  ]).onConflictDoNothing().returning();
+
+  let custId = custs[0]?.id;
+  if (!custId) {
+    const existing = await db.select().from(schema.customers).limit(1);
+    custId = existing[0]?.id;
+  }
+
+  // 2. Consultants
+  const cons = await db.insert(schema.consultants).values([
+    { full_name: "Dr. Aisyah", role_title: "Psikolog Klinis", specialization: "Keluarga & Anak" },
+    { full_name: "Bapak Reza", role_title: "Career Coach", specialization: "Pengembangan Karir" },
+  ]).onConflictDoNothing().returning();
+
+  let consId = cons[0]?.id;
+  if (!consId) {
+    const existing = await db.select().from(schema.consultants).limit(1);
+    consId = existing[0]?.id;
+  }
+
+  // 3. Service Consultants Map
+  if (categoryId && consId) {
+    const existingSvc = await db.select().from(schema.services).limit(1);
+    if (existingSvc.length > 0) {
+      await db.insert(schema.serviceConsultants).values({
+        service_id: existingSvc[0].id,
+        consultant_id: consId,
+      }).onConflictDoNothing();
+    }
+  }
+
+  // 4. Registrations
+  let regId;
+  if (custId) {
+    const existingSvc = await db.select().from(schema.services).limit(1);
+    const existingPkg = await db.select().from(schema.servicePackages).limit(1);
+    
+    if (existingSvc.length > 0) {
+      const reg = await db.insert(schema.registrations).values({
+        registration_code: "REG-2026-0001",
+        customer_id: custId,
+        service_id: existingSvc[0].id,
+        package_id: existingPkg.length > 0 ? existingPkg[0].id : null,
+        full_name: "Budi Santoso",
+        whatsapp_number: "081234567890",
+        price_quoted: "250000",
+        status: "pending_confirmation",
+      }).onConflictDoNothing().returning();
+      
+      regId = reg[0]?.id;
+      if (!regId) {
+        const existing = await db.select().from(schema.registrations).limit(1);
+        regId = existing[0]?.id;
+      }
+    }
+  }
+
+  // 5. Admin Users
+  const admin = await db.insert(schema.adminUsers).values({
+    full_name: "Super Admin",
+    email: "admin@theaim.id",
+    password_hash: "$2a$10$xyz", // mock
+    role: "super_admin",
+  }).onConflictDoNothing().returning();
+  
+  let adminId = admin[0]?.id;
+  if (!adminId) {
+    const existing = await db.select().from(schema.adminUsers).limit(1);
+    adminId = existing[0]?.id;
+  }
+
+  // 6. Payments
+  let payId;
+  if (regId && adminId) {
+    const pm = await db.select().from(schema.paymentMethods).limit(1);
+    if (pm.length > 0) {
+      const pay = await db.insert(schema.payments).values({
+        registration_id: regId,
+        payment_method_id: pm[0].id,
+        payment_code: "PAY-2026-0001",
+        amount: "250000",
+        status: "awaiting_confirmation",
+      }).onConflictDoNothing().returning();
+
+      payId = pay[0]?.id;
+      if (!payId) {
+        const existing = await db.select().from(schema.payments).limit(1);
+        payId = existing[0]?.id;
+      }
+    }
+  }
+
+  // 7. Payment Logs
+  if (payId) {
+    await db.insert(schema.paymentLogs).values({
+      payment_id: payId,
+      provider_reference: "XND-999-000",
+      endpoint: "/api/webhooks/xendit",
+      log_type: "webhook",
+      http_status: 200,
+    }).onConflictDoNothing();
+  }
+
+  // 8. Notification Templates & Logs
+  const tpl = await db.insert(schema.notificationTemplates).values({
+    event_trigger: "registration_created",
+    channel: "whatsapp",
+    message_content: "Halo {nama}, terima kasih telah mendaftar layanan di TheAIM.",
+  }).onConflictDoNothing().returning();
+
+  let tplId = tpl[0]?.id;
+  if (!tplId) {
+    const existing = await db.select().from(schema.notificationTemplates).limit(1);
+    tplId = existing[0]?.id;
+  }
+
+  if (tplId && regId) {
+    await db.insert(schema.notificationLogs).values({
+      template_id: tplId,
+      registration_id: regId,
+      recipient: "081234567890",
+      channel: "whatsapp",
+      status: "sent",
+    }).onConflictDoNothing();
+  }
+
+  // 9. Test Sessions, Responses, Results
+  if (custId && regId) {
+    const pkg = await db.select().from(schema.servicePackages).where(eq(schema.servicePackages.test_code, 'MBTI')).limit(1);
+    if (pkg.length > 0) {
+      const session = await db.insert(schema.testSessions).values({
+        registration_id: regId,
+        customer_id: custId,
+        package_id: pkg[0].id,
+        test_code: "MBTI",
+        access_token: "mock-access-token-123",
+        result_token: "mock-result-token-123",
+        status: "completed",
+        expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      }).onConflictDoNothing().returning();
+
+      let sessionId = session[0]?.id;
+      if (!sessionId) {
+        const existing = await db.select().from(schema.testSessions).limit(1);
+        sessionId = existing[0]?.id;
+      }
+
+      if (sessionId) {
+        const item = await db.select().from(schema.testItems).limit(1);
+        if (item.length > 0) {
+          await db.insert(schema.testResponses).values({
+            session_id: sessionId,
+            item_id: item[0].id,
+            answer_value: "A",
+          }).onConflictDoNothing();
+        }
+
+        await db.insert(schema.testResults).values({
+          session_id: sessionId,
+          test_code: "MBTI",
+          raw_scores: { E: 10, I: 5 },
+          result_type: "ENTJ",
+          result_label: "The Commander",
+          interpretation: { description: "Pemimpin alami" },
+          wa_summary_text: "Hasil tes Anda: ENTJ",
+        }).onConflictDoNothing();
+      }
+    }
+  }
+
+  // 10. Corporate Inquiries & Partners
+  await db.insert(schema.corporateInquiries).values({
+    full_name: "Bapak CEO",
+    company_name: "PT Maju Terus",
+    whatsapp_number: "085566778899",
+    interested_service: "In-House Training",
+    status: "new",
+  }).onConflictDoNothing();
+
+  await db.insert(schema.corporatePartners).values({
+    name: "Universitas Indonesia",
+    logo_url: "https://example.com/logo.png",
+    partnership_type: "active_partnership",
+  }).onConflictDoNothing();
+
+  // 11. Partnership Submissions & Proposal Leads
+  await db.insert(schema.partnershipSubmissions).values({
+    pic_full_name: "Ibu Kemitraan",
+    pic_whatsapp_number: "087788990011",
+    organization_name: "Yayasan Peduli",
+    collaboration_title: "Seminar Mental Health",
+    idea_description: "Seminar gratis untuk siswa",
+    status: "submitted",
+  }).onConflictDoNothing();
+
+  await db.insert(schema.proposalDownloadLeads).values({
+    full_name: "Manager HR",
+    whatsapp_number: "082233445566",
+    company_name: "PT Sejahtera",
+    proposal_type: "corporate_b2b",
+  }).onConflictDoNothing();
+
+  // 12. Job Applications
+  const job = await db.select().from(schema.jobPostings).limit(1);
+  if (job.length > 0) {
+    await db.insert(schema.jobApplications).values({
+      job_posting_id: job[0].id,
+      full_name: "Kandidat A",
+      email: "kandidat@example.com",
+      cv_file_url: "https://example.com/cv.pdf",
+      status: "received",
+    }).onConflictDoNothing();
+  }
+
+  // 13. Testimonials
+  const svc = await db.select().from(schema.services).limit(1);
+  await db.insert(schema.testimonials).values({
+    customer_name: "Klien Puas",
+    content: "Sangat membantu karir saya!",
+    related_service_id: svc.length > 0 ? svc[0].id : null,
+    rating: 5,
+  }).onConflictDoNothing();
+
+  // 14. Ecourse Modules & Enrollments
+  if (svc.length > 0) {
+    await db.insert(schema.ecourseModules).values({
+      service_id: svc[0].id,
+      day_number: 1,
+      title: "Pengenalan Diri",
+      video_url: "https://youtube.com/watch?v=123",
+    }).onConflictDoNothing();
+
+    if (custId) {
+      await db.insert(schema.ecourseEnrollments).values({
+        customer_id: custId,
+        service_id: svc[0].id,
+        progress_day: 1,
+        status: "active",
+      }).onConflictDoNothing();
+    }
+  }
+
   console.log("Seeding complete!");
 }
 
