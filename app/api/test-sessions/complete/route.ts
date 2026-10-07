@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSessionByAccessToken, markSessionCompleted } from "@/lib/queries/test-sessions";
+import { getSessionByAccessToken, markSessionCompleted, readAttemptTimer } from "@/lib/queries/test-sessions";
 import { getResponsesBySession } from "@/lib/queries/test-responses";
 import { getItemsByTestCode } from "@/lib/queries/test-items";
 import { insertTestResultOnce } from "@/lib/queries/test-results";
@@ -11,6 +11,9 @@ import { logRouteError } from "@/lib/log-error";
 import { canWriteTest } from "@/lib/test-access";
 import { completeBody } from "@/lib/validators/test-attempt";
 import { appendResultLink, resultPageUrl, siteOrigin } from "@/lib/site-url";
+import { isAttemptExpired, isTimedTest, parseDbTimestamp, timedDurationSec } from "@/lib/test-timer";
+import { incompleteTestBank, IST_BANK_INCOMPLETE } from "@/lib/ist-bank";
+import { stampExpirySubmission, unansweredCount } from "@/lib/test-completion";
 import { ZodError } from "zod";
 
 export async function POST(req: NextRequest) {
@@ -37,10 +40,35 @@ export async function POST(req: NextRequest) {
       getResponsesBySession(session_id),
     ]);
 
+    const bank = incompleteTestBank(session.test_code, items);
+    if (bank) {
+      return NextResponse.json({ error: IST_BANK_INCOMPLETE, messages: bank.messages }, { status: 409 });
+    }
+
     const responsesMap: Record<number, string> = {};
     for (const row of responses) responsesMap[asId(row.item_id)] = row.answer_value;
 
-    const payload = computeResult(session.test_code, responsesMap, items);
+    const durationSec = timedDurationSec(session.test_code);
+    let expired = false;
+    if (durationSec !== null && isTimedTest(session.test_code)) {
+      const timer = await readAttemptTimer(session.id);
+      const startedMs = parseDbTimestamp(timer?.timer_started_at);
+      const nowMs = parseDbTimestamp(timer?.server_now);
+      expired = startedMs !== null && nowMs !== null && isAttemptExpired(startedMs, durationSec, nowMs);
+    }
+    if (!expired) {
+      const missing = unansweredCount(session.test_code, items, responsesMap);
+      if (missing > 0) {
+        return NextResponse.json({ error: "incomplete", missing }, { status: 422 });
+      }
+    }
+
+    let payload = computeResult(session.test_code, responsesMap, items);
+    if (expired) {
+      const total = items.length;
+      const answered = total - unansweredCount(session.test_code, items, responsesMap);
+      payload = stampExpirySubmission(payload, answered, total);
+    }
     const origin = siteOrigin({
       forwardedHost: req.headers.get("x-forwarded-host"),
       host: req.headers.get("host"),

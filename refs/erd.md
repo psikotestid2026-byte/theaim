@@ -567,6 +567,7 @@ CREATE TABLE test_sessions (
     issued_at       timestamptz NOT NULL DEFAULT now(),
     expires_at      timestamptz NOT NULL,        -- 30 days; NULL after started
     started_at      timestamptz,
+    timer_started_at timestamptz,             -- set once when a timed attempt begins; null for untimed tests
     completed_at    timestamptz,
     created_at      timestamptz NOT NULL DEFAULT now(),
     updated_at      timestamptz NOT NULL DEFAULT now(),

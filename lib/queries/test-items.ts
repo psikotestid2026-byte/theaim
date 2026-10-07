@@ -6,6 +6,16 @@ function normalizeItem(row: TestItem): TestItem {
   return { ...row, id: asId(row.id), item_order: Number(row.item_order) };
 }
 
+export async function getItemForTest(itemId: number, testCode: string): Promise<TestItem | null> {
+  const rows = await sql`
+    SELECT * FROM test_items
+    WHERE id = ${asId(itemId)} AND test_code = ${testCode}
+    LIMIT 1
+  `;
+  const row = rows[0] as TestItem | undefined;
+  return row ? normalizeItem(row) : null;
+}
+
 export async function getItemsByTestCode(testCode: string): Promise<TestItem[]> {
   const rows = await sql`
     SELECT * FROM test_items WHERE test_code = ${testCode} ORDER BY item_order ASC

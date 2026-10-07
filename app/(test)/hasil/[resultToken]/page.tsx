@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
+import { formatResultDate } from "@/lib/format-date";
+import { msaiResultBadge } from "@/lib/msai-label";
+import { presentStrengths, SUMMARY_HEADING } from "@/lib/result-strengths";
 import { resultPageUrl, siteOrigin } from "@/lib/site-url";
+import { getMasterTestByCode } from "@/lib/queries/master-tests";
 import { getSessionByResultToken } from "@/lib/queries/test-sessions";
 import { getResultBySessionId } from "@/lib/queries/test-results";
 import { getTmResultBySessionId } from "@/lib/queries/tm-results";
@@ -51,8 +55,13 @@ export default async function HasilPage({ params }: { params: Promise<{ resultTo
       forwardedProto: headerList.get("x-forwarded-proto"),
     }),
   );
-  const strengths: string[] = result.interpretation?.strengths ?? [];
   const challenges: string[] = result.interpretation?.challenges ?? [];
+  const listed = presentStrengths({
+    testCode: session.test_code,
+    strengths: result.interpretation?.strengths,
+    detail: result.interpretation?.detail,
+  });
+  const strengthBlocks = [listed.strengths.length > 0, listed.summary.length > 0, challenges.length > 0].filter(Boolean).length;
   const careers: string[] = result.interpretation?.careers ?? [];
   const isTalents = session.test_code.toLowerCase() === "talents_mapping";
   const tm = isTalents ? await getTmResultBySessionId(session.id).catch(() => null) : null;
@@ -60,6 +69,9 @@ export default async function HasilPage({ params }: { params: Promise<{ resultTo
     ? String((result.interpretation.detail as { kind?: string }).kind ?? "")
     : "";
   const showGenericBars = !isTalents && !detailKind && result.raw_scores && Object.keys(result.raw_scores).length > 0;
+  const master = await getMasterTestByCode(session.test_code).catch(() => null);
+  const testTitle = master?.name?.trim() || session.test_code;
+  const resultBadge = session.test_code.toLowerCase() === "msai" ? msaiResultBadge(result) : result.result_label;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-red-50/20 print-page">
@@ -82,13 +94,13 @@ export default async function HasilPage({ params }: { params: Promise<{ resultTo
         <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-slate-100 mb-8">
           <div className="text-center mb-8">
             <span className="inline-block text-xs font-black text-red-600 uppercase tracking-widest bg-red-50 px-4 py-2 rounded-full mb-4">
-              {session.test_code} — Hasil Tes Psikologi
+              {testTitle} — Hasil Tes Psikologi
             </span>
             <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-2 tracking-tight">{result.result_type}</h1>
-            <p className="text-xl font-bold text-red-600 mb-4">{result.result_label}</p>
+            <p className="text-xl font-bold text-red-600 mb-4">{resultBadge}</p>
             <p className="text-slate-500 text-sm">
               Untuk: <strong className="text-slate-900">{session.customer_name}</strong> ·{" "}
-              {new Date(result.created_at).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}
+              {formatResultDate(result.created_at)}
             </p>
           </div>
 
@@ -106,16 +118,26 @@ export default async function HasilPage({ params }: { params: Promise<{ resultTo
 
           {!isTalents && <RetailScoreDetail detail={result.interpretation?.detail} />}
 
-          {(strengths.length > 0 || challenges.length > 0) && (
-          <div className={`grid gap-6 mb-8 ${strengths.length > 0 && challenges.length > 0 ? "md:grid-cols-2" : ""}`}>
-            {strengths.length > 0 && (
+          {strengthBlocks > 0 && (
+          <div className={`grid gap-6 mb-8 ${strengthBlocks > 1 ? "md:grid-cols-2" : ""}`}>
+            {listed.strengths.length > 0 && (
             <div className="bg-green-50 rounded-2xl p-6 border border-green-100 print-avoid">
               <h2 className="font-extrabold text-green-800 mb-4">Kekuatan utama</h2>
               <ul className="space-y-2">
-                {strengths.map((s, i) => (
+                {listed.strengths.map((s, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-green-700">
                     <span className="mt-0.5 text-green-500 shrink-0">✓</span>{s}
                   </li>
+                ))}
+              </ul>
+            </div>
+            )}
+            {listed.summary.length > 0 && (
+            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200 print-avoid">
+              <h2 className="font-extrabold text-slate-800 mb-4">{SUMMARY_HEADING}</h2>
+              <ul className="space-y-2">
+                {listed.summary.map((s, i) => (
+                  <li key={i} className="text-sm text-slate-700">{s}</li>
                 ))}
               </ul>
             </div>

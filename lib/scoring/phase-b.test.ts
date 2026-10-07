@@ -129,7 +129,7 @@ describe("retail scorers", () => {
     assert.equal(scored.interpretation.detail && (scored.interpretation.detail.least as { I: number }).I, 1);
   });
 
-  it("reverses Big Five item 2", () => {
+  it("scores Big Five from the stored wording, not BFI-44 positions", () => {
     const likert = [1, 2, 3, 4, 5].map((value) => ({
       value: String(value),
       label: String(value),
@@ -140,12 +140,13 @@ describe("retail scorers", () => {
       "bigfive",
       { 1: "5", 2: "5" },
       [
-        item({ id: 1, item_order: 1, options: likert }),
-        item({ id: 2, item_order: 2, options: likert }),
+        item({ id: 1, item_order: 9, question_text: "Saya mudah cemas", options: likert }),
+        item({ id: 2, item_order: 1, question_text: "Saya ramah dan mudah bergaul", options: likert }),
       ],
     );
+    assert.equal(scored.raw_scores.N, 5);
     assert.equal(scored.raw_scores.E, 5);
-    assert.equal(scored.raw_scores.A, 1);
+    assert.equal(scored.raw_scores.A, 0);
   });
 
   it("counts a RIASEC like toward the published type", () => {

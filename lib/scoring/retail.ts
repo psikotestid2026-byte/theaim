@@ -1,6 +1,6 @@
 import type { TestItem, TestResultPayload } from "@/types/db";
-import { choiceLabel, discIndexAnswers, indexAnswers } from "./answer-map";
-import { calculateBigFiveScore } from "./ruangtes/bigfive";
+import { choiceLabel, discIndexAnswers, indexAnswers, itemOptions } from "./answer-map";
+import { calculateBigFiveFromItems, MIN_HEADLINE_ITEMS, thinBigFiveNote } from "./ruangtes/bigfive";
 import { calculateDiscScore } from "./ruangtes/disc";
 import { findDiscTypeInfo } from "./ruangtes/disc_dictionary";
 import { getEnneagramCoreInfo, getEnneagramWingInfo } from "./ruangtes/enneagram_dictionary";
@@ -12,11 +12,12 @@ import { calculateMsdtScore, MSDT_TYPE_DETAILS } from "./ruangtes/msdt";
 import { calculatePapiScore, PAPI_ASPECT_DETAILS, type PapiAspect } from "./ruangtes/papi";
 import { calculateRiasecScore, RIASEC_TYPE_DETAILS } from "./ruangtes/riasec";
 import { calculateWptScore } from "./ruangtes/wpt";
+import { istIsAboveAverage, mbtiStrengthLines, positiveTraitLines, wptIsAboveAverage } from "../result-strengths";
 
 const BIGFIVE_NAMES: Record<string, string> = {
   O: "Openness",
   C: "Conscientiousness",
-  E: "Ekstraversion",
+  E: "Ekstraversi",
   A: "Agreeableness",
   N: "Neuroticism",
 };
@@ -45,14 +46,13 @@ function summary(testName: string, headline: string): string {
 
 function computeMbtiRetail(responses: Record<number, string>, items: TestItem[]): TestResultPayload {
   const scored = calculateMbtiScore(indexAnswers(items, responses, "value"));
-  const poles = ["E", "I", "S", "N", "T", "F", "J", "P"] as const;
   return {
     raw_scores: scored.raw,
     result_type: scored.type,
     result_label: `${scored.type} · ${scored.validityStatus}`,
     interpretation: {
       description: `Tipe ${scored.type}. Status kelengkapan: ${scored.validityStatus}. ${scored.unanswered} butir tidak terhitung.`,
-      strengths: poles.filter((pole) => scored.type.includes(pole)).map((pole) => `${pole}: ${scored.percent[pole]}%`),
+      strengths: mbtiStrengthLines(scored.percent),
       challenges: scored.validityStatus === "Valid" ? [] : [`Jawaban kosong: ${scored.unanswered}`],
       detail: {
         kind: "mbti",
@@ -101,7 +101,7 @@ function computeDiscRetail(responses: Record<number, string>, items: TestItem[])
 }
 
 function computeBigFive(responses: Record<number, string>, items: TestItem[]): TestResultPayload {
-  const scored = calculateBigFiveScore(indexAnswers(items, responses, "value"));
+  const scored = calculateBigFiveFromItems(items, responses);
   const dimensions = Object.entries(scored.dimensions).map(([code, row]) => ({
     code,
     name: BIGFIVE_NAMES[code] ?? code,
@@ -110,21 +110,26 @@ function computeBigFive(responses: Record<number, string>, items: TestItem[]): T
     percent: row.percent as number,
     category: row.category as string,
     narrative: row.narrative as string,
+    itemCount: row.itemCount,
   }));
   const raw_scores: Record<string, number> = {};
   for (const row of dimensions) raw_scores[row.code] = row.raw;
-  const highest = [...dimensions].sort((a, b) => b.percent - a.percent)[0];
+  const eligible = dimensions.filter((row) => row.itemCount >= MIN_HEADLINE_ITEMS);
+  const thin = dimensions.filter((row) => row.itemCount < MIN_HEADLINE_ITEMS);
+  const highest = [...eligible].sort((a, b) => b.percent - a.percent || a.code.localeCompare(b.code))[0];
+  const thinNote = thin.map((row) => thinBigFiveNote(row.name, row.itemCount)).join(" ");
+  const headline = highest
+    ? `Faktor tertinggi: ${highest.name} (${highest.category}).`
+    : "Tidak ada faktor dengan cukup butir untuk menjadi headline.";
   return {
     raw_scores,
     result_type: highest ? `${highest.code} ${highest.category}` : "Big Five",
     result_label: highest ? `${highest.name} · ${highest.category}` : "Big Five",
     interpretation: {
-      description: highest
-        ? `Skor tiap faktor dibanding maksimumnya. Faktor tertinggi: ${highest.name} (${highest.category}).`
-        : "Skor lima faktor.",
-      strengths: dimensions.filter((row) => row.category === "Tinggi" && row.code !== "N").map((row) => `${row.name}: ${row.narrative}`),
-      challenges: dimensions.filter((row) => row.category === "Rendah" || (row.code === "N" && row.category === "Tinggi")).map((row) => `${row.name}: ${row.narrative}`),
-      detail: { kind: "bigfive", dimensions },
+      description: `Skor tiap faktor dibanding maksimumnya. ${headline}${thinNote ? ` ${thinNote}` : ""}`,
+      strengths: dimensions.filter((row) => row.category === "Tinggi" && row.code !== "N" && row.itemCount >= MIN_HEADLINE_ITEMS).map((row) => `${row.name}: ${row.narrative}`),
+      challenges: dimensions.filter((row) => row.itemCount >= MIN_HEADLINE_ITEMS && (row.category === "Rendah" || (row.code === "N" && row.category === "Tinggi"))).map((row) => `${row.name}: ${row.narrative}`),
+      detail: { kind: "bigfive", dimensions, thinItemCodes: thin.map((row) => row.code) },
     },
     wa_summary_text: summary("Big Five", highest ? `${highest.name} ${highest.category}.` : "Profil lima faktor sudah siap."),
   };
@@ -170,7 +175,7 @@ function computeEnneagramRetail(responses: Record<number, string>, items: TestIt
     result_label: wing?.label ?? core?.name ?? resultType,
     interpretation: {
       description: wing?.description ?? core?.description ?? resultType,
-      strengths: wing?.traits ?? core?.traits ?? [],
+      strengths: positiveTraitLines(wing?.traits ?? core?.traits ?? []),
       challenges: [],
       detail: { kind: "enneagram", scores, wingCode, traits: core?.traits ?? [] },
     },
@@ -242,12 +247,19 @@ function computeWpt(responses: Record<number, string>, items: TestItem[]): TestR
     result_label: scored.label,
     interpretation: {
       description: `${scored.description} Jawaban benar: ${scored.raw_score} dari 50.`,
-      strengths: [`IQ ${scored.iq}`, scored.label],
+      strengths: wptIsAboveAverage(scored.iq) ? [`IQ ${scored.iq}`, scored.label] : [],
       challenges: [],
       detail: { kind: "wpt", rawScore: scored.raw_score, iq: scored.iq, label: scored.label },
     },
     wa_summary_text: summary("WPT", `IQ ${scored.iq} (${scored.label}).`),
   };
+}
+
+/** True only when the chosen option's label is the key. The stored value is an index and is never a key. */
+export function istAnswerMatchesKey(item: TestItem, raw: string, correct: string): boolean {
+  const chosen = itemOptions(item).find((option) => option.value === raw);
+  if (!chosen || typeof chosen.label !== "string") return false;
+  return normText(chosen.label) === normText(correct);
 }
 
 function computeIst(responses: Record<number, string>, items: TestItem[]): TestResultPayload {
@@ -257,9 +269,7 @@ function computeIst(responses: Record<number, string>, items: TestItem[]): TestR
     const correct = IST_CORRECT_BY_ORDER[item.item_order];
     if (!correct) continue;
     const raw = responses[item.id];
-    if (!raw) continue;
-    const label = normText(choiceLabel(item, raw));
-    if (label !== normText(correct) && normText(raw) !== normText(correct)) continue;
+    if (!raw || !istAnswerMatchesKey(item, raw, correct)) continue;
     if (item.item_order <= 96) raScore += 1;
     else zrScore += 1;
   }
@@ -273,7 +283,10 @@ function computeIst(responses: Record<number, string>, items: TestItem[]): TestR
     result_label: "Numerik dan logika (parsial)",
     interpretation: {
       description: `${note} RA ${raScore}/20, ZR ${zrScore}/20.`,
-      strengths: [`RA ${raScore}/20`, `ZR ${zrScore}/20`],
+      strengths: [
+        istIsAboveAverage(raScore) ? `RA ${raScore}/20` : "",
+        istIsAboveAverage(zrScore) ? `ZR ${zrScore}/20` : "",
+      ].filter((line) => line.length > 0),
       challenges: [],
       detail: { kind: "ist", raScore, zrScore, numeric, note },
     },
@@ -292,7 +305,11 @@ function computeMsdt(responses: Record<number, string>, items: TestItem[]): Test
     result_label: info.name,
     interpretation: {
       description: info.narrative,
-      strengths: [`Orientasi tugas: ${scored.orientationCategory.TO}`, `Orientasi relasi: ${scored.orientationCategory.RO}`, `Efektivitas: ${scored.orientationCategory.E}`],
+      strengths: [
+        scored.orientationCategory.TO === "Tinggi" ? "Orientasi tugas: Tinggi" : "",
+        scored.orientationCategory.RO === "Tinggi" ? "Orientasi relasi: Tinggi" : "",
+        scored.orientationCategory.E === "Tinggi" ? "Efektivitas: Tinggi" : "",
+      ].filter((line) => line.length > 0),
       challenges: scored.isValid ? [] : [`Butir terhitung ${scored.totalAnswered} dari 64.`],
       detail: {
         kind: "msdt",
@@ -311,20 +328,26 @@ function computeMsai(responses: Record<number, string>, items: TestItem[]): Test
   for (const [quadrant, score] of Object.entries(scored.quadrantScores)) {
     if (typeof score === "number") raw_scores[quadrant] = score;
   }
-  const top = Object.entries(scored.quadrantScores)
+  const leaders = Object.entries(scored.quadrantScores)
     .filter((entry): entry is [string, number] => typeof entry[1] === "number")
-    .sort((a, b) => b[1] - a[1])[0];
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  const topScore = leaders[0]?.[1];
+  const tied = topScore === undefined ? [] : leaders.filter((entry) => entry[1] === topScore);
+  const tie = tied.length > 1;
+  const tieNames = tied.map(([name]) => name).join(", ");
+  const scoreLabel = typeof topScore === "number" ? topScore.toFixed(2) : "";
+  const gapNote = scored.dataGapNote || "Skor keterampilan manajerial dihitung dari perilaku aktual, efektivitas, dan kepentingan.";
   return {
     raw_scores,
-    result_type: top?.[0] ?? "MSAI",
-    result_label: top ? `${top[0]} · ${top[1]}` : "MSAI",
+    result_type: tie ? "Seri" : (tied[0]?.[0] ?? "MSAI"),
+    result_label: tie ? `Seri · ${tieNames} · ${scoreLabel}` : tied[0] ? `${tied[0][0]} · ${scoreLabel}` : "MSAI",
     interpretation: {
-      description: scored.dataGapNote || "Skor keterampilan manajerial dihitung dari perilaku aktual, efektivitas, dan kepentingan.",
+      description: tie ? `${gapNote} Kuadran seri pada skor ${scoreLabel}: ${tieNames}.` : gapNote,
       strengths: scored.skills.filter((skill) => skill.gap !== null && skill.gap <= 0).map((skill) => skill.name),
-      challenges: scored.skills.filter((skill) => skill.gap !== null && skill.gap > 0).map((skill) => `${skill.name} (selisih ${skill.gap})`),
-      detail: { kind: "msai", skills: scored.skills, quadrantScores: scored.quadrantScores },
+      challenges: scored.skills.filter((skill) => skill.gap !== null && skill.gap > 0).map((skill) => `${skill.name} (selisih ${Number(skill.gap).toFixed(2)})`),
+      detail: { kind: "msai", skills: scored.skills, quadrantScores: scored.quadrantScores, tie },
     },
-    wa_summary_text: summary("MSAI", top ? `Kuadran tertinggi: ${top[0]}.` : "Profil keterampilan sudah siap."),
+    wa_summary_text: summary("MSAI", tie ? `Kuadran seri: ${tieNames}.` : tied[0] ? `Kuadran tertinggi: ${tied[0][0]}.` : "Profil keterampilan sudah siap."),
   };
 }
 

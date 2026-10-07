@@ -4,6 +4,9 @@ import { getItemsByTestCode } from "@/lib/queries/test-items";
 import { getResponsesBySession } from "@/lib/queries/test-responses";
 import { getMasterTestByCode } from "@/lib/queries/master-tests";
 import { canStartTest } from "@/lib/test-access";
+import { incompleteTestBank } from "@/lib/ist-bank";
+import { timedDurationSec } from "@/lib/test-timer";
+import IncompleteBankScreen from "@/components/test/IncompleteBankScreen";
 import TestEngine from "@/components/test/TestEngine";
 
 export default async function TestStartPage({ params }: { params: Promise<{ token: string }> }) {
@@ -19,6 +22,9 @@ export default async function TestStartPage({ params }: { params: Promise<{ toke
     getResponsesBySession(session.id).catch(() => []),
     getMasterTestByCode(session.test_code).catch(() => null),
   ]);
+  const bank = incompleteTestBank(session.test_code, items);
+  if (bank) return <IncompleteBankScreen messages={bank.messages} />;
+
   if (!items.length) {
     return (
       <div className="min-h-screen flex items-center justify-center p-8 text-center">
@@ -42,6 +48,7 @@ export default async function TestStartPage({ params }: { params: Promise<{ toke
       testName={master?.name ?? session.test_code}
       instructions={master?.instructions?.trim() || null}
       durationSec={master?.duration_sec ?? 0}
+      timeLimitSec={timedDurationSec(session.test_code) ?? 0}
       items={items}
       initialAnswers={initialAnswers}
     />

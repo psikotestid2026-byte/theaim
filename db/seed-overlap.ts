@@ -3,6 +3,8 @@ import { join } from "node:path";
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 import { eq } from "drizzle-orm";
+import { BIGFIVE_ITEMS } from "@/lib/scoring/ruangtes/bigfive";
+import { msaiBlockForOrder, msaiOptionLabels } from "@/lib/msai-form";
 import * as schema from "./schema";
 
 // Approved RuangTes overlap export (Abadi, 7 Oct 2026). Mapped onto test_items.
@@ -83,22 +85,32 @@ function toTestItem(row: QuestionBankRow, testId: number) {
   if (!questionText) {
     questionText = "Stem soal tidak tersedia pada berkas sumber.";
   }
-  const labels = rawOptions.length > 0
-    ? rawOptions
-    : row.question_type === "likert_5"
-      ? LIKERT_LABELS
-      : [];
+  const msaiScale = row.code === "msai" ? msaiOptionLabels(row.order_number) : null;
+  const labels = msaiScale
+    ? msaiScale
+    : rawOptions.length > 0
+      ? rawOptions
+      : row.question_type === "likert_5"
+        ? LIKERT_LABELS
+        : [];
   if (labels.length === 0) {
     throw new Error(`Overlap item ${row.code} #${row.order_number} has no options`);
   }
+  const block = row.code === "msai" ? msaiBlockForOrder(row.order_number) : null;
+  const bigFive = row.code === "bigfive" ? BIGFIVE_ITEMS[row.order_number - 1] : undefined;
   return {
     test_code: row.code,
     test_id: testId,
-    section: row.question_type,
+    section: block?.id ?? row.question_type,
     item_order: row.order_number,
     question_text: questionText,
     options: optionRows(labels),
-    scoring_meta: { question_type: row.question_type, source: "ruangtes-overlap" },
+    scoring_meta: {
+      question_type: row.question_type,
+      source: "ruangtes-overlap",
+      ...(block ? { msai_block: block.id } : {}),
+      ...(bigFive ? { dimension: bigFive.dimension, reversed: bigFive.reversed } : {}),
+    },
   };
 }
 

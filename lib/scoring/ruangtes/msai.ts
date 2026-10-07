@@ -34,11 +34,26 @@ export const MSAI_SKILLS: MsaiSkillDef[] = [
 ];
 
 const VALUE_MAP: Record<string, number> = {
-  'sangat kurang': 1,
-  'kurang': 2,
-  'cukup': 3,
-  'baik': 4,
-  'sangat baik': 5,
+  "sangat kurang": 1,
+  kurang: 2,
+  cukup: 3,
+  baik: 4,
+  "sangat baik": 5,
+  "sangat tidak setuju": 1,
+  "tidak setuju": 2,
+  netral: 3,
+  setuju: 4,
+  "sangat setuju": 5,
+  buruk: 1,
+  "di bawah rata-rata": 2,
+  "rata-rata": 3,
+  "di atas rata-rata": 4,
+  "luar biasa": 5,
+  "kurang penting": 1,
+  "cukup penting": 2,
+  penting: 3,
+  "sangat penting": 4,
+  "sangat kritikal": 5,
 };
 
 function norm(s: unknown): string {
@@ -95,7 +110,7 @@ export function calculateMsaiScore(answers: Record<string | number, unknown>): M
     const actual = values.length > 0 ? values.reduce((a, b) => a + b, 0) / values.length : null;
     const effectiveness = getItem(def.effectivenessItem);
     const importance = getItem(def.importanceItem);
-    const gap = importance !== null && actual !== null ? importance - actual : null;
+    const gap = importance !== null && actual !== null ? parseFloat((importance - actual).toFixed(2)) : null;
 
     return {
       name: def.name,

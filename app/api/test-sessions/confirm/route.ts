@@ -9,6 +9,8 @@ import {
 import { invalidateTestAccess, cacheTestSession } from "@/lib/redis";
 import { getCustomerById } from "@/lib/queries/customers";
 import { logRouteError } from "@/lib/log-error";
+import { getItemsByTestCode } from "@/lib/queries/test-items";
+import { incompleteTestBank, IST_BANK_INCOMPLETE } from "@/lib/ist-bank";
 import { canStartTest } from "@/lib/test-access";
 import { confirmBody } from "@/lib/validators/test-attempt";
 import { ZodError } from "zod";
@@ -30,6 +32,14 @@ export async function POST(req: NextRequest) {
     }
     if (session.status === "expired" || session.status === "revoked") {
       return NextResponse.json({ error: session.status }, { status: 410 });
+    }
+
+    if (session.test_code.toLowerCase() === "ist") {
+      const items = await getItemsByTestCode(session.test_code);
+      const bank = incompleteTestBank(session.test_code, items);
+      if (bank) {
+        return NextResponse.json({ error: IST_BANK_INCOMPLETE, messages: bank.messages }, { status: 409 });
+      }
     }
 
     if (canStartTest(session.status)) {

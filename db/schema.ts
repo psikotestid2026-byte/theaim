@@ -247,6 +247,7 @@ export const testSessions = pgTable("test_sessions", {
   issued_at: timestamp("issued_at").defaultNow().notNull(),
   expires_at: timestamp("expires_at").notNull(),
   started_at: timestamp("started_at"),
+  timer_started_at: timestamp("timer_started_at"),
   completed_at: timestamp("completed_at"),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),

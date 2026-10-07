@@ -4,10 +4,27 @@ import { redisRestConfig } from "@/lib/redis-env";
 
 let client: Redis | null | undefined;
 
+/** Fail fast when the REST host is gone. The default client retries with backoff for several seconds. */
+export const REDIS_REQUEST_TIMEOUT_MS = 1_500;
+
+export function redisClientOptions() {
+  return {
+    keepAlive: false as const,
+    retry: { retries: 0 },
+  };
+}
+
 function getRedis(): Redis | null {
   if (client !== undefined) return client;
   const config = redisRestConfig();
-  client = config ? new Redis({ url: config.url, token: config.token, keepAlive: false }) : null;
+  client = config
+    ? new Redis({
+        url: config.url,
+        token: config.token,
+        ...redisClientOptions(),
+        signal: () => AbortSignal.timeout(REDIS_REQUEST_TIMEOUT_MS),
+      })
+    : null;
   return client;
 }
 

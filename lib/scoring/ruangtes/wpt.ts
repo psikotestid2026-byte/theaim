@@ -67,66 +67,76 @@ export const WPT_CATEGORIES = [
   { minIQ: 0,   label: 'Sangat Rendah', description: 'Kapasitas intelektual memerlukan pendampingan intensif.' },
 ];
 
-export const WPT_ANSWER_KEYS: Record<number, string | string[]> = {
-  1: 'Desember',
-  2: 'Membebaskan',
-  3: 'Mobil',
-  4: ['Tidak', 'jawablah yang tidak perlu', 'jawablah jika tidak perlu'],
-  5: 'Berpartisipasi',
-  6: ['Jarang', 'Luar Biasa'],
-  7: 'Bentuk 3',
-  8: ['1/8', '0.125', '0,125'],
-  9: 'Memiliki arti yang sama',
-  10: ['Bau wangi', 'Hidung'],
-  11: 'Musim Semi',
-  12: ['6000', '6.000 kaki', '6000 kaki'],
-  13: 'Benar',
-  14: 'Dekat',
-  15: ['20', '20 rupiah'],
-  16: ['2', '2 pasang'],
-  17: ['A', 'S', 'P', 'D', 'M'],
-  18: ['13', '13 tahun'],
-  19: 'Memiliki tata bahasa dan arti berbeda',
-  20: 'Benar',
-  21: ['20', '20 barel'],
-  22: 'Salah',
-  23: ['1 dan 3', '1,3', '1 & 3', '1 dan 2'],
-  24: ['2', '2 detik'],
-  25: 'Memiliki arti berbeda',
-  26: 'Benar',
-  27: ['3.33 sen', '3,33', '3.33', '1/30'],
-  28: 'Memiliki arti berbeda',
-  29: ['6', '6 ikan'],
-  30: ['216 m³', '216', '216 m3'],
-  31: ['1/100000', '1/100.000', '1/9'],
-  32: 'Ya',
-  33: 'Memiliki arti berbeda',
-  34: ['20', '20 rok'],
-  35: ['0.25', '0.25 detik', '0,25', '0,25 detik'],
-  36: ['24', '24 permainan'],
-  37: '82',
-  38: 'Dua segitiga siku-siku sama kaki',
-  39: 'Karyawan/alat baru sering bekerja sangat efisien',
-  40: ['3', '3 pasangan'],
-  41: ['1 dan 3', '1,3', '1 & 3'],
-  42: 'Dua trapesium siku-siku',
-  43: '0.33',
-  44: 'Kejujuran adalah nilai moral yang tidak perlu disesali',
-  45: ['Rp 1.250', '1250', '1.250'],
-  46: 'Kubus',
-  47: 'Salah (Sesat Pikir)',
-  48: ['Rp 300.000', '300000', '300.000'],
-  49: ['Potongan 1, 2, 4, 5', '1,2,4,5', '1245'],
-  50: ['50 menit', '50'],
+/**
+ * Accepted answers are exact after normalization. Arrays are equivalent writings
+ * of the same correct option, never a second distinct choice.
+ * Q17's grammatical answer is the letter g (third word of "Dia merupakan seorang
+ * penyanyi" is "seorang"). That letter is not among the printed choices.
+ */
+export const WPT_ANSWER_KEYS: Record<number, readonly string[]> = {
+  1: ["Desember"],
+  2: ["Membebaskan"],
+  3: ["Mobil"],
+  4: ["Tidak"],
+  5: ["Berpartisipasi"],
+  6: ["Luar Biasa"],
+  7: ["Bentuk 3"],
+  8: ["1/8", "0.125", "0,125"],
+  9: ["Memiliki arti yang sama"],
+  10: ["Hidung"],
+  11: ["Musim Semi"],
+  12: ["6.000 kaki", "6000 kaki", "6000"],
+  13: ["Benar"],
+  14: ["Dekat"],
+  15: ["20 rupiah"],
+  16: ["5"],
+  17: ["g"],
+  18: ["13 tahun", "13"],
+  19: ["Memiliki tata bahasa dan arti berbeda"],
+  20: ["Benar"],
+  21: ["20 barel", "20"],
+  22: ["Salah"],
+  23: ["1 dan 3", "1,3", "1 & 3"],
+  24: ["2 detik", "2"],
+  25: ["Memiliki arti berbeda"],
+  26: ["Benar"],
+  27: ["3.33 sen", "3,33 sen", "3.33", "3,33"],
+  28: ["Memiliki arti berbeda"],
+  29: ["6 ikan", "6"],
+  30: ["216 m³", "216 m3", "216"],
+  31: ["1/100000", "1/100.000"],
+  32: ["Ya"],
+  33: ["Memiliki arti berbeda"],
+  34: ["20 rok", "20"],
+  35: ["0.25 detik", "0,25 detik", "0.25", "0,25"],
+  36: ["24 permainan", "24"],
+  37: ["82"],
+  38: ["Dua segitiga siku-siku sama kaki"],
+  39: ["Karyawan/alat baru sering bekerja sangat efisien"],
+  40: ["3"],
+  41: ["1 dan 3", "1,3", "1 & 3"],
+  42: ["Dua trapesium siku-siku"],
+  43: ["0.33", "0,33"],
+  44: ["Kejujuran adalah nilai moral yang tidak perlu disesali"],
+  45: ["Rp 1.250", "1.250", "1250"],
+  46: ["Kubus"],
+  47: ["Salah (Sesat Pikir)"],
+  48: ["Rp 300.000", "300.000", "300000"],
+  49: ["Potongan 1, 2, 4, 5", "1,2,4,5", "1245"],
+  50: ["50 menit", "50"],
 };
 
+/** Printed choices that are intentionally unscorable because the right letter is absent. */
+export const WPT_ITEMS_WITHOUT_CORRECT_OPTION = [17] as const;
+
 export function normalizeWptAnswer(val: unknown): string {
-  if (val === undefined || val === null) return '';
-  let s = String(val).trim().toLowerCase();
-  // Strip common trailing zeroes or punctuation
-  if (s.endsWith('.0') && !s.includes('/')) {
-    s = s.slice(0, -2);
-  }
+  if (val === undefined || val === null) return "";
+  let s = String(val).trim().toLowerCase().replace(/\s+/g, " ");
+  s = s.replace(/(\d),(\d)/g, "$1.$2");
+  s = s.replace(/(\d)\.(?=\d{3}(?:\D|$))/g, "$1");
+  s = s.replace(/m³/g, "m3");
+  s = s.replace(/^rp\s*/, "");
+  s = s.replace(/[.](?=\s|$)/g, "");
   return s;
 }
 
@@ -134,19 +144,9 @@ export function checkWptAnswer(qNum: number, rawAns: unknown): boolean {
   if (rawAns === undefined || rawAns === null) return false;
   const ans = normalizeWptAnswer(rawAns);
   if (!ans) return false;
-
-  const key = WPT_ANSWER_KEYS[qNum];
-  if (!key) return false;
-
-  if (Array.isArray(key)) {
-    return key.some(k => {
-      const normK = normalizeWptAnswer(k);
-      return ans === normK || ans.includes(normK) || normK.includes(ans);
-    });
-  }
-
-  const normKey = normalizeWptAnswer(key);
-  return ans === normKey || ans.includes(normKey) || normKey.includes(ans);
+  const accepted = WPT_ANSWER_KEYS[qNum];
+  if (!accepted) return false;
+  return accepted.some((key) => normalizeWptAnswer(key) === ans);
 }
 
 export function calculateWptScore(rawAnswers: Record<string | number, unknown>) {
