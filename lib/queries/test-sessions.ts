@@ -1,32 +1,51 @@
 import { sql } from "@/lib/db";
+import { asCount, asId } from "@/lib/ids";
 import type { TestSession } from "@/types/db";
 
 const MAX_CONFIRM_ATTEMPTS = 3;
 
 export { MAX_CONFIRM_ATTEMPTS };
 
+function normalizeSession(row: TestSession | undefined): TestSession | null {
+  if (!row) return null;
+  return {
+    ...row,
+    id: asId(row.id),
+    customer_id: asId(row.customer_id),
+    package_id: asId(row.package_id),
+    registration_id: row.registration_id == null ? null : asId(row.registration_id),
+    confirm_attempts: asCount(row.confirm_attempts),
+  };
+}
+
 export async function getSessionByAccessToken(token: string): Promise<TestSession | null> {
   const rows = await sql`
-    SELECT s.*, c.whatsapp_number, c.full_name AS customer_name, sp.name AS package_name
+    SELECT s.id, s.registration_id, s.customer_id, s.package_id, s.test_code,
+           s.access_token, s.result_token, s.status, s.confirm_attempts, s.locked_at,
+           s.issued_at, s.expires_at, s.started_at, s.completed_at, s.created_at, s.updated_at,
+           c.whatsapp_number, c.full_name AS customer_name, sp.name AS package_name
     FROM test_sessions s
     JOIN customers c ON c.id = s.customer_id
     JOIN service_packages sp ON sp.id = s.package_id
     WHERE s.access_token = ${token}
     LIMIT 1
   `;
-  return (rows[0] as TestSession) ?? null;
+  return normalizeSession(rows[0] as TestSession | undefined);
 }
 
 export async function getSessionByResultToken(token: string): Promise<TestSession | null> {
   const rows = await sql`
-    SELECT s.*, c.whatsapp_number, c.full_name AS customer_name, sp.name AS package_name
+    SELECT s.id, s.registration_id, s.customer_id, s.package_id, s.test_code,
+           s.access_token, s.result_token, s.status, s.confirm_attempts, s.locked_at,
+           s.issued_at, s.expires_at, s.started_at, s.completed_at, s.created_at, s.updated_at,
+           c.whatsapp_number, c.full_name AS customer_name, sp.name AS package_name
     FROM test_sessions s
     JOIN customers c ON c.id = s.customer_id
     JOIN service_packages sp ON sp.id = s.package_id
     WHERE s.result_token = ${token}
     LIMIT 1
   `;
-  return (rows[0] as TestSession) ?? null;
+  return normalizeSession(rows[0] as TestSession | undefined);
 }
 
 export async function createTestSession(input: {
@@ -49,18 +68,38 @@ export async function createTestSession(input: {
   return rows[0] as TestSession;
 }
 
+/**
+ * One-way completion. Only a confirmed in-progress session can finish.
+ * Completed, locked, revoked, expired, and still-issued rows stay as they are.
+ */
+export async function markSessionCompleted(id: number) {
+  const rows = await sql`
+    UPDATE test_sessions
+    SET status = 'completed',
+        completed_at = COALESCE(completed_at, now()),
+        updated_at = now()
+    WHERE id = ${asId(id)}
+      AND status = 'in_progress'
+    RETURNING id
+  `;
+  return rows[0] ?? null;
+}
+
 export async function updateSessionStatus(
   id: number,
   status: TestSession["status"],
   extra?: { started_at?: Date; completed_at?: Date }
 ) {
+  // Neon sends parameters as text. An uncast COALESCE(text, timestamp) errors.
+  const startedAt = extra?.started_at ? extra.started_at.toISOString() : null;
+  const completedAt = extra?.completed_at ? extra.completed_at.toISOString() : null;
   const rows = await sql`
     UPDATE test_sessions
     SET status = ${status},
-        started_at = COALESCE(${extra?.started_at ?? null}, started_at),
-        completed_at = COALESCE(${extra?.completed_at ?? null}, completed_at),
+        started_at = COALESCE(${startedAt}::timestamp, started_at),
+        completed_at = COALESCE(${completedAt}::timestamp, completed_at),
         updated_at = now()
-    WHERE id = ${id}
+    WHERE id = ${asId(id)}
     RETURNING *
   `;
   return rows[0];

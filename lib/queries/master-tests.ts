@@ -11,6 +11,23 @@ export type MasterTestListRow = {
   formula_type: string | null;
 };
 
+export type MasterTestRunnerRow = {
+  code: string;
+  name: string;
+  instructions: string | null;
+  duration_sec: number;
+};
+
+export async function getMasterTestByCode(code: string): Promise<MasterTestRunnerRow | null> {
+  const rows = await sql`
+    SELECT code, name, instructions, duration_sec
+    FROM master_tests
+    WHERE lower(code) = lower(${code})
+    LIMIT 1
+  `;
+  return (rows[0] as MasterTestRunnerRow) ?? null;
+}
+
 export async function listMasterTests(): Promise<MasterTestListRow[]> {
   const rows = await sql`
     SELECT mt.id,

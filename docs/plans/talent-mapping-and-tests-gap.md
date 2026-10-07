@@ -1,6 +1,6 @@
 # Gap analysis: Talents Mapping and additional test types
 
-Status: Phase A is implemented on this branch (catalog tables, nullable `test_id`, seed, read-only admin list). A follow-up seed fills theme roles, ciri utama, the 14 known activity clusters, five typology branding rows, and the scoring JSON that exists in the product seed SQL. A later approved RuangTes overlap import adds `test_norms` and loads question banks for ten retail codes into `test_items`. The 170 Talents Mapping Likert stems in `db/seed-data/tm-likert-items.ts` are TheAIM-authored and are upserted by `(test_code, item_order)`; they are not the Gallup item bank. `/tes` and `/hasil` are unchanged. `service_package_tests` is not in this slice. The 170 TM statements, the ST-30 formula, and the SWA questions are still absent. The overlap import does not invent them.
+Status: Phase A is on staging (catalog tables, nullable `test_id`, seed, read-only admin list, overlap banks, 170 TheAIM Talents Mapping Likert stems). Phase B extends `/tes` and `/hasil`: instructions, Likert and DISC P/K widgets, answer restore, Talents Mapping rank bands written to `tm_results`, and RuangTes scorers for the lowercase overlap codes. PSS, ST-30, and SWA are still not scored. IST reports only the RA/ZR partial score from RuangTes and is not an IQ. `service_package_tests` is not in this slice.
 
 Compared on 7 Oct 2026:
 

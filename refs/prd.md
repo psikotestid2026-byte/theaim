@@ -183,7 +183,7 @@ TheAIM is one Next.js application split into two route groups: a **Public Sectio
 | About TheAIM / Ecosystem | Static company narrative | Hardcoded (low change frequency) |
 | E-Course access pages | `ecourse_modules`, `ecourse_enrollments` | Dynamic |
 | **Test page** (`/tes/[token]`) | `test_sessions` (token validation), `test_items` (question bank); writes to `test_responses` | Questions dynamic; page layout hardcoded |
-| **Result page** (`/hasil/[resultToken]`) | `test_sessions`, `test_results` | Fully dynamic; page layout + `@media print` stylesheet hardcoded |
+| **Result page** (`/hasil/[resultToken]`) | `test_sessions`, `test_results`, `tm_results` when the session is Talents Mapping | Fully dynamic; page layout + `@media print` stylesheet hardcoded. Browser print only. |
 | Global navigation, footer, legal text, SEO defaults | — | Hardcoded (in code/config, not the database) |
 
 ### 6.2 Admin Panel — Full Menu Structure
