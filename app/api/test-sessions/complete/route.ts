@@ -13,7 +13,7 @@ import { completeBody } from "@/lib/validators/test-attempt";
 import { appendResultLink, resultPageUrl, siteOrigin } from "@/lib/site-url";
 import { isAttemptExpired, isTimedTest, parseDbTimestamp, timedDurationSec } from "@/lib/test-timer";
 import { incompleteTestBank, IST_BANK_INCOMPLETE } from "@/lib/ist-bank";
-import { unansweredCount } from "@/lib/test-completion";
+import { stampExpirySubmission, unansweredCount } from "@/lib/test-completion";
 import { ZodError } from "zod";
 
 export async function POST(req: NextRequest) {
@@ -63,7 +63,12 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const payload = computeResult(session.test_code, responsesMap, items);
+    let payload = computeResult(session.test_code, responsesMap, items);
+    if (expired) {
+      const total = items.length;
+      const answered = total - unansweredCount(session.test_code, items, responsesMap);
+      payload = stampExpirySubmission(payload, answered, total);
+    }
     const origin = siteOrigin({
       forwardedHost: req.headers.get("x-forwarded-host"),
       host: req.headers.get("host"),

@@ -6,6 +6,7 @@ import type { TestItem, TestItemOption } from "@/types/db";
 import { encodeDiscAnswer, parseDiscAnswer } from "@/lib/scoring/disc-answer";
 import { msaiBlockForOrder, msaiScaleOptions } from "@/lib/msai-form";
 import { initialQuestionIndex } from "@/lib/test-access";
+import { EXPIRY_AUTO_SUBMIT_HEADING, EXPIRY_NOTICE_MS, expiryAnsweredLine } from "@/lib/test-timer";
 import { isAnswerComplete, widgetForItem, type AnswerWidget } from "@/lib/test-widget";
 
 interface Props {
@@ -137,12 +138,11 @@ export default function TestEngine({
           setTimerError("Waktu pengerjaan belum bisa dimulai. Periksa koneksi, lalu coba lagi.");
           return;
         }
-        setClock({
-          startedAtMs,
-          serverNowMs,
-          fetchedAtMs: Date.now(),
-          durationSec: typeof data.duration_sec === "number" ? data.duration_sec : timeLimitSec,
-        });
+        const fetchedAtMs = Date.now();
+        const duration = typeof data.duration_sec === "number" ? data.duration_sec : timeLimitSec;
+        const elapsed = serverNowMs - startedAtMs;
+        setClock({ startedAtMs, serverNowMs, fetchedAtMs, durationSec: duration });
+        setRemaining(Math.max(0, duration * 1000 - elapsed));
       } catch {
         if (!cancelled) setTimerError("Waktu pengerjaan belum bisa dimulai. Periksa koneksi, lalu coba lagi.");
       }
@@ -311,8 +311,12 @@ export default function TestEngine({
 
   useEffect(() => {
     if (remaining !== 0 || !clock || autoSubmitted.current || pendingRef.current > 0) return;
-    autoSubmitted.current = true;
-    void submitRef.current();
+    const delay = setTimeout(() => {
+      if (autoSubmitted.current || pendingRef.current > 0) return;
+      autoSubmitted.current = true;
+      void submitRef.current();
+    }, EXPIRY_NOTICE_MS);
+    return () => clearTimeout(delay);
   }, [remaining, clock, pendingSaves]);
 
   if (phase === "instructions" && instructions) {
@@ -350,6 +354,26 @@ export default function TestEngine({
           {timerError && (
             <button type="button" onClick={() => setTimerNonce((value) => value + 1)} className="btn-primary mt-6 px-6 py-3 rounded-xl text-sm">
               Coba lagi
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  if (timed && clock && remaining === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-red-50/30 flex items-center justify-center px-4 py-12">
+        <div role="status" aria-live="polite" className="max-w-[520px] w-full bg-white rounded-3xl p-8 shadow-lg border border-amber-200 text-center">
+          <h1 className="text-xl font-black text-slate-900 mb-3">{EXPIRY_AUTO_SUBMIT_HEADING}</h1>
+          <p className="text-sm font-semibold text-slate-700">{expiryAnsweredLine(totalAnswered, items.length)}</p>
+          <p className="text-sm text-slate-500 mt-3">
+            {submitting ? "Mengirim jawaban..." : pendingSaves > 0 ? "Menyimpan sisa jawaban..." : "Jawaban dikirim sebentar lagi."}
+          </p>
+          {error && <p className="mt-4 text-sm text-red-700 bg-red-50 border border-red-100 rounded-xl px-4 py-3">{error}</p>}
+          {error && (
+            <button type="button" onClick={() => void handleSubmit()} className="btn-primary mt-6 px-6 py-3 rounded-xl text-sm">
+              Kirim lagi
             </button>
           )}
         </div>

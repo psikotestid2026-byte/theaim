@@ -3,6 +3,8 @@ import { describe, it } from "node:test";
 import {
   ANSWER_GRACE_MS,
   answersStillAccepted,
+  EXPIRY_AUTO_SUBMIT_HEADING,
+  expiryAnsweredLine,
   isAttemptExpired,
   isTimedTest,
   remainingMs,
@@ -28,5 +30,10 @@ describe("timed attempts", () => {
     assert.equal(answersStillAccepted(start, duration, deadline + ANSWER_GRACE_MS + 1), false);
     assert.equal(remainingMs(start, duration, deadline + 5000), 0);
     assert.equal(remainingMs(start, duration, start + 1000), duration * 1000 - 1000);
+  });
+
+  it("writes the expiry notice with an answered count", () => {
+    assert.equal(EXPIRY_AUTO_SUBMIT_HEADING, "Waktu habis — jawaban Anda dikirim otomatis");
+    assert.equal(expiryAnsweredLine(2, 50), "2 dari 50 soal terjawab");
   });
 });

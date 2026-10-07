@@ -1,6 +1,7 @@
 import DiscGraphs from "@/components/test/DiscGraphs";
 import { getEnneagramCoreInfo, getEnneagramWingInfo } from "@/lib/scoring/ruangtes/enneagram_dictionary";
 import { MIN_HEADLINE_ITEMS, thinBigFiveNote } from "@/lib/scoring/ruangtes/bigfive";
+import { EXPIRY_AUTO_SUBMIT_HEADING, expiryAnsweredLine } from "@/lib/test-timer";
 
 type Detail = Record<string, unknown>;
 
@@ -259,15 +260,26 @@ export default function RetailScoreDetail({ detail }: { detail: unknown }) {
   }
 
   if (data.kind === "wpt") {
+    const answered = asNumber(data.answered);
+    const total = asNumber(data.total);
+    const submittedByExpiry = data.submittedByExpiry === true && answered !== null && total !== null;
     return (
-      <div className="mb-8 grid grid-cols-2 gap-3">
-        <div className="rounded-2xl bg-slate-50 p-4">
-          <p className="text-xs font-bold text-slate-500">Jawaban benar</p>
-          <p className="text-2xl font-black text-slate-900">{String(data.rawScore ?? "")}/50</p>
-        </div>
-        <div className="rounded-2xl bg-slate-50 p-4">
-          <p className="text-xs font-bold text-slate-500">IQ</p>
-          <p className="text-2xl font-black text-slate-900">{String(data.iq ?? "")}</p>
+      <div className="mb-8">
+        {submittedByExpiry && (
+          <div className="mb-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3">
+            <p className="font-bold text-amber-950">{EXPIRY_AUTO_SUBMIT_HEADING}</p>
+            <p className="text-sm text-amber-900 mt-1">{expiryAnsweredLine(answered, total)}</p>
+          </div>
+        )}
+        <div className="grid grid-cols-2 gap-3">
+          <div className="rounded-2xl bg-slate-50 p-4">
+            <p className="text-xs font-bold text-slate-500">Jawaban benar</p>
+            <p className="text-2xl font-black text-slate-900">{String(data.rawScore ?? "")}/50</p>
+          </div>
+          <div className="rounded-2xl bg-slate-50 p-4">
+            <p className="text-xs font-bold text-slate-500">IQ</p>
+            <p className="text-2xl font-black text-slate-900">{String(data.iq ?? "")}</p>
+          </div>
         </div>
       </div>
     );

@@ -332,13 +332,14 @@ function computeMsai(responses: Record<number, string>, items: TestItem[]): Test
   const tied = topScore === undefined ? [] : leaders.filter((entry) => entry[1] === topScore);
   const tie = tied.length > 1;
   const tieNames = tied.map(([name]) => name).join(", ");
+  const scoreLabel = typeof topScore === "number" ? topScore.toFixed(2) : "";
   const gapNote = scored.dataGapNote || "Skor keterampilan manajerial dihitung dari perilaku aktual, efektivitas, dan kepentingan.";
   return {
     raw_scores,
     result_type: tie ? "Seri" : (tied[0]?.[0] ?? "MSAI"),
-    result_label: tie ? `Seri · ${tieNames} · ${topScore}` : tied[0] ? `${tied[0][0]} · ${tied[0][1]}` : "MSAI",
+    result_label: tie ? `Seri · ${tieNames} · ${scoreLabel}` : tied[0] ? `${tied[0][0]} · ${scoreLabel}` : "MSAI",
     interpretation: {
-      description: tie ? `${gapNote} Kuadran seri pada skor ${topScore}: ${tieNames}.` : gapNote,
+      description: tie ? `${gapNote} Kuadran seri pada skor ${scoreLabel}: ${tieNames}.` : gapNote,
       strengths: scored.skills.filter((skill) => skill.gap !== null && skill.gap <= 0).map((skill) => skill.name),
       challenges: scored.skills.filter((skill) => skill.gap !== null && skill.gap > 0).map((skill) => `${skill.name} (selisih ${Number(skill.gap).toFixed(2)})`),
       detail: { kind: "msai", skills: scored.skills, quadrantScores: scored.quadrantScores, tie },

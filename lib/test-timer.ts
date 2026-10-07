@@ -6,6 +6,16 @@ export const TIMED_TEST_SECONDS: Record<string, number> = {
 /** Answers posted just after the clock hits zero are still stored. */
 export const ANSWER_GRACE_MS = 10_000;
 
+/** Shown before an expired attempt redirects, and again on the result page. */
+export const EXPIRY_AUTO_SUBMIT_HEADING = "Waktu habis — jawaban Anda dikirim otomatis";
+
+/** How long the runner keeps the expiry notice on screen before sending the result. */
+export const EXPIRY_NOTICE_MS = 1_800;
+
+export function expiryAnsweredLine(answered: number, total: number): string {
+  return `${answered} dari ${total} soal terjawab`;
+}
+
 export function timedDurationSec(testCode: string): number | null {
   const seconds = TIMED_TEST_SECONDS[testCode.toLowerCase()];
   return typeof seconds === "number" ? seconds : null;

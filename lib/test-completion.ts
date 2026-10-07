@@ -1,3 +1,4 @@
+import type { TestResultPayload } from "@/types/db";
 import { isAnswerComplete } from "@/lib/test-widget";
 
 type CompletionItem = {
@@ -21,4 +22,24 @@ export function unansweredCount(
   answers: Record<number, string>,
 ): number {
   return unansweredItemIds(testCode, items, answers).length;
+}
+
+/** Marks a timed result that was stored because the clock had already run out. */
+export function stampExpirySubmission(
+  payload: TestResultPayload,
+  answered: number,
+  total: number,
+): TestResultPayload {
+  return {
+    ...payload,
+    interpretation: {
+      ...payload.interpretation,
+      detail: {
+        ...(payload.interpretation.detail ?? {}),
+        submittedByExpiry: true,
+        answered,
+        total,
+      },
+    },
+  };
 }

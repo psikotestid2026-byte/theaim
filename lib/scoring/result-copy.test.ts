@@ -34,7 +34,20 @@ describe("result copy", () => {
     assert.match(scored.result_label, /Market/);
     assert.match(scored.result_label, /Hierarchy/);
     assert.match(scored.result_label, /Clan/);
+    assert.match(scored.result_label, /3\.00$/);
     assert.match(scored.interpretation.description, /seri/i);
+    assert.match(scored.interpretation.description, /3\.00/);
+  });
+
+  it("formats a single MSAI quadrant badge with two decimals", () => {
+    const orders = [2, 8, 27, 45, 51, 9, 14, 28, 46, 59, 26, 29, 44, 52, 53];
+    const higher = new Set([51, 59, 53]);
+    const items = orders.map((order) => ({ ...likert(order, "msai"), item_order: order }));
+    const responses: Record<number, string> = {};
+    for (const order of orders) responses[order] = higher.has(order) ? "2" : "1";
+    const scored = computeResult("msai", responses, items);
+    assert.equal(scored.result_type, "Adhocracy");
+    assert.equal(scored.result_label, "Adhocracy · 1.20");
   });
 
   it("does not list a low MSDT orientation as a strength", () => {
