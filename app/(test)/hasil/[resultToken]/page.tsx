@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
+import { resultPageUrl, siteOrigin } from "@/lib/site-url";
 import { getSessionByResultToken } from "@/lib/queries/test-sessions";
 import { getResultBySessionId } from "@/lib/queries/test-results";
 import { getTmResultBySessionId } from "@/lib/queries/tm-results";
@@ -40,7 +42,15 @@ export default async function HasilPage({ params }: { params: Promise<{ resultTo
   }
   if (!result) return notFound();
 
-  const resultUrl = `${process.env.NEXTAUTH_URL ?? "https://theaim.id"}/hasil/${resultToken}`;
+  const headerList = await headers();
+  const resultUrl = resultPageUrl(
+    resultToken,
+    siteOrigin({
+      forwardedHost: headerList.get("x-forwarded-host"),
+      host: headerList.get("host"),
+      forwardedProto: headerList.get("x-forwarded-proto"),
+    }),
+  );
   const strengths: string[] = result.interpretation?.strengths ?? [];
   const challenges: string[] = result.interpretation?.challenges ?? [];
   const careers: string[] = result.interpretation?.careers ?? [];

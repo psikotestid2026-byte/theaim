@@ -10,6 +10,7 @@ import { asId } from "@/lib/ids";
 import { logRouteError } from "@/lib/log-error";
 import { canWriteTest } from "@/lib/test-access";
 import { completeBody } from "@/lib/validators/test-attempt";
+import { appendResultLink, resultPageUrl, siteOrigin } from "@/lib/site-url";
 import { ZodError } from "zod";
 
 export async function POST(req: NextRequest) {
@@ -40,6 +41,12 @@ export async function POST(req: NextRequest) {
     for (const row of responses) responsesMap[asId(row.item_id)] = row.answer_value;
 
     const payload = computeResult(session.test_code, responsesMap, items);
+    const origin = siteOrigin({
+      forwardedHost: req.headers.get("x-forwarded-host"),
+      host: req.headers.get("host"),
+      forwardedProto: req.headers.get("x-forwarded-proto"),
+    });
+    payload.wa_summary_text = appendResultLink(payload.wa_summary_text, resultPageUrl(session.result_token, origin));
     const result = await insertTestResultOnce(session_id, session.test_code, payload);
 
     if (session.test_code === "talents_mapping" && payload.tm) {

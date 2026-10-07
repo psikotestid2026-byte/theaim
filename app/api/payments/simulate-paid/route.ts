@@ -4,6 +4,7 @@ import { createTestSession } from "@/lib/queries/test-sessions";
 import { getPackageById } from "@/lib/queries/service-packages";
 import { randomUUID } from "crypto";
 import { z } from "zod";
+import { siteOrigin, testPageUrl } from "@/lib/site-url";
 
 const schema = z.object({ registration_code: z.string() });
 
@@ -40,7 +41,14 @@ export async function POST(req: NextRequest) {
           result_token: resultToken,
           expires_at: expiresAt,
         });
-        testLink = `/tes/${accessToken}`;
+        testLink = testPageUrl(
+          accessToken,
+          siteOrigin({
+            forwardedHost: req.headers.get("x-forwarded-host"),
+            host: req.headers.get("host"),
+            forwardedProto: req.headers.get("x-forwarded-proto"),
+          }),
+        );
       }
     }
 
