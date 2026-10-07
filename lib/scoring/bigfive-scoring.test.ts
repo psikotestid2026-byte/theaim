@@ -75,7 +75,9 @@ describe("Big Five item keys", () => {
         row(4, "Saya sering khawatir"),
       ],
     );
-    const dimensions = (scored.interpretation.detail as { dimensions: { code: string; itemCount: number }[] }).dimensions;
+    const dimensions = (scored.interpretation.detail as { dimensions: { code: string; name: string; itemCount: number }[] }).dimensions;
+    assert.equal(dimensions.find((entry) => entry.code === "E")?.name, "Ekstraversi");
+    assert.equal(JSON.stringify(scored).includes("Ekstraversion"), false);
     assert.equal(dimensions.find((entry) => entry.code === "A")?.itemCount, 1);
     assert.equal(dimensions.find((entry) => entry.code === "N")?.itemCount, 3);
     assert.equal(scored.result_label.includes("Agreeableness"), false);

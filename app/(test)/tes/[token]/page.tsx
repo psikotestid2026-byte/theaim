@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { getSessionByAccessToken } from "@/lib/queries/test-sessions";
+import { getItemsByTestCode } from "@/lib/queries/test-items";
 import IdentityConfirmForm from "@/components/test/IdentityConfirmForm";
+import IncompleteBankScreen from "@/components/test/IncompleteBankScreen";
+import { incompleteTestBank } from "@/lib/ist-bank";
 import { canStartTest } from "@/lib/test-access";
 import { maskWhatsApp } from "@/lib/utils";
 import Link from "next/link";
@@ -69,6 +72,12 @@ export default async function TestGatePage({ params }: { params: Promise<{ token
         </div>
       </div>
     );
+  }
+
+  if (session.test_code.toLowerCase() === "ist") {
+    const items = await getItemsByTestCode(session.test_code).catch(() => []);
+    const bank = incompleteTestBank(session.test_code, items);
+    if (bank) return <IncompleteBankScreen messages={bank.messages} />;
   }
 
   const maskedWa = maskWhatsApp(session.whatsapp_number ?? "");

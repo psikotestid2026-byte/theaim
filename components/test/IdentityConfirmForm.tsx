@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { maskWhatsApp } from "@/lib/utils";
+import IncompleteBankScreen from "@/components/test/IncompleteBankScreen";
 
 interface Props {
   token: string;
@@ -16,6 +16,7 @@ export default function IdentityConfirmForm({ token, maskedWa, sessionId, result
   const [digits, setDigits] = useState(["", "", "", ""]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [bankMessages, setBankMessages] = useState<string[] | null>(null);
   const [remaining, setRemaining] = useState(3);
 
   const combined = digits.join("");
@@ -48,10 +49,15 @@ export default function IdentityConfirmForm({ token, maskedWa, sessionId, result
         body: JSON.stringify({ token, last4: combined }),
       });
       const data = await res.json();
+      if (res.status === 409 && data.error === "bank_incomplete") {
+        const messages = Array.isArray(data.messages)
+          ? data.messages.filter((line: unknown): line is string => typeof line === "string" && line.length > 0)
+          : [];
+        setBankMessages(messages.length > 0 ? messages : ["Bank soal belum lengkap. Tes ini belum bisa dimulai."]);
+        return;
+      }
       if (res.status === 200 && data.ok) {
         router.push(`/tes/${token}/mulai`);
-      } else if (data.error === "bank_incomplete") {
-        setError("Bank soal belum lengkap. Tes ini belum bisa dimulai.");
       } else if (res.status === 423) {
         setError("Akses terkunci. Terlalu banyak percobaan gagal. Hubungi admin TheAIM.");
       } else if (res.status === 422) {
@@ -68,6 +74,8 @@ export default function IdentityConfirmForm({ token, maskedWa, sessionId, result
       setLoading(false);
     }
   }
+
+  if (bankMessages) return <IncompleteBankScreen messages={bankMessages} />;
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-16">

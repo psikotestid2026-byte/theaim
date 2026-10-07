@@ -16,7 +16,7 @@ import { calculateWptScore } from "./ruangtes/wpt";
 const BIGFIVE_NAMES: Record<string, string> = {
   O: "Openness",
   C: "Conscientiousness",
-  E: "Ekstraversion",
+  E: "Ekstraversi",
   A: "Agreeableness",
   N: "Neuroticism",
 };
