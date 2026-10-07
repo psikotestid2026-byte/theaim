@@ -186,9 +186,14 @@ export default function TestEngine({
           answer_value: value,
         }),
       });
+      const payload = (await res.json().catch(() => ({}))) as { error?: string };
       if (!res.ok) {
+        if (payload.error === "bank_incomplete") {
+          setError("Bank soal belum lengkap. Jawaban tidak disimpan.");
+          return false;
+        }
         setFailedSaves((prev) => ({ ...prev, [itemId]: value }));
-        if (res.status === 409) setRemaining(0);
+        if (res.status === 409 && payload.error === "expired") setRemaining(0);
         return false;
       }
       setFailedSaves((prev) => {
@@ -274,6 +279,12 @@ export default function TestEngine({
       });
       const data = await res.json().catch(() => ({}));
       const nextToken = typeof data.result_token === "string" ? data.result_token : "";
+      if (res.status === 409 && data.error === "bank_incomplete") {
+        setError("Bank soal belum lengkap. Hasil tidak dihitung.");
+        setSubmitting(false);
+        autoSubmitted.current = false;
+        return;
+      }
       if (res.status === 422 && data.error === "incomplete") {
         const missing = typeof data.missing === "number" ? data.missing : 0;
         setError(`Masih ada ${missing} soal yang belum tersimpan. Lengkapi jawaban, lalu coba lagi.`);

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";
-import { inspectIstBank } from "./ist-bank";
+import { incompleteTestBank, inspectIstBank, IST_BANK_INCOMPLETE } from "./ist-bank";
 
 type BankRow = {
   code: string;
@@ -63,5 +63,43 @@ describe("IST bank readiness", () => {
     ]);
     assert.equal(report.usable, true);
     assert.deepEqual(report.messages, []);
+    assert.equal(incompleteTestBank("ist", [
+      {
+        item_order: 1,
+        question_text: "Lengkapi kalimat ini.",
+        section: "SE",
+        options: [{ label: "satu" }, { label: "dua" }],
+      },
+      {
+        item_order: 2,
+        question_text: "Gambar bentuk.",
+        section: "FA",
+        scoring_meta: { subtest: "FA", image: "/ist/fa-1.png" },
+        options: [{ label: "A" }, { label: "B" }],
+      },
+      {
+        item_order: 3,
+        question_text: "Susun kubus.",
+        section: "WU",
+        scoring_meta: { subtest: "WU" },
+        options: [{ label: "pola 1" }],
+      },
+      {
+        item_order: 4,
+        question_text: "Tahap menghafal kata.",
+        section: "ME",
+        scoring_meta: { subtest: "ME", phase: "memorize" },
+        options: [{ label: "Siap" }],
+      },
+    ]), null);
+  });
+
+  it("blocks only an incomplete IST bank and leaves other tests alone", () => {
+    const broken = inspectIstBank([]);
+    assert.equal(broken.usable, false);
+    const gate = incompleteTestBank("IST", []);
+    assert.equal(gate?.usable, false);
+    assert.equal(IST_BANK_INCOMPLETE, "bank_incomplete");
+    assert.equal(incompleteTestBank("wpt", []), null);
   });
 });

@@ -1,5 +1,6 @@
 import DiscGraphs from "@/components/test/DiscGraphs";
 import { getEnneagramCoreInfo, getEnneagramWingInfo } from "@/lib/scoring/ruangtes/enneagram_dictionary";
+import { MIN_HEADLINE_ITEMS, thinBigFiveNote } from "@/lib/scoring/ruangtes/bigfive";
 
 type Detail = Record<string, unknown>;
 
@@ -10,12 +11,6 @@ function asRecord(value: unknown): Detail | null {
 
 function asNumber(value: unknown): number | null {
   return typeof value === "number" && Number.isFinite(value) ? value : null;
-}
-
-function cell(value: unknown): string {
-  if (typeof value === "number" && Number.isFinite(value)) return String(value);
-  if (typeof value === "string") return value;
-  return "–";
 }
 
 export function formatGap(value: unknown): string {
@@ -49,16 +44,21 @@ export default function RetailScoreDetail({ detail }: { detail: unknown }) {
           const item = asRecord(row);
           if (!item) return null;
           const percent = asNumber(item.percent) ?? 0;
+          const itemCount = asNumber(item.itemCount);
+          const thin = itemCount !== null && itemCount < MIN_HEADLINE_ITEMS;
           return (
             <div key={String(item.code)} className="print-avoid">
-              <div className="flex justify-between text-sm font-semibold mb-1">
-                <span>{String(item.name)} · {String(item.category)}</span>
+              <div className="flex justify-between text-sm font-semibold mb-1 gap-3">
+                <span>{String(item.name)} · {String(item.category)}{itemCount !== null ? ` · ${itemCount} butir` : ""}</span>
                 <span>{percent}%</span>
               </div>
               <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden mb-1">
                 <div className="h-full bg-red-600 rounded-full" style={{ width: `${Math.max(0, Math.min(100, percent))}%` }} />
               </div>
               <p className="text-xs text-slate-500">{String(item.narrative ?? "")}</p>
+              {thin && (
+                <p className="text-xs font-semibold text-amber-800 mt-1">{thinBigFiveNote(String(item.name), itemCount)}</p>
+              )}
             </div>
           );
         })}
@@ -156,8 +156,8 @@ export default function RetailScoreDetail({ detail }: { detail: unknown }) {
               return (
                 <tr key={String(item.name)} className="border-t border-slate-100">
                   <td className="py-2 pr-3">{String(item.name)}</td>
-                  <td className="py-2 pr-3">{cell(item.actual)}</td>
-                  <td className="py-2 pr-3">{cell(item.importance)}</td>
+                  <td className="py-2 pr-3">{formatGap(item.actual)}</td>
+                  <td className="py-2 pr-3">{formatGap(item.importance)}</td>
                   <td className="py-2">{formatGap(item.gap)}</td>
                 </tr>
               );

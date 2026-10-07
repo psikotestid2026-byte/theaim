@@ -4,7 +4,7 @@ import { getItemsByTestCode } from "@/lib/queries/test-items";
 import { getResponsesBySession } from "@/lib/queries/test-responses";
 import { getMasterTestByCode } from "@/lib/queries/master-tests";
 import { canStartTest } from "@/lib/test-access";
-import { inspectIstBank } from "@/lib/ist-bank";
+import { incompleteTestBank } from "@/lib/ist-bank";
 import { timedDurationSec } from "@/lib/test-timer";
 import TestEngine from "@/components/test/TestEngine";
 
@@ -21,9 +21,8 @@ export default async function TestStartPage({ params }: { params: Promise<{ toke
     getResponsesBySession(session.id).catch(() => []),
     getMasterTestByCode(session.test_code).catch(() => null),
   ]);
-  if (session.test_code.toLowerCase() === "ist") {
-    const bank = inspectIstBank(items);
-    if (!bank.usable) {
+  const bank = incompleteTestBank(session.test_code, items);
+  if (bank) {
       return (
         <div className="min-h-screen flex items-center justify-center p-8">
           <div className="max-w-[560px] bg-white rounded-3xl border border-slate-100 shadow-lg p-8">
@@ -40,7 +39,6 @@ export default async function TestStartPage({ params }: { params: Promise<{ toke
           </div>
         </div>
       );
-    }
   }
 
   if (!items.length) {

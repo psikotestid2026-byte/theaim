@@ -42,6 +42,9 @@ function hasFigure(item: IstBankItem): boolean {
   return typeof image === "string" && image.trim().length > 0;
 }
 
+/** Returned by confirm, save, and complete when the stored bank cannot be administered. */
+export const IST_BANK_INCOMPLETE = "bank_incomplete";
+
 export type IstBankReport = {
   usable: boolean;
   letterOnlyItems: number;
@@ -106,4 +109,15 @@ export function inspectIstBank(items: IstBankItem[]): IstBankReport {
     hasMemorizePhase,
     messages: usable ? [] : messages,
   };
+}
+
+/**
+ * IST is blocked only while the stored rows fail inspection.
+ * A later seed that fills the bank makes confirm, save, and complete succeed
+ * without a code change. Other test codes are never blocked here.
+ */
+export function incompleteTestBank(testCode: string, items: IstBankItem[]): IstBankReport | null {
+  if (testCode.trim().toLowerCase() !== "ist") return null;
+  const report = inspectIstBank(items);
+  return report.usable ? null : report;
 }

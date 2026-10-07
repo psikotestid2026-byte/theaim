@@ -12,6 +12,7 @@ import { canWriteTest } from "@/lib/test-access";
 import { completeBody } from "@/lib/validators/test-attempt";
 import { appendResultLink, resultPageUrl, siteOrigin } from "@/lib/site-url";
 import { isAttemptExpired, isTimedTest, parseDbTimestamp, timedDurationSec } from "@/lib/test-timer";
+import { incompleteTestBank, IST_BANK_INCOMPLETE } from "@/lib/ist-bank";
 import { unansweredCount } from "@/lib/test-completion";
 import { ZodError } from "zod";
 
@@ -38,6 +39,11 @@ export async function POST(req: NextRequest) {
       getItemsByTestCode(session.test_code),
       getResponsesBySession(session_id),
     ]);
+
+    const bank = incompleteTestBank(session.test_code, items);
+    if (bank) {
+      return NextResponse.json({ error: IST_BANK_INCOMPLETE, messages: bank.messages }, { status: 409 });
+    }
 
     const responsesMap: Record<number, string> = {};
     for (const row of responses) responsesMap[asId(row.item_id)] = row.answer_value;

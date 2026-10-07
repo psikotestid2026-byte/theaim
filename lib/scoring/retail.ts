@@ -1,6 +1,6 @@
 import type { TestItem, TestResultPayload } from "@/types/db";
 import { choiceLabel, discIndexAnswers, indexAnswers, itemOptions } from "./answer-map";
-import { calculateBigFiveFromItems } from "./ruangtes/bigfive";
+import { calculateBigFiveFromItems, MIN_HEADLINE_ITEMS, thinBigFiveNote } from "./ruangtes/bigfive";
 import { calculateDiscScore } from "./ruangtes/disc";
 import { findDiscTypeInfo } from "./ruangtes/disc_dictionary";
 import { getEnneagramCoreInfo, getEnneagramWingInfo } from "./ruangtes/enneagram_dictionary";
@@ -110,21 +110,26 @@ function computeBigFive(responses: Record<number, string>, items: TestItem[]): T
     percent: row.percent as number,
     category: row.category as string,
     narrative: row.narrative as string,
+    itemCount: row.itemCount,
   }));
   const raw_scores: Record<string, number> = {};
   for (const row of dimensions) raw_scores[row.code] = row.raw;
-  const highest = [...dimensions].sort((a, b) => b.percent - a.percent)[0];
+  const eligible = dimensions.filter((row) => row.itemCount >= MIN_HEADLINE_ITEMS);
+  const thin = dimensions.filter((row) => row.itemCount < MIN_HEADLINE_ITEMS);
+  const highest = [...eligible].sort((a, b) => b.percent - a.percent || a.code.localeCompare(b.code))[0];
+  const thinNote = thin.map((row) => thinBigFiveNote(row.name, row.itemCount)).join(" ");
+  const headline = highest
+    ? `Faktor tertinggi: ${highest.name} (${highest.category}).`
+    : "Tidak ada faktor dengan cukup butir untuk menjadi headline.";
   return {
     raw_scores,
     result_type: highest ? `${highest.code} ${highest.category}` : "Big Five",
     result_label: highest ? `${highest.name} · ${highest.category}` : "Big Five",
     interpretation: {
-      description: highest
-        ? `Skor tiap faktor dibanding maksimumnya. Faktor tertinggi: ${highest.name} (${highest.category}).`
-        : "Skor lima faktor.",
-      strengths: dimensions.filter((row) => row.category === "Tinggi" && row.code !== "N").map((row) => `${row.name}: ${row.narrative}`),
-      challenges: dimensions.filter((row) => row.category === "Rendah" || (row.code === "N" && row.category === "Tinggi")).map((row) => `${row.name}: ${row.narrative}`),
-      detail: { kind: "bigfive", dimensions },
+      description: `Skor tiap faktor dibanding maksimumnya. ${headline}${thinNote ? ` ${thinNote}` : ""}`,
+      strengths: dimensions.filter((row) => row.category === "Tinggi" && row.code !== "N" && row.itemCount >= MIN_HEADLINE_ITEMS).map((row) => `${row.name}: ${row.narrative}`),
+      challenges: dimensions.filter((row) => row.itemCount >= MIN_HEADLINE_ITEMS && (row.category === "Rendah" || (row.code === "N" && row.category === "Tinggi"))).map((row) => `${row.name}: ${row.narrative}`),
+      detail: { kind: "bigfive", dimensions, thinItemCodes: thin.map((row) => row.code) },
     },
     wa_summary_text: summary("Big Five", highest ? `${highest.name} ${highest.category}.` : "Profil lima faktor sudah siap."),
   };

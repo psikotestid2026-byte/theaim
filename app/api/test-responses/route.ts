@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getItemForTest } from "@/lib/queries/test-items";
+import { getItemForTest, getItemsByTestCode } from "@/lib/queries/test-items";
+import { incompleteTestBank, IST_BANK_INCOMPLETE } from "@/lib/ist-bank";
 import { upsertResponse } from "@/lib/queries/test-responses";
 import { getSessionByAccessToken, markTimerStarted, readAttemptTimer } from "@/lib/queries/test-sessions";
 import { bufferAnswer } from "@/lib/redis";
@@ -22,6 +23,14 @@ export async function POST(req: NextRequest) {
     }
     if (!canWriteTest(session.status)) {
       return NextResponse.json({ error: "not_confirmed" }, { status: 403 });
+    }
+
+    if (session.test_code.toLowerCase() === "ist") {
+      const bankItems = await getItemsByTestCode(session.test_code);
+      const bank = incompleteTestBank(session.test_code, bankItems);
+      if (bank) {
+        return NextResponse.json({ error: IST_BANK_INCOMPLETE, messages: bank.messages }, { status: 409 });
+      }
     }
 
     const item = await getItemForTest(data.item_id, session.test_code);

@@ -50,6 +50,8 @@ export default function IdentityConfirmForm({ token, maskedWa, sessionId, result
       const data = await res.json();
       if (res.status === 200 && data.ok) {
         router.push(`/tes/${token}/mulai`);
+      } else if (data.error === "bank_incomplete") {
+        setError("Bank soal belum lengkap. Tes ini belum bisa dimulai.");
       } else if (res.status === 423) {
         setError("Akses terkunci. Terlalu banyak percobaan gagal. Hubungi admin TheAIM.");
       } else if (res.status === 422) {

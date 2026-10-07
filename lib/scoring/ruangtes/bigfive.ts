@@ -115,7 +115,22 @@ function parseLikert(value: string): number | null {
   return rawScore;
 }
 
+export const MIN_HEADLINE_ITEMS = 3;
+
+export type BigFiveDimensionRow = {
+  raw: number;
+  max: number;
+  percent: number;
+  category: string;
+  narrative: string;
+  itemCount: number;
+};
+
 type Bucket = Record<BigFiveDimension, { sum: number; count: number }>;
+
+function emptyCounts(): Record<BigFiveDimension, number> {
+  return { E: 0, A: 0, C: 0, N: 0, O: 0 };
+}
 
 function emptyBuckets(): Bucket {
   return {
@@ -127,8 +142,8 @@ function emptyBuckets(): Bucket {
   };
 }
 
-function finalize(scores: Bucket, totalAnswers: number) {
-  const finalResults: Record<string, { raw: number; max: number; percent: number; category: string; narrative: string }> = {};
+function finalize(scores: Bucket, totalAnswers: number, bankCounts: Record<BigFiveDimension, number>) {
+  const finalResults: Record<string, BigFiveDimensionRow> = {};
   for (const [dim, data] of Object.entries(scores)) {
     const finalMax = data.count * 5;
     const finalPercent = finalMax > 0 ? (data.sum / finalMax) * 100 : 0;
@@ -141,6 +156,7 @@ function finalize(scores: Bucket, totalAnswers: number) {
       percent: parseFloat(finalPercent.toFixed(2)),
       category,
       narrative: BIG_FIVE_NARRATIVES[dim as BigFiveDimension]?.[category as "Tinggi" | "Sedang" | "Rendah"] || "",
+      itemCount: bankCounts[dim as BigFiveDimension] ?? 0,
     };
   }
   return {
@@ -156,19 +172,21 @@ export function calculateBigFiveFromItems(
   responses: Record<number, string>,
 ) {
   const scores = emptyBuckets();
+  const bankCounts = emptyCounts();
   let answered = 0;
   for (const item of items) {
+    const key = resolveBigFiveKey(item);
+    bankCounts[key.dimension] += 1;
     const rawValue = responses[item.id];
     if (!rawValue) continue;
     const rawScore = parseLikert(rawValue);
     if (rawScore === null) continue;
-    const key = resolveBigFiveKey(item);
     const points = key.reversed ? 6 - rawScore : rawScore;
     scores[key.dimension].sum += points;
     scores[key.dimension].count += 1;
     answered += 1;
   }
-  return finalize(scores, answered);
+  return finalize(scores, answered, bankCounts);
 }
 
 export function calculateBigFiveScore(answers: Record<string, string>) {
@@ -184,5 +202,11 @@ export function calculateBigFiveScore(answers: Record<string, string>) {
     scores[itemKey.dimension].sum += points;
     scores[itemKey.dimension].count += 1;
   }
-  return finalize(scores, Object.keys(answers || {}).length);
+  const bankCounts = emptyCounts();
+  for (const item of BIGFIVE_ITEMS) bankCounts[item.dimension] += 1;
+  return finalize(scores, Object.keys(answers || {}).length, bankCounts);
+}
+
+export function thinBigFiveNote(name: string, itemCount: number): string {
+  return `${name} punya ${itemCount} butir, terlalu sedikit untuk dijadikan faktor utama.`;
 }

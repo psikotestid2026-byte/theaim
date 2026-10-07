@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { formatResultDate } from "@/lib/format-date";
 import { resultPageUrl, siteOrigin } from "@/lib/site-url";
+import { getMasterTestByCode } from "@/lib/queries/master-tests";
 import { getSessionByResultToken } from "@/lib/queries/test-sessions";
 import { getResultBySessionId } from "@/lib/queries/test-results";
 import { getTmResultBySessionId } from "@/lib/queries/tm-results";
@@ -61,6 +62,8 @@ export default async function HasilPage({ params }: { params: Promise<{ resultTo
     ? String((result.interpretation.detail as { kind?: string }).kind ?? "")
     : "";
   const showGenericBars = !isTalents && !detailKind && result.raw_scores && Object.keys(result.raw_scores).length > 0;
+  const master = await getMasterTestByCode(session.test_code).catch(() => null);
+  const testTitle = master?.name?.trim() || session.test_code;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-red-50/20 print-page">
@@ -83,7 +86,7 @@ export default async function HasilPage({ params }: { params: Promise<{ resultTo
         <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-slate-100 mb-8">
           <div className="text-center mb-8">
             <span className="inline-block text-xs font-black text-red-600 uppercase tracking-widest bg-red-50 px-4 py-2 rounded-full mb-4">
-              {session.test_code} — Hasil Tes Psikologi
+              {testTitle} — Hasil Tes Psikologi
             </span>
             <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-2 tracking-tight">{result.result_type}</h1>
             <p className="text-xl font-bold text-red-600 mb-4">{result.result_label}</p>

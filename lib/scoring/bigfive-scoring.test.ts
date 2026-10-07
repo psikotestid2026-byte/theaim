@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
+import type { TestItem, TestItemOption } from "@/types/db";
+import { computeResult } from "./index";
 import { calculateBigFiveFromItems, resolveBigFiveKey } from "./ruangtes/bigfive";
 
 describe("Big Five item keys", () => {
@@ -43,5 +45,43 @@ describe("Big Five item keys", () => {
     assert.equal(scored.dimensions.N.raw, 6);
     assert.equal(scored.dimensions.E.raw, 5);
     assert.equal(scored.dimensions.A.raw, 0);
+  });
+
+  it("does not headline a dimension that has fewer than three bank items", () => {
+    const likert: TestItemOption[] = [1, 2, 3, 4, 5].map((value) => ({
+      value: String(value),
+      label: String(value),
+      score_key: "",
+      score_val: value,
+    }));
+    const row = (id: number, text: string): TestItem => ({
+      id,
+      test_code: "bigfive",
+      section: null,
+      item_order: id,
+      question_text: text,
+      options: likert,
+      scoring_meta: null,
+      created_at: "",
+      updated_at: "",
+    });
+    const scored = computeResult(
+      "bigfive",
+      { 1: "5", 2: "1", 3: "1", 4: "1" },
+      [
+        row(1, "Saya sangat sabar"),
+        row(2, "Saya mudah cemas"),
+        row(3, "Saya mudah marah"),
+        row(4, "Saya sering khawatir"),
+      ],
+    );
+    const dimensions = (scored.interpretation.detail as { dimensions: { code: string; itemCount: number }[] }).dimensions;
+    assert.equal(dimensions.find((entry) => entry.code === "A")?.itemCount, 1);
+    assert.equal(dimensions.find((entry) => entry.code === "N")?.itemCount, 3);
+    assert.equal(scored.result_label.includes("Agreeableness"), false);
+    assert.match(scored.result_label, /Neuroticism/);
+    assert.match(scored.interpretation.description, /Agreeableness punya 1 butir/);
+    assert.match(scored.interpretation.description, /terlalu sedikit/);
+    assert.equal(scored.interpretation.strengths.some((line) => line.includes("Agreeableness")), false);
   });
 });
