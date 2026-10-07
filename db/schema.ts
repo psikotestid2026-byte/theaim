@@ -182,6 +182,19 @@ export const scoringConfigs = pgTable("scoring_configs", {
   created_at: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const testNorms = pgTable("test_norms", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  test_id: integer("test_id").references(() => masterTests.id, { onDelete: "cascade" }).notNull(),
+  age_group: varchar("age_group", { length: 30 }),
+  raw_score: varchar("raw_score", { length: 20 }).notNull(),
+  norm_score: varchar("norm_score", { length: 50 }).notNull(),
+  label: varchar("label", { length: 50 }).notNull(),
+  description: text("description"),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+}, (table) => [
+  index("idx_test_norms_test_raw").on(table.test_id, table.raw_score),
+]);
+
 export const talentThemes = pgTable("talent_themes", {
   id: bigserial("id", { mode: "number" }).primaryKey(),
   code: varchar("code", { length: 5 }).notNull().unique(),

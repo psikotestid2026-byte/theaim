@@ -18,7 +18,7 @@
 | Catalog & Pricing | `service_categories`, `services`, `service_packages`, `consultants`, `service_consultants` |
 | Customer & Booking | `customers`, `registrations`, `payments` |
 | Payment Infrastructure & Notifications | `payment_methods`, `payment_instructions`, `payment_logs`, `notification_templates`, `notification_logs` |
-| **Psychometric Test Engine** | **`master_tests`, `scoring_configs`, `talent_themes`, `strength_activities`, `strength_typologies`, `test_sessions`, `test_items`, `test_responses`, `test_results`, `tm_results`** |
+| **Psychometric Test Engine** | **`master_tests`, `scoring_configs`, `test_norms`, `talent_themes`, `strength_activities`, `strength_typologies`, `test_sessions`, `test_items`, `test_responses`, `test_results`, `tm_results`** |
 | Corporate / Partnership | `corporate_inquiries`, `partnership_submissions`, `proposal_download_leads` |
 | Recruitment | `job_postings`, `job_applications` |
 | Content & Marketing | `articles`, `testimonials`, `corporate_partners` |
@@ -52,6 +52,7 @@ erDiagram
     master_tests ||--o{ test_sessions : "optional test_id"
     master_tests ||--o{ test_items : "optional test_id"
     master_tests ||--o| scoring_configs : "formula"
+    master_tests ||--o{ test_norms : "lookup"
     test_sessions ||--o{ test_responses : "records answers"
     test_items ||--o{ test_responses : "answered in"
     test_sessions ||--|| test_results : "produces"
@@ -670,6 +671,18 @@ CREATE TABLE scoring_configs (
     config_data  jsonb NOT NULL,
     created_at   timestamptz NOT NULL DEFAULT now()
 );
+
+CREATE TABLE test_norms (
+    id           bigserial PRIMARY KEY,
+    test_id      bigint NOT NULL REFERENCES master_tests(id) ON DELETE CASCADE,
+    age_group    varchar(30),
+    raw_score    varchar(20) NOT NULL,
+    norm_score   varchar(50) NOT NULL,
+    label        varchar(50) NOT NULL,
+    description  text,
+    created_at   timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX idx_test_norms_test_raw ON test_norms (test_id, raw_score);
 
 CREATE TABLE talent_themes (
     id             bigserial PRIMARY KEY,

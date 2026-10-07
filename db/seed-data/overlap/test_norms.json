@@ -1,0 +1,1143 @@
+[
+  {
+    "code": "disc",
+    "raw_score": "DI",
+    "norm_score": "Dominance-Influence",
+    "label": "Result Oriented",
+    "description": "Kandidat memiliki pengaruh dan ketegasan tinggi. Sangat cocok sebagai inovator atau pemimpin proyek yang dinamis."
+  },
+  {
+    "code": "disc",
+    "raw_score": "SC",
+    "norm_score": "Steadiness-Compliance",
+    "label": "Detail Oriented",
+    "description": "Kandidat sangat stabil, teliti, dan menyukai keteraturan. Andal dalam menangani infrastruktur sistem berskala besar."
+  },
+  {
+    "code": "disc",
+    "raw_score": "DI",
+    "norm_score": "Dominance-Influence",
+    "label": "Result Oriented",
+    "description": "Kandidat memiliki pengaruh dan ketegasan tinggi. Sangat cocok sebagai inovator atau pemimpin proyek yang dinamis."
+  },
+  {
+    "code": "disc",
+    "raw_score": "SC",
+    "norm_score": "Steadiness-Compliance",
+    "label": "Detail Oriented",
+    "description": "Kandidat sangat stabil, teliti, dan menyukai keteraturan. Andal dalam menangani infrastruktur sistem berskala besar."
+  },
+  {
+    "code": "disc",
+    "raw_score": "DI",
+    "norm_score": "Dominance-Influence",
+    "label": "Result Oriented",
+    "description": "Kandidat memiliki pengaruh dan ketegasan tinggi. Sangat cocok sebagai inovator atau pemimpin proyek yang dinamis."
+  },
+  {
+    "code": "disc",
+    "raw_score": "SC",
+    "norm_score": "Steadiness-Compliance",
+    "label": "Detail Oriented",
+    "description": "Kandidat sangat stabil, teliti, dan menyukai keteraturan. Andal dalam menangani infrastruktur sistem berskala besar."
+  },
+  {
+    "code": "disc",
+    "raw_score": "DI",
+    "norm_score": "Dominance-Influence",
+    "label": "Result Oriented",
+    "description": "Kandidat memiliki pengaruh dan ketegasan tinggi. Sangat cocok sebagai inovator atau pemimpin proyek yang dinamis."
+  },
+  {
+    "code": "disc",
+    "raw_score": "SC",
+    "norm_score": "Steadiness-Compliance",
+    "label": "Detail Oriented",
+    "description": "Kandidat sangat stabil, teliti, dan menyukai keteraturan. Andal dalam menangani infrastruktur sistem berskala besar."
+  },
+  {
+    "code": "disc",
+    "raw_score": "DI",
+    "norm_score": "Dominance-Influence",
+    "label": "Result Oriented",
+    "description": "Kandidat memiliki pengaruh dan ketegasan tinggi. Sangat cocok sebagai inovator atau pemimpin proyek yang dinamis."
+  },
+  {
+    "code": "disc",
+    "raw_score": "SC",
+    "norm_score": "Steadiness-Compliance",
+    "label": "Detail Oriented",
+    "description": "Kandidat sangat stabil, teliti, dan menyukai keteraturan. Andal dalam menangani infrastruktur sistem berskala besar."
+  },
+  {
+    "code": "disc",
+    "raw_score": "DI",
+    "norm_score": "Dominance-Influence",
+    "label": "Result Oriented",
+    "description": "Kandidat memiliki pengaruh dan ketegasan tinggi. Sangat cocok sebagai inovator atau pemimpin proyek yang dinamis."
+  },
+  {
+    "code": "disc",
+    "raw_score": "SC",
+    "norm_score": "Steadiness-Compliance",
+    "label": "Detail Oriented",
+    "description": "Kandidat sangat stabil, teliti, dan menyukai keteraturan. Andal dalam menangani infrastruktur sistem berskala besar."
+  },
+  {
+    "code": "disc",
+    "raw_score": "DI",
+    "norm_score": "Dominance-Influence",
+    "label": "Result Oriented",
+    "description": "Kandidat memiliki pengaruh dan ketegasan tinggi. Sangat cocok sebagai inovator atau pemimpin proyek yang dinamis."
+  },
+  {
+    "code": "disc",
+    "raw_score": "SC",
+    "norm_score": "Steadiness-Compliance",
+    "label": "Detail Oriented",
+    "description": "Kandidat sangat stabil, teliti, dan menyukai keteraturan. Andal dalam menangani infrastruktur sistem berskala besar."
+  },
+  {
+    "code": "disc",
+    "raw_score": "DI",
+    "norm_score": "Dominance-Influence",
+    "label": "Result Oriented",
+    "description": "Kandidat memiliki pengaruh dan ketegasan tinggi. Sangat cocok sebagai inovator atau pemimpin proyek yang dinamis."
+  },
+  {
+    "code": "disc",
+    "raw_score": "SC",
+    "norm_score": "Steadiness-Compliance",
+    "label": "Detail Oriented",
+    "description": "Kandidat sangat stabil, teliti, dan menyukai keteraturan. Andal dalam menangani infrastruktur sistem berskala besar."
+  },
+  {
+    "code": "ist",
+    "raw_score": "58",
+    "norm_score": "37",
+    "label": "Mentally Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "59",
+    "norm_score": "39",
+    "label": "Mentally Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "60",
+    "norm_score": "40",
+    "label": "Mentally Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "61",
+    "norm_score": "42",
+    "label": "Mentally Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "62",
+    "norm_score": "43",
+    "label": "Mentally Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "63",
+    "norm_score": "45",
+    "label": "Mentally Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "64",
+    "norm_score": "46",
+    "label": "Mentally Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "65",
+    "norm_score": "48",
+    "label": "Mentally Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "66",
+    "norm_score": "49",
+    "label": "Mentally Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "67",
+    "norm_score": "51",
+    "label": "Mentally Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "68",
+    "norm_score": "52",
+    "label": "Mentally Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "69",
+    "norm_score": "54",
+    "label": "Mentally Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "70",
+    "norm_score": "56",
+    "label": "Mentally Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "71",
+    "norm_score": "57",
+    "label": "Mentally Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "72",
+    "norm_score": "58",
+    "label": "Mentally Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "73",
+    "norm_score": "60",
+    "label": "Mentally Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "74",
+    "norm_score": "61",
+    "label": "Mentally Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "75",
+    "norm_score": "63",
+    "label": "Mentally Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "76",
+    "norm_score": "64",
+    "label": "Mentally Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "77",
+    "norm_score": "66",
+    "label": "Borderline Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "78",
+    "norm_score": "67",
+    "label": "Borderline Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "79",
+    "norm_score": "69",
+    "label": "Borderline Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "80",
+    "norm_score": "70",
+    "label": "Borderline Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "81",
+    "norm_score": "72",
+    "label": "Borderline Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "82",
+    "norm_score": "73",
+    "label": "Borderline Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "83",
+    "norm_score": "75",
+    "label": "Borderline Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "84",
+    "norm_score": "76",
+    "label": "Borderline Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "85",
+    "norm_score": "78",
+    "label": "Borderline Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "86",
+    "norm_score": "79",
+    "label": "Borderline Defective",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "87",
+    "norm_score": "81",
+    "label": "Low Average",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "88",
+    "norm_score": "82",
+    "label": "Low Average",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "89",
+    "norm_score": "84",
+    "label": "Low Average",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "90",
+    "norm_score": "85",
+    "label": "Low Average",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "91",
+    "norm_score": "87",
+    "label": "Low Average",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "92",
+    "norm_score": "88",
+    "label": "Low Average",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "93",
+    "norm_score": "90",
+    "label": "Low Average",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "94",
+    "norm_score": "91",
+    "label": "Average",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "95",
+    "norm_score": "93",
+    "label": "Average",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "96",
+    "norm_score": "94",
+    "label": "Average",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "97",
+    "norm_score": "96",
+    "label": "Average",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "98",
+    "norm_score": "97",
+    "label": "Average",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "99",
+    "norm_score": "99",
+    "label": "Average",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "100",
+    "norm_score": "100",
+    "label": "Average",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "101",
+    "norm_score": "102",
+    "label": "Average",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "102",
+    "norm_score": "103",
+    "label": "Average",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "103",
+    "norm_score": "105",
+    "label": "Average",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "104",
+    "norm_score": "106",
+    "label": "Average",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "105",
+    "norm_score": "108",
+    "label": "Average",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "106",
+    "norm_score": "109",
+    "label": "Average",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "107",
+    "norm_score": "111",
+    "label": "High Average",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "108",
+    "norm_score": "112",
+    "label": "High Average",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "109",
+    "norm_score": "114",
+    "label": "High Average",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "110",
+    "norm_score": "115",
+    "label": "High Average",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "111",
+    "norm_score": "117",
+    "label": "High Average",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "112",
+    "norm_score": "118",
+    "label": "High Average",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "113",
+    "norm_score": "120",
+    "label": "Superior",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "114",
+    "norm_score": "121",
+    "label": "Superior",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "115",
+    "norm_score": "123",
+    "label": "Superior",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "116",
+    "norm_score": "124",
+    "label": "Superior",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "117",
+    "norm_score": "126",
+    "label": "Superior",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "118",
+    "norm_score": "127",
+    "label": "Superior",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "119",
+    "norm_score": "129",
+    "label": "Very Superior",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "120",
+    "norm_score": "130",
+    "label": "Very Superior",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "121",
+    "norm_score": "132",
+    "label": "Very Superior",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "122",
+    "norm_score": "133",
+    "label": "Very Superior",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "123",
+    "norm_score": "135",
+    "label": "Very Superior",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "124",
+    "norm_score": "136",
+    "label": "Very Superior",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "125",
+    "norm_score": "138",
+    "label": "Very Superior",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "126",
+    "norm_score": "139",
+    "label": "Very Superior",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "127",
+    "norm_score": "141",
+    "label": "Genius",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "128",
+    "norm_score": "142",
+    "label": "Genius",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "129",
+    "norm_score": "144",
+    "label": "Genius",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "130",
+    "norm_score": "145",
+    "label": "Genius",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "131",
+    "norm_score": "147",
+    "label": "Genius",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "132",
+    "norm_score": "148",
+    "label": "Genius",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "133",
+    "norm_score": "150",
+    "label": "Genius",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "134",
+    "norm_score": "151",
+    "label": "Genius",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "135",
+    "norm_score": "153",
+    "label": "Genius",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "136",
+    "norm_score": "154",
+    "label": "Genius",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "137",
+    "norm_score": "156",
+    "label": "Genius",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "138",
+    "norm_score": "157",
+    "label": "Genius",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "ist",
+    "raw_score": "139",
+    "norm_score": "159",
+    "label": "Genius",
+    "description": "Gesamt score conversion"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "0",
+    "norm_score": "59",
+    "label": "Sangat Rendah",
+    "description": "Very Low"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "1",
+    "norm_score": "59",
+    "label": "Sangat Rendah",
+    "description": "Very Low"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "2",
+    "norm_score": "61",
+    "label": "Sangat Rendah",
+    "description": "Very Low"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "3",
+    "norm_score": "64",
+    "label": "Sangat Rendah",
+    "description": "Very Low"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "4",
+    "norm_score": "67",
+    "label": "Sangat Rendah",
+    "description": "Very Low"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "5",
+    "norm_score": "69",
+    "label": "Sangat Rendah",
+    "description": "Very Low"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "6",
+    "norm_score": "71",
+    "label": "Sangat Rendah",
+    "description": "Very Low"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "7",
+    "norm_score": "73",
+    "label": "Sangat Rendah",
+    "description": "Very Low"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "8",
+    "norm_score": "75",
+    "label": "Sangat Rendah",
+    "description": "Very Low"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "9",
+    "norm_score": "78",
+    "label": "Sangat Rendah",
+    "description": "Very Low"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "10",
+    "norm_score": "80",
+    "label": "Di Bawah Rata-rata",
+    "description": "Below Average"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "11",
+    "norm_score": "81",
+    "label": "Di Bawah Rata-rata",
+    "description": "Below Average"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "12",
+    "norm_score": "83",
+    "label": "Di Bawah Rata-rata",
+    "description": "Below Average"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "13",
+    "norm_score": "86",
+    "label": "Di Bawah Rata-rata",
+    "description": "Below Average"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "14",
+    "norm_score": "88",
+    "label": "Di Bawah Rata-rata",
+    "description": "Below Average"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "15",
+    "norm_score": "90",
+    "label": "Rata-rata Bawah",
+    "description": "Low Average"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "16",
+    "norm_score": "93",
+    "label": "Rata-rata Bawah",
+    "description": "Low Average"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "17",
+    "norm_score": "95",
+    "label": "Rata-rata Bawah",
+    "description": "Low Average"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "18",
+    "norm_score": "97",
+    "label": "Rata-rata Bawah",
+    "description": "Low Average"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "19",
+    "norm_score": "98",
+    "label": "Rata-rata Bawah",
+    "description": "Low Average"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "20",
+    "norm_score": "100",
+    "label": "Rata-rata",
+    "description": "Average"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "21",
+    "norm_score": "102",
+    "label": "Rata-rata",
+    "description": "Average"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "22",
+    "norm_score": "104",
+    "label": "Rata-rata",
+    "description": "Average"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "23",
+    "norm_score": "106",
+    "label": "Rata-rata",
+    "description": "Average"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "24",
+    "norm_score": "108",
+    "label": "Rata-rata",
+    "description": "Average"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "25",
+    "norm_score": "111",
+    "label": "Rata-rata Atas",
+    "description": "High Average"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "26",
+    "norm_score": "113",
+    "label": "Rata-rata Atas",
+    "description": "High Average"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "27",
+    "norm_score": "114",
+    "label": "Rata-rata Atas",
+    "description": "High Average"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "28",
+    "norm_score": "116",
+    "label": "Rata-rata Atas",
+    "description": "High Average"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "29",
+    "norm_score": "118",
+    "label": "Rata-rata Atas",
+    "description": "High Average"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "30",
+    "norm_score": "120",
+    "label": "Superior",
+    "description": "Superior"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "31",
+    "norm_score": "121",
+    "label": "Superior",
+    "description": "Superior"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "32",
+    "norm_score": "123",
+    "label": "Superior",
+    "description": "Superior"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "33",
+    "norm_score": "125",
+    "label": "Superior",
+    "description": "Superior"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "34",
+    "norm_score": "126",
+    "label": "Superior",
+    "description": "Superior"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "35",
+    "norm_score": "128",
+    "label": "Superior",
+    "description": "Superior"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "36",
+    "norm_score": "130",
+    "label": "Sangat Superior",
+    "description": "Very Superior"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "37",
+    "norm_score": "132",
+    "label": "Sangat Superior",
+    "description": "Very Superior"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "38",
+    "norm_score": "134",
+    "label": "Sangat Superior",
+    "description": "Very Superior"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "39",
+    "norm_score": "136",
+    "label": "Sangat Superior",
+    "description": "Very Superior"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "40",
+    "norm_score": "138",
+    "label": "Sangat Superior",
+    "description": "Very Superior"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "41",
+    "norm_score": "140",
+    "label": "Sangat Superior",
+    "description": "Very Superior"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "42",
+    "norm_score": "142",
+    "label": "Sangat Superior",
+    "description": "Very Superior"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "43",
+    "norm_score": "143",
+    "label": "Sangat Superior",
+    "description": "Very Superior"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "44",
+    "norm_score": "146",
+    "label": "Sangat Superior",
+    "description": "Very Superior"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "45",
+    "norm_score": "146",
+    "label": "Sangat Superior",
+    "description": "Very Superior"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "46",
+    "norm_score": "146",
+    "label": "Sangat Superior",
+    "description": "Very Superior"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "47",
+    "norm_score": "146",
+    "label": "Sangat Superior",
+    "description": "Very Superior"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "48",
+    "norm_score": "146",
+    "label": "Sangat Superior",
+    "description": "Very Superior"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "49",
+    "norm_score": "146",
+    "label": "Sangat Superior",
+    "description": "Very Superior"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "50",
+    "norm_score": "146",
+    "label": "Sangat Superior",
+    "description": "Very Superior"
+  },
+  {
+    "code": "wpt",
+    "raw_score": "20",
+    "norm_score": "100",
+    "label": "Average",
+    "description": "Kapasitas intelektual dan kognitif umum berada pada tingkat rata-rata populasi."
+  },
+  {
+    "code": "wpt",
+    "raw_score": "35",
+    "norm_score": "120",
+    "label": "Superior",
+    "description": "Kapasitas analitis sangat baik, mampu memecahkan arsitektur permasalahan yang rumit dengan cepat."
+  },
+  {
+    "code": "wpt",
+    "raw_score": "20",
+    "norm_score": "100",
+    "label": "Average",
+    "description": "Kapasitas intelektual dan kognitif umum berada pada tingkat rata-rata populasi."
+  },
+  {
+    "code": "wpt",
+    "raw_score": "35",
+    "norm_score": "120",
+    "label": "Superior",
+    "description": "Kapasitas analitis sangat baik, mampu memecahkan arsitektur permasalahan yang rumit dengan cepat."
+  },
+  {
+    "code": "wpt",
+    "raw_score": "20",
+    "norm_score": "100",
+    "label": "Average",
+    "description": "Kapasitas intelektual dan kognitif umum berada pada tingkat rata-rata populasi."
+  },
+  {
+    "code": "wpt",
+    "raw_score": "35",
+    "norm_score": "120",
+    "label": "Superior",
+    "description": "Kapasitas analitis sangat baik, mampu memecahkan arsitektur permasalahan yang rumit dengan cepat."
+  },
+  {
+    "code": "wpt",
+    "raw_score": "20",
+    "norm_score": "100",
+    "label": "Average",
+    "description": "Kapasitas intelektual dan kognitif umum berada pada tingkat rata-rata populasi."
+  },
+  {
+    "code": "wpt",
+    "raw_score": "35",
+    "norm_score": "120",
+    "label": "Superior",
+    "description": "Kapasitas analitis sangat baik, mampu memecahkan arsitektur permasalahan yang rumit dengan cepat."
+  },
+  {
+    "code": "wpt",
+    "raw_score": "20",
+    "norm_score": "100",
+    "label": "Average",
+    "description": "Kapasitas intelektual dan kognitif umum berada pada tingkat rata-rata populasi."
+  },
+  {
+    "code": "wpt",
+    "raw_score": "35",
+    "norm_score": "120",
+    "label": "Superior",
+    "description": "Kapasitas analitis sangat baik, mampu memecahkan arsitektur permasalahan yang rumit dengan cepat."
+  },
+  {
+    "code": "wpt",
+    "raw_score": "20",
+    "norm_score": "100",
+    "label": "Average",
+    "description": "Kapasitas intelektual dan kognitif umum berada pada tingkat rata-rata populasi."
+  },
+  {
+    "code": "wpt",
+    "raw_score": "35",
+    "norm_score": "120",
+    "label": "Superior",
+    "description": "Kapasitas analitis sangat baik, mampu memecahkan arsitektur permasalahan yang rumit dengan cepat."
+  },
+  {
+    "code": "wpt",
+    "raw_score": "20",
+    "norm_score": "100",
+    "label": "Average",
+    "description": "Kapasitas intelektual dan kognitif umum berada pada tingkat rata-rata populasi."
+  },
+  {
+    "code": "wpt",
+    "raw_score": "35",
+    "norm_score": "120",
+    "label": "Superior",
+    "description": "Kapasitas analitis sangat baik, mampu memecahkan arsitektur permasalahan yang rumit dengan cepat."
+  }
+]

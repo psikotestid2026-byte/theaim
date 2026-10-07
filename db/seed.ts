@@ -15,6 +15,7 @@ import {
   TYPOLOGY_DETAIL_SEEDS,
 } from "./seed-data/talent-enrichment";
 import { SCORING_CONFIG_BY_CODE } from "./seed-data/scoring-configs";
+import { seedOverlapBanks } from "./seed-overlap";
 
 dotenv.config({ path: ".env.local" });
 
@@ -636,9 +637,15 @@ async function seedTalentCatalog() {
     unmatched_item_codes: unmatchedItems,
     unmatched_session_codes: unmatchedSessions,
   }, null, 2));
+
+  await seedOverlapBanks();
 }
 
-const run = process.env.SEED_CATALOG_ONLY === "1" ? seedTalentCatalog : main;
+const run = process.env.SEED_OVERLAP_ONLY === "1"
+  ? seedOverlapBanks
+  : process.env.SEED_CATALOG_ONLY === "1"
+    ? seedTalentCatalog
+    : main;
 
 run().catch((e) => {
   console.error("Seeding failed:");

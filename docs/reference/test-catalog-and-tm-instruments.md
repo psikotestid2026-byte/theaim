@@ -2,7 +2,9 @@
 
 Source: TheAIM product document, Super Admin panel document, platform schema SQL, platform seed SQL, and the Talents Mapping implementation guide (v2.0.0). Where those sources disagree, the disagreement is listed at the bottom.
 
-The catalog seed now stores the product seed's `scoring_configs.config_data` verbatim for the ten formulas that have JSON. The MBTI key overlap is kept as published. `ist` stays a draft marker because that INSERT has no body. `tm_rank_scale` is rank bands only.
+The catalog seed stores the product seed's `scoring_configs.config_data` for formulas that JSON defines. An approved RuangTes overlap export then replaces ten of those rows (`mbti_scale`, `disc_matrix`, `bigfive_matrix`, `enneagram_scale`, `riasec_scale`, `papi_scale`, `matching_key`, `ist_scale`, `msdt_scale`, `msai_scale`) and loads the matching question banks into `test_items` under the lowercase code. `talents_mapping` stays on `tm_rank_scale`. The uppercase `MBTI` demo items are not deleted.
+
+`test_norms` holds the flat IST, DISC, and WPT rows from that export. Identical copies are collapsed. `age_group` is null because the export has no age column. IST age tables remain inside `scoring_configs.config_data` for `ist_scale`.
 
 ## Still absent after the enrichment seed
 
@@ -16,7 +18,7 @@ Searched the guide, the product doc, the admin doc, the schema SQL, and the seed
 | Activity cluster for the other 100 activities | Not present. Only COMMUNICATING, GREETING, MOTIVATING, SERVING, SPIRITUALIZING, SUPPORTING, TRAINING, ENTERTAINING, TEACHING, INFLUENCING, ADVISING, PRESENTING, SELLING, VOLUNTEERING have a cluster, from the worked example |
 | Theme `strengths` and `watch_out` | Not labeled on the 34 theme sections. One API sketch for SIG includes both strings; that sketch does not match the SIG section and is not seeded. Tips Manajemen exists for all 34 and is not stored (no column, and it is not `watch_out`) |
 | Typology category and personal branding for the other 25 codes | Not present. Five codes only: COM, SER, SEL, MOT, EDU |
-| IST norm rows | Not present |
+| IST norm rows in the original product pack | Not present there. The later RuangTes overlap export supplies flat `test_norms` rows for IST, DISC, and WPT |
 | `tech_js` formula | Not present |
 
 ## Twelve retail instruments

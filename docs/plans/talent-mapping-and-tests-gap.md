@@ -1,6 +1,6 @@
 # Gap analysis: Talents Mapping and additional test types
 
-Status: Phase A is implemented on this branch (catalog tables, nullable `test_id`, seed, read-only admin list). A follow-up seed fills theme roles, ciri utama, the 14 known activity clusters, five typology branding rows, and the scoring JSON that exists in the product seed SQL. No further migration. `/tes` and `/hasil` are unchanged. `service_package_tests` is not in this slice. The 170 TM statements, the ST-30 formula, and the SWA questions are still absent from the uploaded pack.
+Status: Phase A is implemented on this branch (catalog tables, nullable `test_id`, seed, read-only admin list). A follow-up seed fills theme roles, ciri utama, the 14 known activity clusters, five typology branding rows, and the scoring JSON that exists in the product seed SQL. A later approved RuangTes overlap import adds `test_norms` and loads question banks for ten retail codes into `test_items`. `/tes` and `/hasil` are unchanged. `service_package_tests` is not in this slice. The 170 TM statements, the ST-30 formula, and the SWA questions are still absent. The overlap import does not invent them.
 
 Compared on 7 Oct 2026:
 
