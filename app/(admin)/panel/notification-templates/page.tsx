@@ -13,10 +13,10 @@ export default async function AdminNotificationTemplatesPage() {
         data={templates}
         columns={[
           { header: "ID", accessorKey: "id" },
-          { header: "Nama Template", cell: (t) => (
+          { header: "Event", cell: (t) => (
             <div>
-              <p className="font-bold text-slate-900">{t.name}</p>
-              <p className="text-xs text-slate-500 font-mono">Event: {t.event_trigger}</p>
+              <p className="font-bold text-slate-900">{t.event_trigger}</p>
+              <p className="text-xs text-slate-500 line-clamp-1">{t.message_content}</p>
             </div>
           ) },
           { header: "Kanal", cell: (t) => (

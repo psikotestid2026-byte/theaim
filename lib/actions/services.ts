@@ -43,7 +43,7 @@ export async function createService(formData: FormData) {
     )
   `;
 
-  revalidateTag("services");
+  revalidateTag("services", { expire: 0 });
   revalidatePath("/panel/services");
   redirect("/panel/services");
 }
@@ -78,7 +78,7 @@ export async function updateService(id: number, formData: FormData) {
     WHERE id = ${id}
   `;
 
-  revalidateTag("services");
+  revalidateTag("services", { expire: 0 });
   revalidatePath("/panel/services");
   redirect("/panel/services");
 }
