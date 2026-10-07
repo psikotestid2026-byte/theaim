@@ -125,7 +125,7 @@ export interface MbtiScoreResult {
   submitted_at: string;
 }
 
-function norm(s: any): string {
+function norm(s: unknown): string {
   return String(s ?? '').trim().toLowerCase().replace(/\s+/g, ' ');
 }
 
@@ -134,7 +134,7 @@ function groupForItem(index0: number): MbtiPoleGroup {
   return BLOCK_POSITION_GROUP[position];
 }
 
-export function calculateMbtiScore(answers: Record<string | number, any>): MbtiScoreResult {
+export function calculateMbtiScore(answers: Record<string | number, unknown>): MbtiScoreResult {
   const raw = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
   let unanswered = 0;
 
@@ -165,7 +165,7 @@ export function calculateMbtiScore(answers: Record<string | number, any>): MbtiS
     }
 
     if (matchedPole) {
-      (raw as any)[matchedPole]++;
+      raw[matchedPole as keyof typeof raw]++;
     } else {
       unanswered++;
     }

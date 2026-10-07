@@ -85,7 +85,7 @@ export interface RiasecScoreResult {
   submitted_at: string;
 }
 
-function norm(s: any): string {
+function norm(s: unknown): string {
   return String(s ?? '').trim().toLowerCase();
 }
 
@@ -101,7 +101,7 @@ function isNo(val: string): boolean {
   return false;
 }
 
-export function calculateRiasecScore(answers: Record<string | number, any>): RiasecScoreResult {
+export function calculateRiasecScore(answers: Record<string | number, unknown>): RiasecScoreResult {
   const scores = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 } as Record<RiasecType, number>;
   let totalYa = 0;
   let unanswered = 0;

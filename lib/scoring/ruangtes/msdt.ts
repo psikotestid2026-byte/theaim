@@ -106,7 +106,7 @@ export interface MsdtScoreResult {
   submitted_at: string;
 }
 
-function norm(s: any): string {
+function norm(s: unknown): string {
   return String(s ?? '').trim().toLowerCase().replace(/\s+/g, ' ');
 }
 
@@ -126,7 +126,7 @@ const FINAL_RESULT_MATRIX: Record<string, MsdtDimension> = {
   LHH: 'Dv', LHL: 'Mi', LLH: 'Bu', LLL: 'Ds',
 };
 
-export function calculateMsdtScore(answers: Record<string | number, any>): MsdtScoreResult {
+export function calculateMsdtScore(answers: Record<string | number, unknown>): MsdtScoreResult {
   // grid[block][position] = 'a' | 'b' | null, block/position 0-based
   const grid: (('a' | 'b') | null)[][] = Array.from({ length: 8 }, () => Array(8).fill(null));
   let totalAnswered = 0;

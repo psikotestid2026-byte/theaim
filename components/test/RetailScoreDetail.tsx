@@ -11,6 +11,12 @@ function asNumber(value: unknown): number | null {
   return typeof value === "number" && Number.isFinite(value) ? value : null;
 }
 
+function cell(value: unknown): string {
+  if (typeof value === "number" && Number.isFinite(value)) return String(value);
+  if (typeof value === "string") return value;
+  return "–";
+}
+
 export default function RetailScoreDetail({ detail }: { detail: unknown }) {
   const data = asRecord(detail);
   if (!data || typeof data.kind !== "string") return null;
@@ -129,9 +135,9 @@ export default function RetailScoreDetail({ detail }: { detail: unknown }) {
               return (
                 <tr key={String(item.name)} className="border-t border-slate-100">
                   <td className="py-2 pr-3">{String(item.name)}</td>
-                  <td className="py-2 pr-3">{item.actual ?? "–"}</td>
-                  <td className="py-2 pr-3">{item.importance ?? "–"}</td>
-                  <td className="py-2">{item.gap ?? "–"}</td>
+                  <td className="py-2 pr-3">{cell(item.actual)}</td>
+                  <td className="py-2 pr-3">{cell(item.importance)}</td>
+                  <td className="py-2">{cell(item.gap)}</td>
                 </tr>
               );
             })}

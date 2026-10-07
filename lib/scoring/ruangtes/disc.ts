@@ -242,7 +242,7 @@ export function calculateDiscScore(answers: Record<number | string, { P?: number
   const hasStressPotential = domG1[0] !== domG2[0];
 
   const primaryDim = dominantCode[0] as DiscDimension;
-  let recommendations = SARAN[primaryDim] ? [...SARAN[primaryDim]] : [];
+  const recommendations = SARAN[primaryDim] ? [...SARAN[primaryDim]] : [];
   if (dominantCode.length >= 2) {
     const secDim = dominantCode[1] as DiscDimension;
     if (SARAN[secDim]) {

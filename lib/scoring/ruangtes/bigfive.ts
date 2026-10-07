@@ -56,7 +56,7 @@ export function calculateBigFiveScore(answers: Record<string, string>) {
     }
   }
 
-  const finalResults: Record<string, any> = {};
+  const finalResults: Record<string, { raw: number; max: number; percent: number; category: string; narrative: string }> = {};
   
   for (const [dim, data] of Object.entries(scores)) {
     const finalMax = data.count * 5;

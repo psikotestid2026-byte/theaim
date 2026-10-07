@@ -120,7 +120,7 @@ export const WPT_ANSWER_KEYS: Record<number, string | string[]> = {
   50: ['50 menit', '50'],
 };
 
-export function normalizeWptAnswer(val: any): string {
+export function normalizeWptAnswer(val: unknown): string {
   if (val === undefined || val === null) return '';
   let s = String(val).trim().toLowerCase();
   // Strip common trailing zeroes or punctuation
@@ -130,7 +130,7 @@ export function normalizeWptAnswer(val: any): string {
   return s;
 }
 
-export function checkWptAnswer(qNum: number, rawAns: any): boolean {
+export function checkWptAnswer(qNum: number, rawAns: unknown): boolean {
   if (rawAns === undefined || rawAns === null) return false;
   const ans = normalizeWptAnswer(rawAns);
   if (!ans) return false;
@@ -149,7 +149,7 @@ export function checkWptAnswer(qNum: number, rawAns: any): boolean {
   return ans === normKey || ans.includes(normKey) || normKey.includes(ans);
 }
 
-export function calculateWptScore(rawAnswers: Record<string, any>) {
+export function calculateWptScore(rawAnswers: Record<string | number, unknown>) {
   let rs = 0;
 
   for (let qNum = 1; qNum <= 50; qNum++) {

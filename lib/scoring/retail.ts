@@ -74,7 +74,7 @@ function computeDiscRetail(responses: Record<number, string>, items: TestItem[])
   if (scored.isSuperSyndrome) notes.push("Super syndrome: keempat dimensi Change di atas nol.");
   if (scored.isUndershift) notes.push("Undershift: keempat dimensi Change pada atau di bawah nol.");
   return {
-    raw_scores: scored.g3,
+    raw_scores: { D: scored.g3.D, I: scored.g3.I, S: scored.g3.S, C: scored.g3.C },
     result_type: scored.dominantLabel,
     result_label: info?.name ?? scored.dominantType,
     interpretation: {

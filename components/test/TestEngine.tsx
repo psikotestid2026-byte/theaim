@@ -228,10 +228,10 @@ export default function TestEngine({
                       <span className="text-sm font-semibold text-slate-800">{opt.label}</span>
                     </div>
                     <div className="flex gap-2 shrink-0">
-                      <button type="button" onClick={() => selectDisc("P", index)} className={`px-3 py-2 rounded-lg text-xs font-black ${isP ? "bg-emerald-600 text-white" : "bg-slate-100 text-slate-600"}`}>
+                      <button type="button" aria-pressed={isP} onClick={() => selectDisc("P", index)} className={`px-3 py-2 rounded-lg text-xs font-black ${isP ? "bg-emerald-600 text-white" : "bg-slate-100 text-slate-600"}`}>
                         {isP ? "P (Paling)" : "P"}
                       </button>
-                      <button type="button" onClick={() => selectDisc("K", index)} className={`px-3 py-2 rounded-lg text-xs font-black ${isK ? "bg-amber-600 text-white" : "bg-slate-100 text-slate-600"}`}>
+                      <button type="button" aria-pressed={isK} onClick={() => selectDisc("K", index)} className={`px-3 py-2 rounded-lg text-xs font-black ${isK ? "bg-amber-600 text-white" : "bg-slate-100 text-slate-600"}`}>
                         {isK ? "K (Kurang)" : "K"}
                       </button>
                     </div>
@@ -252,6 +252,7 @@ export default function TestEngine({
                   <button
                     key={`${opt.value}-${index}`}
                     type="button"
+                    aria-pressed={selected}
                     onClick={() => selectChoice(opt.value)}
                     className={`test-option-btn ${selected ? "selected" : ""}`}
                   >

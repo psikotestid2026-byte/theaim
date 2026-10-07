@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
     }
 
     const completed = await markSessionCompleted(session_id);
-    if (!completed && session.status !== "completed") {
+    if (!completed) {
       const latest = await getSessionByAccessToken(token);
       if (latest?.status === "completed") {
         return NextResponse.json({ result_token: session.result_token });

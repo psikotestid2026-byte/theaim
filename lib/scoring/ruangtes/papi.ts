@@ -138,11 +138,11 @@ export interface PapiScoreResult {
   submitted_at: string;
 }
 
-function norm(s: any): string {
+function norm(s: unknown): string {
   return String(s ?? '').trim().toLowerCase().replace(/\s+/g, ' ');
 }
 
-export function calculatePapiScore(answers: Record<string | number, any>): PapiScoreResult {
+export function calculatePapiScore(answers: Record<string | number, unknown>): PapiScoreResult {
   const aspects = Object.keys(PAPI_ASPECT_DETAILS) as PapiAspect[];
   const scores = {} as Record<PapiAspect, number>;
   aspects.forEach((a) => (scores[a] = 0));

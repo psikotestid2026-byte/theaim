@@ -41,11 +41,11 @@ const VALUE_MAP: Record<string, number> = {
   'sangat baik': 5,
 };
 
-function norm(s: any): string {
+function norm(s: unknown): string {
   return String(s ?? '').trim().toLowerCase();
 }
 
-function parseLikert(val: any): number | null {
+function parseLikert(val: unknown): number | null {
   if (val === undefined || val === null) return null;
   const n = norm(val);
   if (n === '') return null;
@@ -74,7 +74,7 @@ export interface MsaiScoreResult {
   submitted_at: string;
 }
 
-export function calculateMsaiScore(answers: Record<string | number, any>): MsaiScoreResult {
+export function calculateMsaiScore(answers: Record<string | number, unknown>): MsaiScoreResult {
   // Item N (1-based, per refs/docs/msai.md) lives at answer index N-1.
   const getItem = (n: number): number | null => {
     const a = answers[n - 1] ?? answers[String(n - 1)];
