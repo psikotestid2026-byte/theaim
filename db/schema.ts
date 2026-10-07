@@ -11,6 +11,7 @@ import {
   date,
   index,
   check,
+  unique,
 } from "drizzle-orm/pg-core";
 
 export const serviceCategories = pgTable("service_categories", {
@@ -274,7 +275,9 @@ export const testResponses = pgTable("test_responses", {
   item_id: integer("item_id").references(() => testItems.id).notNull(),
   answer_value: varchar("answer_value", { length: 255 }).notNull(),
   answered_at: timestamp("answered_at").defaultNow().notNull(),
-});
+}, (table) => [
+  unique("uq_test_responses_session_item").on(table.session_id, table.item_id),
+]);
 
 export const testResults = pgTable("test_results", {
   id: bigserial("id", { mode: "number" }).primaryKey(),
