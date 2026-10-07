@@ -15,6 +15,20 @@
       "when": 1783781887158,
       "tag": "0001_puzzling_nicolaos",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791366362313,
+      "tag": "0002_talent_catalog",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791368743422,
+      "tag": "0003_test_norms",
+      "breakpoints": true
     }
   ]
 }

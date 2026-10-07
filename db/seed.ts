@@ -1,8 +1,22 @@
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
-import { eq } from "drizzle-orm";
+import { eq, sql as drizzleSql } from "drizzle-orm";
 import * as schema from "./schema";
 import * as dotenv from "dotenv";
+import {
+  MASTER_TEST_SEEDS,
+  STRENGTH_ACTIVITY_SEEDS,
+  STRENGTH_TYPOLOGY_SEEDS,
+  TALENT_THEME_SEEDS,
+} from "./seed-data/talent-catalog";
+import {
+  ACTIVITY_CLUSTER_SEEDS,
+  THEME_DETAIL_SEEDS,
+  TYPOLOGY_DETAIL_SEEDS,
+} from "./seed-data/talent-enrichment";
+import { SCORING_CONFIG_BY_CODE } from "./seed-data/scoring-configs";
+import { seedOverlapBanks } from "./seed-overlap";
+import { seedTmLikertItems } from "./seed-tm-likert";
 
 dotenv.config({ path: ".env.local" });
 
@@ -423,10 +437,221 @@ async function main() {
     }
   }
 
+  await seedTalentCatalog();
+
   console.log("Seeding complete!");
 }
 
-main().catch((e) => {
+async function seedTalentCatalog() {
+  for (const row of MASTER_TEST_SEEDS) {
+    await db.insert(schema.masterTests).values({
+      code: row.code,
+      name: row.name,
+      category: row.category,
+      description: row.description,
+      instructions: row.instructions,
+      duration_sec: row.duration_sec,
+      total_questions: row.total_questions,
+      is_active: true,
+    }).onConflictDoUpdate({
+      target: schema.masterTests.code,
+      set: {
+        name: row.name,
+        category: row.category,
+        description: row.description,
+        instructions: row.instructions,
+        duration_sec: row.duration_sec,
+        total_questions: row.total_questions,
+        updated_at: new Date(),
+      },
+    });
+  }
+
+  const tests = await db.select({
+    id: schema.masterTests.id,
+    code: schema.masterTests.code,
+  }).from(schema.masterTests);
+  const idByCode = new Map(tests.map((t) => [t.code, t.id]));
+
+  for (const row of MASTER_TEST_SEEDS) {
+    if (!row.formula_type) continue;
+    const testId = idByCode.get(row.code);
+    if (!testId) continue;
+    const published = SCORING_CONFIG_BY_CODE[row.code];
+    if (published && published.formula_type !== row.formula_type) {
+      throw new Error(`Scoring formula mismatch for ${row.code}`);
+    }
+    const configData = published
+      ? published.config_data
+      : {
+          status: "draft",
+          reason: "Named in the product document. The seed SQL has no config_data for this formula.",
+        };
+    await db.insert(schema.scoringConfigs).values({
+      test_id: testId,
+      formula_type: row.formula_type,
+      config_data: configData,
+    }).onConflictDoUpdate({
+      target: schema.scoringConfigs.test_id,
+      set: {
+        formula_type: row.formula_type,
+        config_data: configData,
+      },
+    });
+  }
+
+  const themeRows = TALENT_THEME_SEEDS.map((theme) => {
+    const detail = THEME_DETAIL_SEEDS[theme.code];
+    if (!detail) throw new Error(`Missing theme detail for ${theme.code}`);
+    return {
+      code: theme.code,
+      name: theme.name,
+      domain: theme.domain,
+      description: `${theme.description}. Ciri utama: ${detail.ciriUtama.join("; ")}.`,
+      suitable_roles: detail.suitableRoles,
+      strengths: null,
+      watch_out: null,
+    };
+  });
+  await db.insert(schema.talentThemes).values(themeRows).onConflictDoUpdate({
+    target: schema.talentThemes.code,
+    set: {
+      name: drizzleSql`excluded.name`,
+      domain: drizzleSql`excluded.domain`,
+      description: drizzleSql`excluded.description`,
+      suitable_roles: drizzleSql`excluded.suitable_roles`,
+      strengths: drizzleSql`excluded.strengths`,
+      watch_out: drizzleSql`excluded.watch_out`,
+    },
+  });
+
+  await db.insert(schema.strengthActivities).values(
+    STRENGTH_ACTIVITY_SEEDS.map((activity) => ({
+      code: activity.code,
+      name: activity.name,
+      definition: activity.definition,
+      cluster: ACTIVITY_CLUSTER_SEEDS[activity.code] ?? null,
+    })),
+  ).onConflictDoUpdate({
+    target: schema.strengthActivities.code,
+    set: {
+      name: drizzleSql`excluded.name`,
+      definition: drizzleSql`excluded.definition`,
+      cluster: drizzleSql`excluded.cluster`,
+    },
+  });
+
+  await db.insert(schema.strengthTypologies).values(
+    STRENGTH_TYPOLOGY_SEEDS.map((typology) => {
+      const detail = TYPOLOGY_DETAIL_SEEDS[typology.code];
+      return {
+        code: typology.code,
+        name: typology.name,
+        description: typology.description,
+        category: detail?.category ?? null,
+        personal_branding: detail?.personalBranding ?? null,
+      };
+    }),
+  ).onConflictDoUpdate({
+    target: schema.strengthTypologies.code,
+    set: {
+      name: drizzleSql`excluded.name`,
+      description: drizzleSql`excluded.description`,
+      category: drizzleSql`excluded.category`,
+      personal_branding: drizzleSql`excluded.personal_branding`,
+    },
+  });
+
+  const packages = await sql`
+    UPDATE service_packages AS sp
+    SET test_code = 'talents_mapping', updated_at = now()
+    FROM services AS s
+    WHERE s.id = sp.service_id
+      AND s.slug = 'talents-mapping'
+      AND sp.test_code IS DISTINCT FROM 'talents_mapping'
+    RETURNING sp.id
+  `;
+
+  const items = await sql`
+    UPDATE test_items AS ti
+    SET test_id = mt.id, updated_at = now()
+    FROM master_tests AS mt
+    WHERE ti.test_id IS NULL
+      AND (
+        lower(ti.test_code) = mt.code
+        OR (upper(ti.test_code) = 'PAPIKOSTIK' AND mt.code = 'papi')
+      )
+    RETURNING ti.id, ti.test_code
+  `;
+
+  const sessions = await sql`
+    UPDATE test_sessions AS ts
+    SET test_id = mt.id, updated_at = now()
+    FROM master_tests AS mt
+    WHERE ts.test_id IS NULL
+      AND (
+        lower(ts.test_code) = mt.code
+        OR (upper(ts.test_code) = 'PAPIKOSTIK' AND mt.code = 'papi')
+      )
+    RETURNING ts.id, ts.test_code
+  `;
+
+  const unmatchedItems = await sql`
+    SELECT test_code, count(*)::int AS n
+    FROM test_items
+    WHERE test_id IS NULL
+    GROUP BY test_code
+    ORDER BY test_code
+  `;
+  const unmatchedSessions = await sql`
+    SELECT test_code, count(*)::int AS n
+    FROM test_sessions
+    WHERE test_id IS NULL
+    GROUP BY test_code
+    ORDER BY test_code
+  `;
+  const counts = await sql`
+    SELECT
+      (SELECT count(*)::int FROM master_tests) AS master_tests,
+      (SELECT count(*)::int FROM scoring_configs) AS scoring_configs,
+      (SELECT count(*)::int FROM scoring_configs WHERE config_data->>'status' = 'draft') AS scoring_draft,
+      (SELECT count(*)::int FROM scoring_configs WHERE formula_type = 'tm_rank_scale' AND (config_data->>'total_statements')::int = 170) AS tm_rank_configs,
+      (SELECT count(*)::int FROM talent_themes) AS talent_themes,
+      (SELECT count(*)::int FROM talent_themes WHERE jsonb_array_length(suitable_roles) > 0) AS themes_with_roles,
+      (SELECT count(*)::int FROM talent_themes WHERE strengths IS NOT NULL) AS themes_with_strengths,
+      (SELECT count(*)::int FROM talent_themes WHERE watch_out IS NOT NULL) AS themes_with_watch_out,
+      (SELECT count(*)::int FROM strength_activities) AS strength_activities,
+      (SELECT count(*)::int FROM strength_activities WHERE cluster IS NOT NULL) AS activities_with_cluster,
+      (SELECT count(*)::int FROM strength_typologies) AS strength_typologies,
+      (SELECT count(*)::int FROM strength_typologies WHERE category IS NOT NULL) AS typologies_with_category,
+      (SELECT count(*)::int FROM strength_typologies WHERE personal_branding IS NOT NULL) AS typologies_with_branding,
+      (SELECT count(*)::int FROM tm_results) AS tm_results,
+      (SELECT count(*)::int FROM test_items WHERE lower(test_code) = 'talents_mapping' OR test_id IN (SELECT id FROM master_tests WHERE code = 'talents_mapping')) AS tm_items
+  `;
+
+  console.log("Talent catalog seed:");
+  console.log(JSON.stringify({
+    counts: counts[0],
+    packages_pointed_at_talents_mapping: packages.length,
+    items_backfilled: items.length,
+    sessions_backfilled: sessions.length,
+    unmatched_item_codes: unmatchedItems,
+    unmatched_session_codes: unmatchedSessions,
+  }, null, 2));
+
+  await seedTmLikertItems();
+  await seedOverlapBanks();
+}
+
+const run = process.env.SEED_TM_ONLY === "1"
+  ? seedTmLikertItems
+  : process.env.SEED_OVERLAP_ONLY === "1"
+    ? seedOverlapBanks
+    : process.env.SEED_CATALOG_ONLY === "1"
+      ? seedTalentCatalog
+      : main;
+
+run().catch((e) => {
   console.error("Seeding failed:");
   console.error(e);
   process.exit(1);
