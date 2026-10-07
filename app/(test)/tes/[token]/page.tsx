@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { getSessionByAccessToken } from "@/lib/queries/test-sessions";
 import IdentityConfirmForm from "@/components/test/IdentityConfirmForm";
+import { canStartTest } from "@/lib/test-access";
 import { maskWhatsApp } from "@/lib/utils";
 import Link from "next/link";
 
@@ -47,6 +48,7 @@ export default async function TestGatePage({ params }: { params: Promise<{ token
 
   if (!session) return notFound();
 
+  if (canStartTest(session.status)) redirect(`/tes/${token}/mulai`);
   if (session.status === "locked") return <LockedScreen />;
   if (session.status === "expired" || session.status === "revoked") return <ExpiredScreen />;
 

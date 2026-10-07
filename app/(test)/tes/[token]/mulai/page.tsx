@@ -3,6 +3,7 @@ import { getSessionByAccessToken } from "@/lib/queries/test-sessions";
 import { getItemsByTestCode } from "@/lib/queries/test-items";
 import { getResponsesBySession } from "@/lib/queries/test-responses";
 import { getMasterTestByCode } from "@/lib/queries/master-tests";
+import { canStartTest } from "@/lib/test-access";
 import TestEngine from "@/components/test/TestEngine";
 
 export default async function TestStartPage({ params }: { params: Promise<{ token: string }> }) {
@@ -11,7 +12,7 @@ export default async function TestStartPage({ params }: { params: Promise<{ toke
 
   if (!session) return notFound();
   if (session.status === "completed") redirect(`/hasil/${session.result_token}`);
-  if (!["in_progress"].includes(session.status)) redirect(`/tes/${token}`);
+  if (!canStartTest(session.status)) redirect(`/tes/${token}`);
 
   const [items, saved, master] = await Promise.all([
     getItemsByTestCode(session.test_code),

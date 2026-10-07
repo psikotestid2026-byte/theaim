@@ -8,18 +8,16 @@ import {
 } from "@/lib/queries/test-sessions";
 import { invalidateTestAccess, cacheTestSession } from "@/lib/redis";
 import { getCustomerById } from "@/lib/queries/customers";
-import { z } from "zod";
-
-const schema = z.object({
-  token: z.string().uuid(),
-  last4: z.string().length(4),
-});
+import { logRouteError } from "@/lib/log-error";
+import { canStartTest } from "@/lib/test-access";
+import { confirmBody } from "@/lib/validators/test-attempt";
+import { ZodError } from "zod";
 
 // POST /api/test-sessions/confirm — identity confirmation (not OTP)
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { token, last4 } = schema.parse(body);
+    const { token, last4 } = confirmBody.parse(body);
 
     const session = await getSessionByAccessToken(token);
     if (!session) return NextResponse.json({ error: "not_found" }, { status: 404 });
@@ -34,7 +32,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: session.status }, { status: 410 });
     }
 
-    // Check 4-digit WA
+    if (canStartTest(session.status)) {
+      return NextResponse.json({ ok: true, session_id: session.id, test_code: session.test_code });
+    }
+
     const customer = await getCustomerById(session.customer_id);
     const correctLast4 = customer?.whatsapp_number?.slice(-4);
 
@@ -42,7 +43,7 @@ export async function POST(req: NextRequest) {
       const newAttempts = session.confirm_attempts + 1;
       if (newAttempts >= MAX_CONFIRM_ATTEMPTS) {
         await lockSession(session.id);
-        await invalidateTestAccess(token);
+        await invalidateTestAccess(token).catch((err) => logRouteError("confirm invalidate", err));
         return NextResponse.json({ error: "locked", attempts: newAttempts }, { status: 423 });
       }
       await incrementConfirmAttempts(session.id, newAttempts);
@@ -50,13 +51,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "wrong_digit", remaining }, { status: 422 });
     }
 
-    // Correct — transition to in_progress
     await updateSessionStatus(session.id, "in_progress", { started_at: new Date() });
-    await cacheTestSession(token, { ...session, status: "in_progress" });
+    await cacheTestSession(token, { id: session.id, status: "in_progress", test_code: session.test_code }).catch((err) =>
+      logRouteError("confirm cache", err),
+    );
 
     return NextResponse.json({ ok: true, session_id: session.id, test_code: session.test_code });
   } catch (err) {
-    if (err instanceof z.ZodError) return NextResponse.json({ error: err.flatten().fieldErrors }, { status: 400 });
+    if (err instanceof ZodError) return NextResponse.json({ error: err.flatten().fieldErrors }, { status: 400 });
+    logRouteError("confirm", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

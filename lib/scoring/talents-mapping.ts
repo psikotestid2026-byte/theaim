@@ -76,7 +76,7 @@ export function computeTalentsMapping(
     const meta = (item.scoring_meta ?? {}) as { theme_code?: string; theme_name?: string; domain?: string };
     const code = meta.theme_code;
     if (!code || !themes.has(code)) continue;
-    const raw = responses[item.id];
+    const raw = responses[Number(item.id)];
     if (!raw) continue;
     const points = likertPoints(item, raw);
     if (points === null) continue;

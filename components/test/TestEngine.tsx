@@ -4,6 +4,7 @@ import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { TestItem, TestItemOption } from "@/types/db";
 import { encodeDiscAnswer, parseDiscAnswer } from "@/lib/scoring/disc-answer";
+import { initialQuestionIndex } from "@/lib/test-access";
 import { isAnswerComplete, widgetForItem, type AnswerWidget } from "@/lib/test-widget";
 
 interface Props {
@@ -52,10 +53,15 @@ export default function TestEngine({
   const router = useRouter();
   const saved = useMemo(() => normalizeAnswers(initialAnswers), [initialAnswers]);
   const [answers, setAnswers] = useState<Record<number, string>>(saved);
-  const [current, setCurrent] = useState(() => {
-    const index = items.findIndex((item) => !isAnswerComplete(testCode, item, saved[item.id]));
-    return index === -1 ? Math.max(0, items.length - 1) : index;
-  });
+  const [current, setCurrent] = useState(() =>
+    initialQuestionIndex(
+      items.map((row) => row.id),
+      (itemId) => {
+        const row = items.find((item) => item.id === itemId);
+        return row ? isAnswerComplete(testCode, row, saved[itemId]) : false;
+      },
+    ),
+  );
   const [phase, setPhase] = useState<"instructions" | "questions">(
     instructions && Object.keys(saved).length === 0 ? "instructions" : "questions",
   );
@@ -76,7 +82,12 @@ export default function TestEngine({
       await fetch("/api/test-responses", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ session_id: sessionId, item_id: itemId, answer_value: value }),
+        body: JSON.stringify({
+          token,
+          session_id: Number(sessionId),
+          item_id: Number(itemId),
+          answer_value: value,
+        }),
       });
     } finally {
       setSaving(false);
@@ -125,7 +136,7 @@ export default function TestEngine({
       const res = await fetch("/api/test-sessions/complete", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, session_id: sessionId }),
+        body: JSON.stringify({ token, session_id: Number(sessionId) }),
       });
       const data = await res.json().catch(() => ({}));
       const nextToken = typeof data.result_token === "string" ? data.result_token : "";

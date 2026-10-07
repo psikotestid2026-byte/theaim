@@ -6,14 +6,16 @@ import { insertTestResultOnce } from "@/lib/queries/test-results";
 import { insertTmResultOnce } from "@/lib/queries/tm-results";
 import { computeResult } from "@/lib/scoring";
 import { invalidateTestAccess, cacheTestResult } from "@/lib/redis";
-import { z } from "zod";
-
-const schema = z.object({ token: z.string().uuid(), session_id: z.number().int().positive() });
+import { asId } from "@/lib/ids";
+import { logRouteError } from "@/lib/log-error";
+import { canWriteTest } from "@/lib/test-access";
+import { completeBody } from "@/lib/validators/test-attempt";
+import { ZodError } from "zod";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { token, session_id } = schema.parse(body);
+    const { token, session_id } = completeBody.parse(body);
 
     const session = await getSessionByAccessToken(token);
     if (!session || session.id !== session_id) {
@@ -22,8 +24,11 @@ export async function POST(req: NextRequest) {
     if (session.status === "completed") {
       return NextResponse.json({ result_token: session.result_token });
     }
-    if (session.status === "locked" || session.status === "revoked" || session.status === "expired") {
-      return NextResponse.json({ error: session.status }, { status: session.status === "locked" ? 423 : 403 });
+    if (session.status === "locked") {
+      return NextResponse.json({ error: "locked" }, { status: 423 });
+    }
+    if (!canWriteTest(session.status)) {
+      return NextResponse.json({ error: "not_confirmed" }, { status: 403 });
     }
 
     const [items, responses] = await Promise.all([
@@ -32,14 +37,14 @@ export async function POST(req: NextRequest) {
     ]);
 
     const responsesMap: Record<number, string> = {};
-    for (const row of responses) responsesMap[row.item_id] = row.answer_value;
+    for (const row of responses) responsesMap[asId(row.item_id)] = row.answer_value;
 
     const payload = computeResult(session.test_code, responsesMap, items);
     const result = await insertTestResultOnce(session_id, session.test_code, payload);
 
     if (session.test_code === "talents_mapping" && payload.tm) {
       await insertTmResultOnce({
-        test_result_id: result.id,
+        test_result_id: asId(result.id),
         session_id,
         customer_id: session.customer_id,
         tm: payload.tm,
@@ -55,12 +60,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: latest?.status ?? "not_completed" }, { status: 409 });
     }
 
-    await invalidateTestAccess(token);
-    await cacheTestResult(session.result_token, result);
+    await invalidateTestAccess(token).catch((cacheErr) => logRouteError("complete invalidate", cacheErr));
+    await cacheTestResult(session.result_token, result).catch((cacheErr) => logRouteError("complete cache", cacheErr));
 
     return NextResponse.json({ result_token: session.result_token });
   } catch (err) {
-    console.error("complete error:", err instanceof Error ? err.name : "unknown");
+    if (err instanceof ZodError) return NextResponse.json({ error: err.flatten().fieldErrors }, { status: 400 });
+    logRouteError("complete", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

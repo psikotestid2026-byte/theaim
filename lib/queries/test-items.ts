@@ -1,11 +1,16 @@
 import { sql } from "@/lib/db";
+import { asId } from "@/lib/ids";
 import type { TestItem } from "@/types/db";
+
+function normalizeItem(row: TestItem): TestItem {
+  return { ...row, id: asId(row.id), item_order: Number(row.item_order) };
+}
 
 export async function getItemsByTestCode(testCode: string): Promise<TestItem[]> {
   const rows = await sql`
     SELECT * FROM test_items WHERE test_code = ${testCode} ORDER BY item_order ASC
   `;
-  return rows as TestItem[];
+  return (rows as TestItem[]).map(normalizeItem);
 }
 
 export async function getAllTestItems(testCode?: string): Promise<TestItem[]> {
