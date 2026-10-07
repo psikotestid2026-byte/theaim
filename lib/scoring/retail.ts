@@ -12,6 +12,7 @@ import { calculateMsdtScore, MSDT_TYPE_DETAILS } from "./ruangtes/msdt";
 import { calculatePapiScore, PAPI_ASPECT_DETAILS, type PapiAspect } from "./ruangtes/papi";
 import { calculateRiasecScore, RIASEC_TYPE_DETAILS } from "./ruangtes/riasec";
 import { calculateWptScore } from "./ruangtes/wpt";
+import { istIsAboveAverage, mbtiStrengthLines, positiveTraitLines, wptIsAboveAverage } from "../result-strengths";
 
 const BIGFIVE_NAMES: Record<string, string> = {
   O: "Openness",
@@ -45,14 +46,13 @@ function summary(testName: string, headline: string): string {
 
 function computeMbtiRetail(responses: Record<number, string>, items: TestItem[]): TestResultPayload {
   const scored = calculateMbtiScore(indexAnswers(items, responses, "value"));
-  const poles = ["E", "I", "S", "N", "T", "F", "J", "P"] as const;
   return {
     raw_scores: scored.raw,
     result_type: scored.type,
     result_label: `${scored.type} · ${scored.validityStatus}`,
     interpretation: {
       description: `Tipe ${scored.type}. Status kelengkapan: ${scored.validityStatus}. ${scored.unanswered} butir tidak terhitung.`,
-      strengths: poles.filter((pole) => scored.type.includes(pole)).map((pole) => `${pole}: ${scored.percent[pole]}%`),
+      strengths: mbtiStrengthLines(scored.percent),
       challenges: scored.validityStatus === "Valid" ? [] : [`Jawaban kosong: ${scored.unanswered}`],
       detail: {
         kind: "mbti",
@@ -175,7 +175,7 @@ function computeEnneagramRetail(responses: Record<number, string>, items: TestIt
     result_label: wing?.label ?? core?.name ?? resultType,
     interpretation: {
       description: wing?.description ?? core?.description ?? resultType,
-      strengths: wing?.traits ?? core?.traits ?? [],
+      strengths: positiveTraitLines(wing?.traits ?? core?.traits ?? []),
       challenges: [],
       detail: { kind: "enneagram", scores, wingCode, traits: core?.traits ?? [] },
     },
@@ -247,7 +247,7 @@ function computeWpt(responses: Record<number, string>, items: TestItem[]): TestR
     result_label: scored.label,
     interpretation: {
       description: `${scored.description} Jawaban benar: ${scored.raw_score} dari 50.`,
-      strengths: [`IQ ${scored.iq}`, scored.label],
+      strengths: wptIsAboveAverage(scored.iq) ? [`IQ ${scored.iq}`, scored.label] : [],
       challenges: [],
       detail: { kind: "wpt", rawScore: scored.raw_score, iq: scored.iq, label: scored.label },
     },
@@ -283,7 +283,10 @@ function computeIst(responses: Record<number, string>, items: TestItem[]): TestR
     result_label: "Numerik dan logika (parsial)",
     interpretation: {
       description: `${note} RA ${raScore}/20, ZR ${zrScore}/20.`,
-      strengths: [`RA ${raScore}/20`, `ZR ${zrScore}/20`],
+      strengths: [
+        istIsAboveAverage(raScore) ? `RA ${raScore}/20` : "",
+        istIsAboveAverage(zrScore) ? `ZR ${zrScore}/20` : "",
+      ].filter((line) => line.length > 0),
       challenges: [],
       detail: { kind: "ist", raScore, zrScore, numeric, note },
     },
