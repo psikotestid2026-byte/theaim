@@ -12,7 +12,7 @@ Searched the guide, the product doc, the admin doc, the schema SQL, and the seed
 
 | Item | What the files actually contain |
 |---|---|
-| 170 TM statement texts | Not present. The seed SQL has two sample Likert items (Significance, Developer). They are not loaded into `test_items`, because two samples are not the bank. The guide's `tm_statements` table is a sketch with no rows |
+| Official Gallup 170 statement texts | Not present, and not copied. `db/seed-data/tm-likert-items.ts` is a separate TheAIM-authored Likert bank (5 stems × 34 themes) upserted onto `test_items` |
 | ST-30 scoring formula or theme-to-typology map | Not present. Product text says `tm_rank_scale` "generates" ST-30. The guide's flow is a 1–5 self-rating. Sample scores are signed. No formula JSON exists |
 | SWA questions | Not present. Named once as "Seven Working Area — 5 pertanyaan wilayah kerja", plus `SWA` in a CHECK list. No question text |
 | Activity cluster for the other 100 activities | Not present. Only COMMUNICATING, GREETING, MOTIVATING, SERVING, SPIRITUALIZING, SUPPORTING, TRAINING, ENTERTAINING, TEACHING, INFLUENCING, ADVISING, PRESENTING, SELLING, VOLUNTEERING have a cluster, from the worked example |

@@ -9,6 +9,7 @@ The running schema remains `db/schema.ts`, generated from Drizzle and applied wi
 | File | Contents |
 |---|---|
 | `test-catalog-and-tm-instruments.md` | The 12 retail test codes, formula types, Talents Mapping instrument counts, and the `tm_results` JSON shape from the product schema |
+| `tm-likert-seed.md` | How the 170 TheAIM-authored Likert stems are seeded, and what that bank does not include |
 
 ## What was left out on purpose
 
