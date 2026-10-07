@@ -1,6 +1,6 @@
 # Gap analysis: Talents Mapping and additional test types
 
-Status: Phase A is implemented on this branch (catalog tables, nullable `test_id`, seed, read-only admin list). `/tes` and `/hasil` are unchanged. `service_package_tests` is not in this slice.
+Status: Phase A is implemented on this branch (catalog tables, nullable `test_id`, seed, read-only admin list). A follow-up seed fills theme roles, ciri utama, the 14 known activity clusters, five typology branding rows, and the scoring JSON that exists in the product seed SQL. No further migration. `/tes` and `/hasil` are unchanged. `service_package_tests` is not in this slice. The 170 TM statements, the ST-30 formula, and the SWA questions are still absent from the uploaded pack.
 
 Compared on 7 Oct 2026:
 
@@ -194,10 +194,10 @@ Idempotent inserts in `db/seed.ts`, keyed on natural unique columns (`master_tes
 | Data | In the uploads? | Safe to seed now? |
 |---|---|---|
 | 12 `master_tests` rows (code, name, category, duration, question count, instructions) | yes | yes |
-| `scoring_configs.formula_type` labels and empty or obviously-marked draft `config_data` | formula names yes; MBTI key JSON is internally inconsistent | store the type, not the sample MBTI key, until keys are reviewed |
-| 34 themes (code, name, domain from the per-theme table) | yes | yes, with the domain conflict called out in a comment |
-| 114 activity names | yes, with definitions | names and definitions yes; `cluster` null |
-| 30 typology names and short descriptions | yes | yes |
+| `scoring_configs.formula_type` and `config_data` | yes for 10 tests in the seed SQL. MBTI key JSON is internally inconsistent (F item numbers overlap E) and is stored unchanged. `ist_norms` is a name only. `tech_js` has no row | copy the JSON as published. Leave IST as `{ status: "draft" }`. Do not invent an ST-30 formula inside `tm_rank_scale` |
+| 34 themes (code, name, domain from the per-theme table) | yes, plus ciri utama and peran yang cocok on each theme section | yes. `strengths` and `watch_out` are not labeled on those sections. The SIG JSON sketch is an example payload, not master data |
+| 114 activity names | yes, with definitions. Cluster on 14 worked-example activities only | names and definitions yes. Cluster on those 14 only; the other 100 stay null |
+| 30 typology names and short descriptions | yes. Category and personal-branding paragraphs exist for 5 codes only | yes. The other 25 stay without category or branding |
 | 170 TM statement texts | **no.** Two sample items only | blocked on content from the rights holder |
 | Theme → activity weights (PSP) | **no** | blocks strength potentials |
 | Activity → cluster for all 114 | **no** (only 14 examples) | blocks the cluster map |

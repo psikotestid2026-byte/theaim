@@ -14,5 +14,5 @@ The running schema remains `db/schema.ts`, generated from Drizzle and applied wi
 
 - Password hashes and sample customer rows from the seed SQL.
 - The full personal Talents Mapping report used as a worked example. A PDF of that report already lives under `refs/` and should not be duplicated.
-- The 34 theme essays, career-recommendation copy, and the 114 activity definitions. Names and codes are enough to plan tables. Narrative copy stays with the rights holder until it is seeded.
+- Career-recommendation copy. The seed stores ciri utama and suitable roles from the 34 theme sections, activity definitions, and the five personal-branding paragraphs that the guide actually prints. It does not store the career table.
 - The Talents Mapping guide's standalone PostgreSQL sketch (`users` UUID, `assessment_sessions`, per-answer tables). It conflicts with both the product schema (`BIGSERIAL`, `tm_results` JSONB) and this repo (`test_sessions` magic links). Do not migrate toward that sketch.

@@ -1,6 +1,7 @@
 // Catalog rows copied from the uploaded product seed and Talents Mapping guide.
-// Formula config_data is intentionally a draft marker. Sample scoring keys are not copied.
-// Activity cluster is null: the guide does not assign a cluster to every activity.
+// Scoring JSON lives in scoring-configs.ts (verbatim from the product seed SQL).
+// Theme roles, ciri utama, the 14 known activity clusters, and five typology
+// branding rows live in talent-enrichment.ts.
 // ist formula_type is the name from the product doc; no norm rows are seeded.
 // tech_js has no formula_type in the product pack.
 

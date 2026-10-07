@@ -10,7 +10,7 @@ export default async function AdminMasterTestsPage() {
     <div className="space-y-6">
       <DataTable
         title="Master Tests"
-        description="Katalog alat tes. Formula scoring masih draft; bank soal Talents Mapping belum diisi."
+        description="Katalog alat tes. Config formula disalin dari seed produk; IST masih draft. Bank soal Talents Mapping belum diisi."
         data={tests}
         pageSize={20}
         columns={[

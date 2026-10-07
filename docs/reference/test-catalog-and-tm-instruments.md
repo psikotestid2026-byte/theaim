@@ -1,6 +1,23 @@
 # Test catalog and Talents Mapping instruments
 
-Source: TheAIM product document, Super Admin panel document, platform schema SQL, platform seed SQL, and the Talents Mapping implementation guide (v2.0.0). Where those sources disagree, the disagreement is listed at the bottom. Do not treat the seed JSON as production scoring keys.
+Source: TheAIM product document, Super Admin panel document, platform schema SQL, platform seed SQL, and the Talents Mapping implementation guide (v2.0.0). Where those sources disagree, the disagreement is listed at the bottom.
+
+The catalog seed now stores the product seed's `scoring_configs.config_data` verbatim for the ten formulas that have JSON. The MBTI key overlap is kept as published. `ist` stays a draft marker because that INSERT has no body. `tm_rank_scale` is rank bands only.
+
+## Still absent after the enrichment seed
+
+Searched the guide, the product doc, the admin doc, the schema SQL, and the seed SQL.
+
+| Item | What the files actually contain |
+|---|---|
+| 170 TM statement texts | Not present. The seed SQL has two sample Likert items (Significance, Developer). They are not loaded into `test_items`, because two samples are not the bank. The guide's `tm_statements` table is a sketch with no rows |
+| ST-30 scoring formula or theme-to-typology map | Not present. Product text says `tm_rank_scale` "generates" ST-30. The guide's flow is a 1–5 self-rating. Sample scores are signed. No formula JSON exists |
+| SWA questions | Not present. Named once as "Seven Working Area — 5 pertanyaan wilayah kerja", plus `SWA` in a CHECK list. No question text |
+| Activity cluster for the other 100 activities | Not present. Only COMMUNICATING, GREETING, MOTIVATING, SERVING, SPIRITUALIZING, SUPPORTING, TRAINING, ENTERTAINING, TEACHING, INFLUENCING, ADVISING, PRESENTING, SELLING, VOLUNTEERING have a cluster, from the worked example |
+| Theme `strengths` and `watch_out` | Not labeled on the 34 theme sections. One API sketch for SIG includes both strings; that sketch does not match the SIG section and is not seeded. Tips Manajemen exists for all 34 and is not stored (no column, and it is not `watch_out`) |
+| Typology category and personal branding for the other 25 codes | Not present. Five codes only: COM, SER, SEL, MOT, EDU |
+| IST norm rows | Not present |
+| `tech_js` formula | Not present |
 
 ## Twelve retail instruments
 
@@ -9,7 +26,7 @@ Codes are lowercase in the product seed. This repo currently stores `MBTI` in up
 | Code | Name | Category | Items | Duration | `formula_type` in seed | Seeded scoring row |
 |---|---|---|---|---|---|---|
 | `wpt` | Wonderlic Personnel Test | COGNITIVE | 50 | 12 min | `wpt_correct_count` | yes |
-| `ist` | Intelligenz Struktur Test | COGNITIVE | 176 (9 subtests) | 90 min | `ist_norms` (named in the product doc, absent from the seed) | no |
+| `ist` | Intelligenz Struktur Test | COGNITIVE | 176 (9 subtests) | 90 min | `ist_norms` (named in the product doc, no JSON in the seed) | draft marker only |
 | `mbti` | Myers-Briggs Type Indicator | PERSONALITY | 93 | 15 min | `mbti_bipolar` | yes, illustrative only |
 | `disc` | DISC | PERSONALITY | 28 blocks | 10 min | `disc_most_least` | yes |
 | `papi` | PAPI Kostick | PERSONALITY | 90 | 15 min | `papi_scale` | yes |
@@ -95,4 +112,4 @@ The live `TestEngine` stores one string per item and advances on a single click.
 4. **SWA.** Named, not specified.
 5. **PDF.** The product doc asks for a stored PDF file. This repo's rule is browser `window.print()` on `/hasil/[resultToken]`, with no server-side PDF for test results.
 6. **Identity.** The product schema adds `customers.password_hash` and an orders model. This repo issues a magic `access_token` / `result_token` pair and confirms the last four digits of WhatsApp. Those token rules stay in force (see the gap analysis).
-7. **Seed MBTI keys.** The sample `mbti_bipolar` JSON reuses item numbers across poles (the F list overlaps the E list). Treat it as a sketch, not a key.
+7. **Seed MBTI keys.** The sample `mbti_bipolar` JSON reuses item numbers across poles (the F list overlaps the E list: 41, 46, 51, 56, 61, 66, 71, 76, 81, 86, 91). It is stored unchanged because the seed task asked for the published JSON. It is not a reviewed answer key.
