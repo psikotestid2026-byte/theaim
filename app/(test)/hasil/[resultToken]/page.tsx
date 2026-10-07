@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { formatResultDate } from "@/lib/format-date";
+import { msaiResultBadge } from "@/lib/msai-label";
 import { resultPageUrl, siteOrigin } from "@/lib/site-url";
 import { getMasterTestByCode } from "@/lib/queries/master-tests";
 import { getSessionByResultToken } from "@/lib/queries/test-sessions";
@@ -64,6 +65,7 @@ export default async function HasilPage({ params }: { params: Promise<{ resultTo
   const showGenericBars = !isTalents && !detailKind && result.raw_scores && Object.keys(result.raw_scores).length > 0;
   const master = await getMasterTestByCode(session.test_code).catch(() => null);
   const testTitle = master?.name?.trim() || session.test_code;
+  const resultBadge = session.test_code.toLowerCase() === "msai" ? msaiResultBadge(result) : result.result_label;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-red-50/20 print-page">
@@ -89,7 +91,7 @@ export default async function HasilPage({ params }: { params: Promise<{ resultTo
               {testTitle} — Hasil Tes Psikologi
             </span>
             <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-2 tracking-tight">{result.result_type}</h1>
-            <p className="text-xl font-bold text-red-600 mb-4">{result.result_label}</p>
+            <p className="text-xl font-bold text-red-600 mb-4">{resultBadge}</p>
             <p className="text-slate-500 text-sm">
               Untuk: <strong className="text-slate-900">{session.customer_name}</strong> ·{" "}
               {formatResultDate(result.created_at)}

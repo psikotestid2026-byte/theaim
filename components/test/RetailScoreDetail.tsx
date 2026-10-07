@@ -1,6 +1,7 @@
 import DiscGraphs from "@/components/test/DiscGraphs";
 import { getEnneagramCoreInfo, getEnneagramWingInfo } from "@/lib/scoring/ruangtes/enneagram_dictionary";
 import { MIN_HEADLINE_ITEMS, thinBigFiveNote } from "@/lib/scoring/ruangtes/bigfive";
+import { msaiQuadrantLeaders } from "@/lib/msai-label";
 import { EXPIRY_AUTO_SUBMIT_HEADING, expiryAnsweredLine } from "@/lib/test-timer";
 
 type Detail = Record<string, unknown>;
@@ -123,12 +124,7 @@ export default function RetailScoreDetail({ detail }: { detail: unknown }) {
   }
 
   if (data.kind === "msai" && Array.isArray(data.skills)) {
-    const quadrants = asRecord(data.quadrantScores);
-    const ranked = Object.entries(quadrants ?? {})
-      .map(([name, score]) => ({ name, score: asNumber(score) }))
-      .filter((row): row is { name: string; score: number } => row.score !== null)
-      .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
-    const leaders = ranked.filter((row) => row.score === ranked[0]?.score);
+    const leaders = msaiQuadrantLeaders(data.quadrantScores);
     return (
       <div className="mb-8 overflow-x-auto">
         {leaders.length > 1 ? (
