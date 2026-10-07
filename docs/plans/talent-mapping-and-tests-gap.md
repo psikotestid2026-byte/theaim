@@ -1,6 +1,6 @@
 # Gap analysis: Talents Mapping and additional test types
 
-Status: analysis only. This branch does not change the schema, the runner, or any database.
+Status: Phase A is implemented on this branch (catalog tables, nullable `test_id`, seed, read-only admin list). `/tes` and `/hasil` are unchanged. `service_package_tests` is not in this slice.
 
 Compared on 7 Oct 2026:
 

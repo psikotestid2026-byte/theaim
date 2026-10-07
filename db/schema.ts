@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import {
   pgTable,
   bigserial,
@@ -8,6 +9,8 @@ import {
   integer,
   jsonb,
   date,
+  index,
+  check,
 } from "drizzle-orm/pg-core";
 
 export const serviceCategories = pgTable("service_categories", {
@@ -151,12 +154,77 @@ export const paymentLogs = pgTable("payment_logs", {
   created_at: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const masterTests = pgTable("master_tests", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  code: varchar("code", { length: 50 }).notNull().unique(),
+  name: varchar("name", { length: 255 }).notNull(),
+  category: varchar("category", { length: 50 }).notNull().default("PERSONALITY"),
+  description: text("description"),
+  instructions: text("instructions"),
+  duration_sec: integer("duration_sec").notNull().default(0),
+  total_questions: integer("total_questions").notNull().default(0),
+  is_active: boolean("is_active").notNull().default(true),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+}, (table) => [
+  index("idx_master_tests_category").on(table.category),
+  check(
+    "ck_master_tests_category",
+    sql`${table.category} IN ('PERSONALITY','COGNITIVE','LEADERSHIP','VOKASIONAL','TECHNICAL','GENERAL')`,
+  ),
+]);
+
+export const scoringConfigs = pgTable("scoring_configs", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  test_id: integer("test_id").references(() => masterTests.id, { onDelete: "cascade" }).notNull().unique(),
+  formula_type: varchar("formula_type", { length: 100 }).notNull(),
+  config_data: jsonb("config_data").notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const talentThemes = pgTable("talent_themes", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  code: varchar("code", { length: 5 }).notNull().unique(),
+  name: varchar("name", { length: 100 }).notNull(),
+  domain: varchar("domain", { length: 20 }).notNull(),
+  description: text("description"),
+  suitable_roles: jsonb("suitable_roles").$type<string[]>().notNull().default([]),
+  strengths: text("strengths"),
+  watch_out: text("watch_out"),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+}, (table) => [
+  check(
+    "ck_talent_themes_domain",
+    sql`${table.domain} IN ('Striving','Thinking','Relating','Influencing','Executing')`,
+  ),
+]);
+
+export const strengthActivities = pgTable("strength_activities", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  code: varchar("code", { length: 40 }).notNull().unique(),
+  name: varchar("name", { length: 100 }).notNull(),
+  cluster: varchar("cluster", { length: 30 }),
+  definition: text("definition"),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const strengthTypologies = pgTable("strength_typologies", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  code: varchar("code", { length: 5 }).notNull().unique(),
+  name: varchar("name", { length: 50 }).notNull(),
+  category: varchar("category", { length: 50 }),
+  description: text("description"),
+  personal_branding: text("personal_branding"),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const testSessions = pgTable("test_sessions", {
   id: bigserial("id", { mode: "number" }).primaryKey(),
   registration_id: integer("registration_id").references(() => registrations.id),
   customer_id: integer("customer_id").references(() => customers.id).notNull(),
   package_id: integer("package_id").references(() => servicePackages.id).notNull(),
   test_code: varchar("test_code", { length: 50 }).notNull(),
+  test_id: integer("test_id").references(() => masterTests.id),
   access_token: varchar("access_token", { length: 36 }).notNull().unique(),
   result_token: varchar("result_token", { length: 36 }).notNull().unique(),
   status: varchar("status", { length: 50 }).default("issued").notNull(),
@@ -168,11 +236,14 @@ export const testSessions = pgTable("test_sessions", {
   completed_at: timestamp("completed_at"),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
-});
+}, (table) => [
+  index("idx_test_sessions_test_id").on(table.test_id),
+]);
 
 export const testItems = pgTable("test_items", {
   id: bigserial("id", { mode: "number" }).primaryKey(),
   test_code: varchar("test_code", { length: 50 }).notNull(),
+  test_id: integer("test_id").references(() => masterTests.id),
   section: varchar("section", { length: 100 }),
   item_order: integer("item_order").notNull(),
   question_text: text("question_text").notNull(),
@@ -180,7 +251,9 @@ export const testItems = pgTable("test_items", {
   scoring_meta: jsonb("scoring_meta"),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
-});
+}, (table) => [
+  index("idx_test_items_test_id").on(table.test_id),
+]);
 
 export const testResponses = pgTable("test_responses", {
   id: bigserial("id", { mode: "number" }).primaryKey(),
@@ -201,6 +274,22 @@ export const testResults = pgTable("test_results", {
   wa_summary_text: text("wa_summary_text").notNull(),
   created_at: timestamp("created_at").defaultNow().notNull(),
 });
+
+export const tmResults = pgTable("tm_results", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  test_result_id: integer("test_result_id").references(() => testResults.id, { onDelete: "cascade" }).notNull().unique(),
+  session_id: integer("session_id").references(() => testSessions.id).notNull().unique(),
+  customer_id: integer("customer_id").references(() => customers.id).notNull(),
+  talent_ranking: jsonb("talent_ranking").notNull().default([]),
+  domain_distribution: jsonb("domain_distribution").notNull().default({}),
+  strength_potentials: jsonb("strength_potentials").notNull().default([]),
+  st30_scores: jsonb("st30_scores").notNull().default([]),
+  personal_branding: jsonb("personal_branding").notNull().default([]),
+  career_recommendations: jsonb("career_recommendations").notNull().default([]),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+}, (table) => [
+  index("idx_tm_results_customer").on(table.customer_id),
+]);
 
 export const articles = pgTable("articles", {
   id: bigserial("id", { mode: "number" }).primaryKey(),

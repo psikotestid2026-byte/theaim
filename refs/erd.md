@@ -18,7 +18,7 @@
 | Catalog & Pricing | `service_categories`, `services`, `service_packages`, `consultants`, `service_consultants` |
 | Customer & Booking | `customers`, `registrations`, `payments` |
 | Payment Infrastructure & Notifications | `payment_methods`, `payment_instructions`, `payment_logs`, `notification_templates`, `notification_logs` |
-| **Psychometric Test Engine** | **`test_sessions`, `test_items`, `test_responses`, `test_results`** |
+| **Psychometric Test Engine** | **`master_tests`, `scoring_configs`, `talent_themes`, `strength_activities`, `strength_typologies`, `test_sessions`, `test_items`, `test_responses`, `test_results`, `tm_results`** |
 | Corporate / Partnership | `corporate_inquiries`, `partnership_submissions`, `proposal_download_leads` |
 | Recruitment | `job_postings`, `job_applications` |
 | Content & Marketing | `articles`, `testimonials`, `corporate_partners` |
@@ -49,9 +49,15 @@ erDiagram
     registrations ||--o{ test_sessions : "grants test access"
     customers ||--o{ test_sessions : "owns"
     service_packages ||--o{ test_sessions : "purchased"
+    master_tests ||--o{ test_sessions : "optional test_id"
+    master_tests ||--o{ test_items : "optional test_id"
+    master_tests ||--o| scoring_configs : "formula"
     test_sessions ||--o{ test_responses : "records answers"
     test_items ||--o{ test_responses : "answered in"
     test_sessions ||--|| test_results : "produces"
+    test_results ||--o| tm_results : "talents mapping payload"
+    test_sessions ||--o| tm_results : "one report"
+    customers ||--o{ tm_results : "owns"
     registrations ||--o{ ecourse_enrollments : "grants access"
     customers ||--o{ ecourse_enrollments : "enrolled in"
     job_postings ||--o{ job_applications : "receives"
@@ -633,6 +639,97 @@ CREATE TABLE test_results (
 );
 -- session_id is UNIQUE so this already has an implicit index; add test_code for admin reporting
 CREATE INDEX idx_test_results_test_code ON test_results (test_code);
+
+-- Phase A catalog. test_code on sessions and items stays the runner key.
+-- test_id is nullable so existing MBTI rows backfill onto master_tests.code = 'mbti'
+-- without rewriting the string the scorer already uses.
+
+CREATE TABLE master_tests (
+    id               bigserial PRIMARY KEY,
+    code             varchar(50) NOT NULL,
+    name             varchar(255) NOT NULL,
+    category         varchar(50) NOT NULL DEFAULT 'PERSONALITY',
+    description      text,
+    instructions     text,
+    duration_sec     integer NOT NULL DEFAULT 0,
+    total_questions  integer NOT NULL DEFAULT 0,
+    is_active        boolean NOT NULL DEFAULT true,
+    created_at       timestamptz NOT NULL DEFAULT now(),
+    updated_at       timestamptz NOT NULL DEFAULT now(),
+    CONSTRAINT uq_master_tests_code UNIQUE (code),
+    CONSTRAINT ck_master_tests_category CHECK (
+        category IN ('PERSONALITY','COGNITIVE','LEADERSHIP','VOKASIONAL','TECHNICAL','GENERAL')
+    )
+);
+CREATE INDEX idx_master_tests_category ON master_tests (category);
+
+CREATE TABLE scoring_configs (
+    id           bigserial PRIMARY KEY,
+    test_id      bigint NOT NULL UNIQUE REFERENCES master_tests(id) ON DELETE CASCADE,
+    formula_type varchar(100) NOT NULL,
+    config_data  jsonb NOT NULL,
+    created_at   timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE talent_themes (
+    id             bigserial PRIMARY KEY,
+    code           varchar(5) NOT NULL,
+    name           varchar(100) NOT NULL,
+    domain         varchar(20) NOT NULL,
+    description    text,
+    suitable_roles jsonb NOT NULL DEFAULT '[]',
+    strengths      text,
+    watch_out      text,
+    created_at     timestamptz NOT NULL DEFAULT now(),
+    CONSTRAINT uq_talent_themes_code UNIQUE (code),
+    CONSTRAINT ck_talent_themes_domain CHECK (
+        domain IN ('Striving','Thinking','Relating','Influencing','Executing')
+    )
+);
+
+CREATE TABLE strength_activities (
+    id          bigserial PRIMARY KEY,
+    code        varchar(40) NOT NULL,
+    name        varchar(100) NOT NULL,
+    cluster     varchar(30),
+    definition  text,
+    created_at  timestamptz NOT NULL DEFAULT now(),
+    CONSTRAINT uq_strength_activities_code UNIQUE (code)
+);
+
+CREATE TABLE strength_typologies (
+    id                 bigserial PRIMARY KEY,
+    code               varchar(5) NOT NULL,
+    name               varchar(50) NOT NULL,
+    category           varchar(50),
+    description        text,
+    personal_branding  text,
+    created_at         timestamptz NOT NULL DEFAULT now(),
+    CONSTRAINT uq_strength_typologies_code UNIQUE (code)
+);
+
+ALTER TABLE test_sessions
+    ADD COLUMN test_id bigint REFERENCES master_tests(id);
+CREATE INDEX idx_test_sessions_test_id ON test_sessions (test_id);
+
+ALTER TABLE test_items
+    ADD COLUMN test_id bigint REFERENCES master_tests(id);
+CREATE INDEX idx_test_items_test_id ON test_items (test_id);
+
+CREATE TABLE tm_results (
+    id                      bigserial PRIMARY KEY,
+    test_result_id          bigint NOT NULL UNIQUE REFERENCES test_results(id) ON DELETE CASCADE,
+    session_id              bigint NOT NULL UNIQUE REFERENCES test_sessions(id),
+    customer_id             bigint NOT NULL REFERENCES customers(id),
+    talent_ranking          jsonb NOT NULL DEFAULT '[]',
+    domain_distribution     jsonb NOT NULL DEFAULT '{}',
+    strength_potentials     jsonb NOT NULL DEFAULT '[]',
+    st30_scores             jsonb NOT NULL DEFAULT '[]',
+    personal_branding       jsonb NOT NULL DEFAULT '[]',
+    career_recommendations  jsonb NOT NULL DEFAULT '[]',
+    created_at              timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX idx_tm_results_customer ON tm_results (customer_id);
 ```
 
 ### Scoring Logic Convention

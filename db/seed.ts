@@ -3,6 +3,12 @@ import { drizzle } from "drizzle-orm/neon-http";
 import { eq } from "drizzle-orm";
 import * as schema from "./schema";
 import * as dotenv from "dotenv";
+import {
+  MASTER_TEST_SEEDS,
+  STRENGTH_ACTIVITY_SEEDS,
+  STRENGTH_TYPOLOGY_SEEDS,
+  TALENT_THEME_SEEDS,
+} from "./seed-data/talent-catalog";
 
 dotenv.config({ path: ".env.local" });
 
@@ -423,10 +429,154 @@ async function main() {
     }
   }
 
+  await seedTalentCatalog();
+
   console.log("Seeding complete!");
 }
 
-main().catch((e) => {
+async function seedTalentCatalog() {
+  for (const row of MASTER_TEST_SEEDS) {
+    await db.insert(schema.masterTests).values({
+      code: row.code,
+      name: row.name,
+      category: row.category,
+      description: row.description,
+      instructions: row.instructions,
+      duration_sec: row.duration_sec,
+      total_questions: row.total_questions,
+      is_active: true,
+    }).onConflictDoUpdate({
+      target: schema.masterTests.code,
+      set: {
+        name: row.name,
+        category: row.category,
+        description: row.description,
+        instructions: row.instructions,
+        duration_sec: row.duration_sec,
+        total_questions: row.total_questions,
+        updated_at: new Date(),
+      },
+    });
+  }
+
+  const tests = await db.select({
+    id: schema.masterTests.id,
+    code: schema.masterTests.code,
+  }).from(schema.masterTests);
+  const idByCode = new Map(tests.map((t) => [t.code, t.id]));
+
+  for (const row of MASTER_TEST_SEEDS) {
+    if (!row.formula_type) continue;
+    const testId = idByCode.get(row.code);
+    if (!testId) continue;
+    await db.insert(schema.scoringConfigs).values({
+      test_id: testId,
+      formula_type: row.formula_type,
+      config_data: { status: "draft" },
+    }).onConflictDoUpdate({
+      target: schema.scoringConfigs.test_id,
+      set: { formula_type: row.formula_type },
+    });
+  }
+
+  await db.insert(schema.talentThemes).values(
+    TALENT_THEME_SEEDS.map((theme) => ({
+      code: theme.code,
+      name: theme.name,
+      domain: theme.domain,
+      description: theme.description,
+      suitable_roles: [] as string[],
+    })),
+  ).onConflictDoNothing();
+
+  await db.insert(schema.strengthActivities).values(
+    STRENGTH_ACTIVITY_SEEDS.map((activity) => ({
+      code: activity.code,
+      name: activity.name,
+      definition: activity.definition,
+    })),
+  ).onConflictDoNothing();
+
+  await db.insert(schema.strengthTypologies).values(
+    STRENGTH_TYPOLOGY_SEEDS.map((typology) => ({
+      code: typology.code,
+      name: typology.name,
+      description: typology.description,
+    })),
+  ).onConflictDoNothing();
+
+  const packages = await sql`
+    UPDATE service_packages AS sp
+    SET test_code = 'talents_mapping', updated_at = now()
+    FROM services AS s
+    WHERE s.id = sp.service_id
+      AND s.slug = 'talents-mapping'
+      AND sp.test_code IS DISTINCT FROM 'talents_mapping'
+    RETURNING sp.id
+  `;
+
+  const items = await sql`
+    UPDATE test_items AS ti
+    SET test_id = mt.id, updated_at = now()
+    FROM master_tests AS mt
+    WHERE ti.test_id IS NULL
+      AND (
+        lower(ti.test_code) = mt.code
+        OR (upper(ti.test_code) = 'PAPIKOSTIK' AND mt.code = 'papi')
+      )
+    RETURNING ti.id, ti.test_code
+  `;
+
+  const sessions = await sql`
+    UPDATE test_sessions AS ts
+    SET test_id = mt.id, updated_at = now()
+    FROM master_tests AS mt
+    WHERE ts.test_id IS NULL
+      AND (
+        lower(ts.test_code) = mt.code
+        OR (upper(ts.test_code) = 'PAPIKOSTIK' AND mt.code = 'papi')
+      )
+    RETURNING ts.id, ts.test_code
+  `;
+
+  const unmatchedItems = await sql`
+    SELECT test_code, count(*)::int AS n
+    FROM test_items
+    WHERE test_id IS NULL
+    GROUP BY test_code
+    ORDER BY test_code
+  `;
+  const unmatchedSessions = await sql`
+    SELECT test_code, count(*)::int AS n
+    FROM test_sessions
+    WHERE test_id IS NULL
+    GROUP BY test_code
+    ORDER BY test_code
+  `;
+  const counts = await sql`
+    SELECT
+      (SELECT count(*)::int FROM master_tests) AS master_tests,
+      (SELECT count(*)::int FROM scoring_configs) AS scoring_configs,
+      (SELECT count(*)::int FROM talent_themes) AS talent_themes,
+      (SELECT count(*)::int FROM strength_activities) AS strength_activities,
+      (SELECT count(*)::int FROM strength_typologies) AS strength_typologies,
+      (SELECT count(*)::int FROM tm_results) AS tm_results
+  `;
+
+  console.log("Talent catalog seed:");
+  console.log(JSON.stringify({
+    counts: counts[0],
+    packages_pointed_at_talents_mapping: packages.length,
+    items_backfilled: items.length,
+    sessions_backfilled: sessions.length,
+    unmatched_item_codes: unmatchedItems,
+    unmatched_session_codes: unmatchedSessions,
+  }, null, 2));
+}
+
+const run = process.env.SEED_CATALOG_ONLY === "1" ? seedTalentCatalog : main;
+
+run().catch((e) => {
   console.error("Seeding failed:");
   console.error(e);
   process.exit(1);
