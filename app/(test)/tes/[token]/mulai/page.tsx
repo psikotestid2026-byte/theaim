@@ -1,6 +1,8 @@
 import { notFound, redirect } from "next/navigation";
 import { getSessionByAccessToken } from "@/lib/queries/test-sessions";
 import { getItemsByTestCode } from "@/lib/queries/test-items";
+import { getResponsesBySession } from "@/lib/queries/test-responses";
+import { getMasterTestByCode } from "@/lib/queries/master-tests";
 import TestEngine from "@/components/test/TestEngine";
 
 export default async function TestStartPage({ params }: { params: Promise<{ token: string }> }) {
@@ -11,7 +13,11 @@ export default async function TestStartPage({ params }: { params: Promise<{ toke
   if (session.status === "completed") redirect(`/hasil/${session.result_token}`);
   if (!["in_progress"].includes(session.status)) redirect(`/tes/${token}`);
 
-  const items = await getItemsByTestCode(session.test_code);
+  const [items, saved, master] = await Promise.all([
+    getItemsByTestCode(session.test_code),
+    getResponsesBySession(session.id).catch(() => []),
+    getMasterTestByCode(session.test_code).catch(() => null),
+  ]);
   if (!items.length) {
     return (
       <div className="min-h-screen flex items-center justify-center p-8 text-center">
@@ -24,13 +30,19 @@ export default async function TestStartPage({ params }: { params: Promise<{ toke
     );
   }
 
+  const initialAnswers: Record<string, string> = {};
+  for (const row of saved) initialAnswers[String(row.item_id)] = row.answer_value;
+
   return (
     <TestEngine
       sessionId={session.id}
       token={token}
       testCode={session.test_code}
+      testName={master?.name ?? session.test_code}
+      instructions={master?.instructions?.trim() || null}
+      durationSec={master?.duration_sec ?? 0}
       items={items}
-      resultToken={session.result_token}
+      initialAnswers={initialAnswers}
     />
   );
 }

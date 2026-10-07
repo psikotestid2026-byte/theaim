@@ -2,21 +2,26 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getSessionByResultToken } from "@/lib/queries/test-sessions";
 import { getResultBySessionId } from "@/lib/queries/test-results";
+import { getTmResultBySessionId } from "@/lib/queries/tm-results";
 import { getCachedTestResult } from "@/lib/redis";
 import PrintButton from "@/components/test/PrintButton";
 import QRCodeDisplay from "@/components/test/QRCodeDisplay";
+import TalentsMappingReport from "@/components/test/TalentsMappingReport";
+import RetailScoreDetail from "@/components/test/RetailScoreDetail";
 import Image from "next/image";
 
 export async function generateMetadata({ params }: { params: Promise<{ resultToken: string }> }): Promise<Metadata> {
   const { resultToken } = await params;
   const session = await getSessionByResultToken(resultToken).catch(() => null);
   if (!session) return { title: "Hasil Tes — TheAIM" };
+  const result = await getResultBySessionId(session.id).catch(() => null);
+  const headline = result?.result_type || session.test_code;
   return {
-    title: `Hasil ${session.test_code} — ${session.customer_name} | TheAIM`,
-    description: `Hasil tes psikologi ${session.test_code} untuk ${session.customer_name}. Diterbitkan oleh PT Abadi Insan Manfaat (TheAIM).`,
+    title: `Hasil ${headline} — ${session.customer_name} | TheAIM`,
+    description: `Hasil tes psikologi untuk ${session.customer_name}. Diterbitkan oleh PT Abadi Insan Manfaat (TheAIM).`,
     openGraph: {
-      title: `Hasil ${session.test_code} — TheAIM`,
-      description: `Lihat hasil tes psikologi ${session.test_code} Anda secara online dan unduh sebagai PDF.`,
+      title: `Hasil ${headline} — TheAIM`,
+      description: "Lihat hasil tes psikologi Anda secara online dan simpan sebagai PDF dari peramban.",
     },
     robots: "noindex",
   };
@@ -38,6 +43,13 @@ export default async function HasilPage({ params }: { params: Promise<{ resultTo
   const resultUrl = `${process.env.NEXTAUTH_URL ?? "https://theaim.id"}/hasil/${resultToken}`;
   const strengths: string[] = result.interpretation?.strengths ?? [];
   const challenges: string[] = result.interpretation?.challenges ?? [];
+  const careers: string[] = result.interpretation?.careers ?? [];
+  const isTalents = session.test_code.toLowerCase() === "talents_mapping";
+  const tm = isTalents ? await getTmResultBySessionId(session.id).catch(() => null) : null;
+  const detailKind = result.interpretation?.detail && typeof result.interpretation.detail === "object"
+    ? String((result.interpretation.detail as { kind?: string }).kind ?? "")
+    : "";
+  const showGenericBars = !isTalents && !detailKind && result.raw_scores && Object.keys(result.raw_scores).length > 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-red-50/20 print-page">
@@ -75,10 +87,20 @@ export default async function HasilPage({ params }: { params: Promise<{ resultTo
             <p className="text-slate-700 leading-relaxed text-sm">{result.interpretation?.description}</p>
           </div>
 
-          {/* Strengths & Challenges */}
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-green-50 rounded-2xl p-6 border border-green-100">
-              <h2 className="font-extrabold text-green-800 mb-4 flex items-center gap-2">✨ Kekuatan Utama</h2>
+          {isTalents && (
+            <TalentsMappingReport
+              talentRanking={tm?.talent_ranking}
+              domainDistribution={tm?.domain_distribution}
+            />
+          )}
+
+          {!isTalents && <RetailScoreDetail detail={result.interpretation?.detail} />}
+
+          {(strengths.length > 0 || challenges.length > 0) && (
+          <div className={`grid gap-6 mb-8 ${strengths.length > 0 && challenges.length > 0 ? "md:grid-cols-2" : ""}`}>
+            {strengths.length > 0 && (
+            <div className="bg-green-50 rounded-2xl p-6 border border-green-100 print-avoid">
+              <h2 className="font-extrabold text-green-800 mb-4">Kekuatan utama</h2>
               <ul className="space-y-2">
                 {strengths.map((s, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-green-700">
@@ -87,8 +109,10 @@ export default async function HasilPage({ params }: { params: Promise<{ resultTo
                 ))}
               </ul>
             </div>
-            <div className="bg-orange-50 rounded-2xl p-6 border border-orange-100">
-              <h2 className="font-extrabold text-orange-800 mb-4 flex items-center gap-2">🎯 Area Pengembangan</h2>
+            )}
+            {challenges.length > 0 && (
+            <div className="bg-orange-50 rounded-2xl p-6 border border-orange-100 print-avoid">
+              <h2 className="font-extrabold text-orange-800 mb-4">Area pengembangan</h2>
               <ul className="space-y-2">
                 {challenges.map((c, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-orange-700">
@@ -97,10 +121,18 @@ export default async function HasilPage({ params }: { params: Promise<{ resultTo
                 ))}
               </ul>
             </div>
+            )}
           </div>
+          )}
 
-          {/* Score breakdown */}
-          {result.raw_scores && Object.keys(result.raw_scores).length > 0 && (
+          {careers.length > 0 && (
+            <div className="mb-8 print-avoid">
+              <h2 className="font-extrabold text-slate-900 mb-3">Arah peran</h2>
+              <p className="text-sm text-slate-600">{careers.join(" · ")}</p>
+            </div>
+          )}
+
+          {showGenericBars && result.raw_scores && (
             <div className="mb-8">
               <h2 className="font-extrabold text-slate-900 mb-4">📊 Breakdown Skor</h2>
               <div className="space-y-3">

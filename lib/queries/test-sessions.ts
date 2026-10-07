@@ -49,6 +49,22 @@ export async function createTestSession(input: {
   return rows[0] as TestSession;
 }
 
+/**
+ * One-way completion. Rows that are already completed, locked, revoked, or expired stay as they are.
+ */
+export async function markSessionCompleted(id: number) {
+  const rows = await sql`
+    UPDATE test_sessions
+    SET status = 'completed',
+        completed_at = COALESCE(completed_at, now()),
+        updated_at = now()
+    WHERE id = ${id}
+      AND status IN ('issued', 'confirming', 'in_progress')
+    RETURNING id
+  `;
+  return rows[0] ?? null;
+}
+
 export async function updateSessionStatus(
   id: number,
   status: TestSession["status"],
