@@ -7,7 +7,7 @@ let client: Redis | null | undefined;
 function getRedis(): Redis | null {
   if (client !== undefined) return client;
   const config = redisRestConfig();
-  client = config ? new Redis({ url: config.url, token: config.token }) : null;
+  client = config ? new Redis({ url: config.url, token: config.token, keepAlive: false }) : null;
   return client;
 }
 
