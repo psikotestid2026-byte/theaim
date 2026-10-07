@@ -125,6 +125,33 @@ export async function lockSession(id: number) {
   return rows[0];
 }
 
+export async function readAttemptTimer(id: number): Promise<{ timer_started_at: string | null; server_now: string } | null> {
+  const rows = await sql`
+    SELECT timer_started_at, now() AS server_now
+    FROM test_sessions
+    WHERE id = ${asId(id)}
+      AND status = 'in_progress'
+    LIMIT 1
+  `;
+  return (rows[0] as { timer_started_at: string | null; server_now: string } | undefined) ?? null;
+}
+
+/**
+ * Starts the countdown once. Later calls keep the original timestamp.
+ * Only an in-progress session can start; completed rows are left alone.
+ */
+export async function markTimerStarted(id: number): Promise<{ timer_started_at: string; server_now: string } | null> {
+  const rows = await sql`
+    UPDATE test_sessions
+    SET timer_started_at = COALESCE(timer_started_at, now()),
+        updated_at = CASE WHEN timer_started_at IS NULL THEN now() ELSE updated_at END
+    WHERE id = ${asId(id)}
+      AND status = 'in_progress'
+    RETURNING timer_started_at, now() AS server_now
+  `;
+  return (rows[0] as { timer_started_at: string; server_now: string } | undefined) ?? null;
+}
+
 export async function revokeSession(id: number) {
   const rows = await sql`
     UPDATE test_sessions

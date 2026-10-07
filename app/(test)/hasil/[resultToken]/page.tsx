@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
+import { formatResultDate } from "@/lib/format-date";
 import { resultPageUrl, siteOrigin } from "@/lib/site-url";
 import { getSessionByResultToken } from "@/lib/queries/test-sessions";
 import { getResultBySessionId } from "@/lib/queries/test-results";
@@ -88,7 +89,7 @@ export default async function HasilPage({ params }: { params: Promise<{ resultTo
             <p className="text-xl font-bold text-red-600 mb-4">{result.result_label}</p>
             <p className="text-slate-500 text-sm">
               Untuk: <strong className="text-slate-900">{session.customer_name}</strong> ·{" "}
-              {new Date(result.created_at).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}
+              {formatResultDate(result.created_at)}
             </p>
           </div>
 

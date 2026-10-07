@@ -1,6 +1,6 @@
 import type { TestItem, TestResultPayload } from "@/types/db";
-import { choiceLabel, discIndexAnswers, indexAnswers } from "./answer-map";
-import { calculateBigFiveScore } from "./ruangtes/bigfive";
+import { choiceLabel, discIndexAnswers, indexAnswers, itemOptions } from "./answer-map";
+import { calculateBigFiveFromItems } from "./ruangtes/bigfive";
 import { calculateDiscScore } from "./ruangtes/disc";
 import { findDiscTypeInfo } from "./ruangtes/disc_dictionary";
 import { getEnneagramCoreInfo, getEnneagramWingInfo } from "./ruangtes/enneagram_dictionary";
@@ -101,7 +101,7 @@ function computeDiscRetail(responses: Record<number, string>, items: TestItem[])
 }
 
 function computeBigFive(responses: Record<number, string>, items: TestItem[]): TestResultPayload {
-  const scored = calculateBigFiveScore(indexAnswers(items, responses, "value"));
+  const scored = calculateBigFiveFromItems(items, responses);
   const dimensions = Object.entries(scored.dimensions).map(([code, row]) => ({
     code,
     name: BIGFIVE_NAMES[code] ?? code,
@@ -250,6 +250,13 @@ function computeWpt(responses: Record<number, string>, items: TestItem[]): TestR
   };
 }
 
+/** True only when the chosen option's label is the key. The stored value is an index and is never a key. */
+export function istAnswerMatchesKey(item: TestItem, raw: string, correct: string): boolean {
+  const chosen = itemOptions(item).find((option) => option.value === raw);
+  if (!chosen || typeof chosen.label !== "string") return false;
+  return normText(chosen.label) === normText(correct);
+}
+
 function computeIst(responses: Record<number, string>, items: TestItem[]): TestResultPayload {
   let raScore = 0;
   let zrScore = 0;
@@ -257,9 +264,7 @@ function computeIst(responses: Record<number, string>, items: TestItem[]): TestR
     const correct = IST_CORRECT_BY_ORDER[item.item_order];
     if (!correct) continue;
     const raw = responses[item.id];
-    if (!raw) continue;
-    const label = normText(choiceLabel(item, raw));
-    if (label !== normText(correct) && normText(raw) !== normText(correct)) continue;
+    if (!raw || !istAnswerMatchesKey(item, raw, correct)) continue;
     if (item.item_order <= 96) raScore += 1;
     else zrScore += 1;
   }
@@ -292,7 +297,11 @@ function computeMsdt(responses: Record<number, string>, items: TestItem[]): Test
     result_label: info.name,
     interpretation: {
       description: info.narrative,
-      strengths: [`Orientasi tugas: ${scored.orientationCategory.TO}`, `Orientasi relasi: ${scored.orientationCategory.RO}`, `Efektivitas: ${scored.orientationCategory.E}`],
+      strengths: [
+        scored.orientationCategory.TO === "Tinggi" ? "Orientasi tugas: Tinggi" : "",
+        scored.orientationCategory.RO === "Tinggi" ? "Orientasi relasi: Tinggi" : "",
+        scored.orientationCategory.E === "Tinggi" ? "Efektivitas: Tinggi" : "",
+      ].filter((line) => line.length > 0),
       challenges: scored.isValid ? [] : [`Butir terhitung ${scored.totalAnswered} dari 64.`],
       detail: {
         kind: "msdt",
@@ -311,20 +320,25 @@ function computeMsai(responses: Record<number, string>, items: TestItem[]): Test
   for (const [quadrant, score] of Object.entries(scored.quadrantScores)) {
     if (typeof score === "number") raw_scores[quadrant] = score;
   }
-  const top = Object.entries(scored.quadrantScores)
+  const leaders = Object.entries(scored.quadrantScores)
     .filter((entry): entry is [string, number] => typeof entry[1] === "number")
-    .sort((a, b) => b[1] - a[1])[0];
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  const topScore = leaders[0]?.[1];
+  const tied = topScore === undefined ? [] : leaders.filter((entry) => entry[1] === topScore);
+  const tie = tied.length > 1;
+  const tieNames = tied.map(([name]) => name).join(", ");
+  const gapNote = scored.dataGapNote || "Skor keterampilan manajerial dihitung dari perilaku aktual, efektivitas, dan kepentingan.";
   return {
     raw_scores,
-    result_type: top?.[0] ?? "MSAI",
-    result_label: top ? `${top[0]} · ${top[1]}` : "MSAI",
+    result_type: tie ? "Seri" : (tied[0]?.[0] ?? "MSAI"),
+    result_label: tie ? `Seri · ${tieNames} · ${topScore}` : tied[0] ? `${tied[0][0]} · ${tied[0][1]}` : "MSAI",
     interpretation: {
-      description: scored.dataGapNote || "Skor keterampilan manajerial dihitung dari perilaku aktual, efektivitas, dan kepentingan.",
+      description: tie ? `${gapNote} Kuadran seri pada skor ${topScore}: ${tieNames}.` : gapNote,
       strengths: scored.skills.filter((skill) => skill.gap !== null && skill.gap <= 0).map((skill) => skill.name),
-      challenges: scored.skills.filter((skill) => skill.gap !== null && skill.gap > 0).map((skill) => `${skill.name} (selisih ${skill.gap})`),
-      detail: { kind: "msai", skills: scored.skills, quadrantScores: scored.quadrantScores },
+      challenges: scored.skills.filter((skill) => skill.gap !== null && skill.gap > 0).map((skill) => `${skill.name} (selisih ${Number(skill.gap).toFixed(2)})`),
+      detail: { kind: "msai", skills: scored.skills, quadrantScores: scored.quadrantScores, tie },
     },
-    wa_summary_text: summary("MSAI", top ? `Kuadran tertinggi: ${top[0]}.` : "Profil keterampilan sudah siap."),
+    wa_summary_text: summary("MSAI", tie ? `Kuadran seri: ${tieNames}.` : tied[0] ? `Kuadran tertinggi: ${tied[0][0]}.` : "Profil keterampilan sudah siap."),
   };
 }
 

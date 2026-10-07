@@ -36,6 +36,13 @@
       "when": 1791401100000,
       "tag": "0004_test_response_unique",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1791405693209,
+      "tag": "0005_test_session_timer",
+      "breakpoints": true
     }
   ]
 }
