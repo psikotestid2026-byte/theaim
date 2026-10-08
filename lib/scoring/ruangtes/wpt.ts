@@ -1,7 +1,8 @@
 /**
- * WPT (Wonderlic Personnel Test) Scoring Engine
- * Synchronized with refs/psikoscoring engine and norm tables.
+ * WPT (Wonderlic Personnel Test) scoring.
+ * Item keys live in test_items.scoring_meta. Raw→IQ is Dodrill (1981) Table 1.
  */
+import { itemMeta, type ItemMeta } from "../item-meta";
 
 export const WPT_RS_TO_IQ = [
   59,  // RS 0
@@ -67,116 +68,122 @@ export const WPT_CATEGORIES = [
   { minIQ: 0,   label: 'Sangat Rendah', description: 'Kapasitas intelektual memerlukan pendampingan intensif.' },
 ];
 
-/**
- * Accepted answers are exact after normalization. Arrays are equivalent writings
- * of the same correct option, never a second distinct choice.
- * Q17's grammatical answer is the letter g (third word of "Dia merupakan seorang
- * penyanyi" is "seorang"). That letter is not among the printed choices.
- */
-export const WPT_ANSWER_KEYS: Record<number, readonly string[]> = {
-  1: ["Desember"],
-  2: ["Membebaskan"],
-  3: ["Mobil"],
-  4: ["Tidak"],
-  5: ["Berpartisipasi"],
-  6: ["Luar Biasa"],
-  7: ["Bentuk 3"],
-  8: ["1/8", "0.125", "0,125"],
-  9: ["Memiliki arti yang sama"],
-  10: ["Hidung"],
-  11: ["Musim Semi"],
-  12: ["6.000 kaki", "6000 kaki", "6000"],
-  13: ["Benar"],
-  14: ["Dekat"],
-  15: ["20 rupiah"],
-  16: ["5"],
-  17: ["g"],
-  18: ["13 tahun", "13"],
-  19: ["Memiliki tata bahasa dan arti berbeda"],
-  20: ["Benar"],
-  21: ["20 barel", "20"],
-  22: ["Salah"],
-  23: ["1 dan 3", "1,3", "1 & 3"],
-  24: ["2 detik", "2"],
-  25: ["Memiliki arti berbeda"],
-  26: ["Benar"],
-  27: ["3.33 sen", "3,33 sen", "3.33", "3,33"],
-  28: ["Memiliki arti berbeda"],
-  29: ["6 ikan", "6"],
-  30: ["216 m³", "216 m3", "216"],
-  31: ["1/100000", "1/100.000"],
-  32: ["Ya"],
-  33: ["Memiliki arti berbeda"],
-  34: ["20 rok", "20"],
-  35: ["0.25 detik", "0,25 detik", "0.25", "0,25"],
-  36: ["24 permainan", "24"],
-  37: ["82"],
-  38: ["Dua segitiga siku-siku sama kaki"],
-  39: ["Karyawan/alat baru sering bekerja sangat efisien"],
-  40: ["3"],
-  41: ["1 dan 3", "1,3", "1 & 3"],
-  42: ["Dua trapesium siku-siku"],
-  43: ["0.33", "0,33"],
-  44: ["Kejujuran adalah nilai moral yang tidak perlu disesali"],
-  45: ["Rp 1.250", "1.250", "1250"],
-  46: ["Kubus"],
-  47: ["Salah (Sesat Pikir)"],
-  48: ["Rp 300.000", "300.000", "300000"],
-  49: ["Potongan 1, 2, 4, 5", "1,2,4,5", "1245"],
-  50: ["50 menit", "50"],
-};
+/** Raw scores outside Dodrill (1981) Table 1 (1–44). Their IQ values are kept from the old table. */
+export const WPT_EXTRAPOLATED_RAW = new Set([0, 45, 46, 47, 48, 49, 50]);
 
-/** Printed choices that are intentionally unscorable because the right letter is absent. */
-export const WPT_ITEMS_WITHOUT_CORRECT_OPTION = [17] as const;
+function cleanNumberText(raw: string): string {
+  return raw
+    .trim()
+    .toLowerCase()
+    .replace(/½/g, "1/2")
+    .replace(/¼/g, "1/4")
+    .replace(/\s+/g, "")
+    .replace(/^rp\.?/, "")
+    .replace(/[^0-9.,/-]/g, "");
+}
 
-export function normalizeWptAnswer(val: unknown): string {
+/** Parses an Indonesian-style number: comma or dot decimals, dot thousands, a/b fractions. */
+export function parseWptNumber(raw: unknown): number | null {
+  if (raw === undefined || raw === null) return null;
+  const s = cleanNumberText(String(raw));
+  if (!s) return null;
+  if (s.includes("/")) {
+    const [a, b, extra] = s.split("/");
+    if (extra !== undefined) return null;
+    const top = parseWptNumber(a);
+    const bottom = parseWptNumber(b);
+    if (top === null || bottom === null || bottom === 0) return null;
+    return top / bottom;
+  }
+  let text = s;
+  if (/^\d+,\d+$/.test(text)) text = text.replace(",", ".");
+  else if (/^[1-9]\d{0,2}(\.\d{3})+$/.test(text)) text = text.replace(/\./g, "");
+  else if (/^\d{1,3}(,\d{3})+$/.test(text)) return null;
+  if (!/^-?(\d+\.?\d*|\.\d+)$/.test(text)) return null;
+  const value = Number(text);
+  return Number.isFinite(value) ? value : null;
+}
+
+function decimalsOf(raw: string): number {
+  const s = cleanNumberText(raw);
+  const match = s.match(/[.,](\d+)$/);
+  return match && !/^[1-9]\d{0,2}(\.\d{3})+$/.test(s) ? match[1].length : 0;
+}
+
+export function normalizeWptText(val: unknown): string {
   if (val === undefined || val === null) return "";
-  let s = String(val).trim().toLowerCase().replace(/\s+/g, " ");
-  s = s.replace(/(\d),(\d)/g, "$1.$2");
-  s = s.replace(/(\d)\.(?=\d{3}(?:\D|$))/g, "$1");
-  s = s.replace(/m³/g, "m3");
-  s = s.replace(/^rp\s*/, "");
-  s = s.replace(/[.](?=\s|$)/g, "");
-  return s;
+  return String(val).trim().toLowerCase().replace(/["'“”‘’.!?]/g, "").replace(/\s+/g, " ");
 }
 
-export function checkWptAnswer(qNum: number, rawAns: unknown): boolean {
-  if (rawAns === undefined || rawAns === null) return false;
-  const ans = normalizeWptAnswer(rawAns);
-  if (!ans) return false;
-  const accepted = WPT_ANSWER_KEYS[qNum];
-  if (!accepted) return false;
-  return accepted.some((key) => normalizeWptAnswer(key) === ans);
+function numbersOf(raw: string): string[] {
+  return (raw.match(/\d+/g) ?? []).map((n) => String(Number(n)));
 }
 
-export function calculateWptScore(rawAnswers: Record<string | number, unknown>) {
+/** True when the stored answer satisfies the item key in scoring_meta. */
+export function wptAnswerIsCorrect(meta: ItemMeta, raw: unknown): boolean {
+  if (raw === undefined || raw === null) return false;
+  const answer = String(raw).trim();
+  const accepted = Array.isArray(meta.accepted) ? meta.accepted.map(String) : [];
+  if (!answer || accepted.length === 0) return false;
+  switch (meta.match ?? (meta.answer_type === "choice" ? "choice" : "text")) {
+    case "choice":
+      return accepted.includes(answer);
+    case "text":
+      return accepted.some((key) => normalizeWptText(key) === normalizeWptText(answer));
+    case "number": {
+      const value = parseWptNumber(answer);
+      if (value === null) return false;
+      const decimals = decimalsOf(answer);
+      return accepted.some((key) => {
+        const target = parseWptNumber(key);
+        if (target === null) return false;
+        if (Math.abs(value - target) < 1e-9) return true;
+        // A fraction key also accepts a decimal written to at least 3 places (1/30 → 0,0333).
+        return key.includes("/") && decimals >= 3 && Math.abs(value - target) <= 0.5 * 10 ** -decimals;
+      });
+    }
+    case "numbers_set": {
+      const got = numbersOf(answer).sort();
+      const want = accepted.map((n) => String(Number(n))).sort();
+      return got.length === want.length && got.every((n, i) => n === want[i]);
+    }
+    default:
+      return false;
+  }
+}
+
+export function wptCategory(iq: number) {
+  return WPT_CATEGORIES.find((cat) => iq >= cat.minIQ) ?? WPT_CATEGORIES[WPT_CATEGORIES.length - 1];
+}
+
+export function wptIqForRaw(raw: number): number {
+  const index = Math.max(0, Math.min(raw, WPT_RS_TO_IQ.length - 1));
+  return WPT_RS_TO_IQ[index];
+}
+
+/** Scores WPT from item keys in scoring_meta. Responses are keyed by test_items.id. */
+export function calculateWptFromItems(
+  items: { id: number; item_order: number; scoring_meta?: unknown }[],
+  responses: Record<number, string>,
+) {
   let rs = 0;
-
-  for (let qNum = 1; qNum <= 50; qNum++) {
-    // rawAnswers can be indexed by 0-based index or 1-based index or question id
-    const userAns = rawAnswers[qNum - 1] ?? rawAnswers[qNum] ?? rawAnswers[String(qNum - 1)] ?? rawAnswers[String(qNum)];
-    if (checkWptAnswer(qNum, userAns)) {
-      rs++;
-    }
+  let keyed = 0;
+  for (const item of items) {
+    const meta = itemMeta(item);
+    if (!Array.isArray(meta.accepted) || meta.accepted.length === 0) continue;
+    keyed += 1;
+    if (wptAnswerIsCorrect(meta, responses[item.id])) rs += 1;
   }
-
-  const iqIndex = Math.max(0, Math.min(rs, WPT_RS_TO_IQ.length - 1));
-  const iq = WPT_RS_TO_IQ[iqIndex];
-
-  let kategoriObj = WPT_CATEGORIES[WPT_CATEGORIES.length - 1];
-  for (const cat of WPT_CATEGORIES) {
-    if (iq >= cat.minIQ) {
-      kategoriObj = cat;
-      break;
-    }
-  }
-
+  const iq = wptIqForRaw(rs);
+  const category = wptCategory(iq);
   return {
     raw_score: rs,
+    keyed_items: keyed,
     iq,
     score: String(iq),
-    label: kategoriObj.label,
-    description: kategoriObj.description,
-    category: kategoriObj,
+    label: category.label,
+    description: category.description,
+    category,
+    extrapolated: WPT_EXTRAPOLATED_RAW.has(rs),
   };
 }

@@ -14,6 +14,7 @@ import PrintButton from "@/components/test/PrintButton";
 import QRCodeDisplay from "@/components/test/QRCodeDisplay";
 import TalentsMappingReport from "@/components/test/TalentsMappingReport";
 import RetailScoreDetail from "@/components/test/RetailScoreDetail";
+import { presentTakerResult } from "@/lib/taker-view";
 import Image from "next/image";
 
 export async function generateMetadata({ params }: { params: Promise<{ resultToken: string }> }): Promise<Metadata> {
@@ -45,6 +46,7 @@ export default async function HasilPage({ params }: { params: Promise<{ resultTo
     result = await getResultBySessionId(session.id).catch(() => null);
   }
   if (!result) return notFound();
+  const view = presentTakerResult(result, resultToken);
 
   const headerList = await headers();
   const resultUrl = resultPageUrl(
@@ -55,23 +57,23 @@ export default async function HasilPage({ params }: { params: Promise<{ resultTo
       forwardedProto: headerList.get("x-forwarded-proto"),
     }),
   );
-  const challenges: string[] = result.interpretation?.challenges ?? [];
+  const challenges: string[] = view.interpretation?.challenges ?? [];
   const listed = presentStrengths({
     testCode: session.test_code,
-    strengths: result.interpretation?.strengths,
-    detail: result.interpretation?.detail,
+    strengths: view.interpretation?.strengths,
+    detail: view.interpretation?.detail,
   });
   const strengthBlocks = [listed.strengths.length > 0, listed.summary.length > 0, challenges.length > 0].filter(Boolean).length;
-  const careers: string[] = result.interpretation?.careers ?? [];
+  const careers: string[] = view.interpretation?.careers ?? [];
   const isTalents = session.test_code.toLowerCase() === "talents_mapping";
   const tm = isTalents ? await getTmResultBySessionId(session.id).catch(() => null) : null;
-  const detailKind = result.interpretation?.detail && typeof result.interpretation.detail === "object"
-    ? String((result.interpretation.detail as { kind?: string }).kind ?? "")
+  const detailKind = view.interpretation?.detail && typeof view.interpretation.detail === "object"
+    ? String((view.interpretation.detail as { kind?: string }).kind ?? "")
     : "";
-  const showGenericBars = !isTalents && !detailKind && result.raw_scores && Object.keys(result.raw_scores).length > 0;
+  const showGenericBars = !isTalents && !detailKind && view.raw_scores && Object.keys(view.raw_scores).length > 0;
   const master = await getMasterTestByCode(session.test_code).catch(() => null);
   const testTitle = master?.name?.trim() || session.test_code;
-  const resultBadge = session.test_code.toLowerCase() === "msai" ? msaiResultBadge(result) : result.result_label;
+  const resultBadge = session.test_code.toLowerCase() === "msai" ? msaiResultBadge(view) : view.result_label;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-red-50/20 print-page">
@@ -96,17 +98,17 @@ export default async function HasilPage({ params }: { params: Promise<{ resultTo
             <span className="inline-block text-xs font-black text-red-600 uppercase tracking-widest bg-red-50 px-4 py-2 rounded-full mb-4">
               {testTitle} — Hasil Tes Psikologi
             </span>
-            <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-2 tracking-tight">{result.result_type}</h1>
+            <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-2 tracking-tight">{view.result_type}</h1>
             <p className="text-xl font-bold text-red-600 mb-4">{resultBadge}</p>
             <p className="text-slate-500 text-sm">
               Untuk: <strong className="text-slate-900">{session.customer_name}</strong> ·{" "}
-              {formatResultDate(result.created_at)}
+              {formatResultDate(view.created_at)}
             </p>
           </div>
 
           {/* Description */}
           <div className="bg-slate-50 rounded-2xl p-6 mb-8">
-            <p className="text-slate-700 leading-relaxed text-sm">{result.interpretation?.description}</p>
+            <p className="text-slate-700 leading-relaxed text-sm">{view.interpretation?.description}</p>
           </div>
 
           {isTalents && (
@@ -116,7 +118,7 @@ export default async function HasilPage({ params }: { params: Promise<{ resultTo
             />
           )}
 
-          {!isTalents && <RetailScoreDetail detail={result.interpretation?.detail} />}
+          {!isTalents && <RetailScoreDetail detail={view.interpretation?.detail} />}
 
           {strengthBlocks > 0 && (
           <div className={`grid gap-6 mb-8 ${strengthBlocks > 1 ? "md:grid-cols-2" : ""}`}>
@@ -164,14 +166,14 @@ export default async function HasilPage({ params }: { params: Promise<{ resultTo
             </div>
           )}
 
-          {showGenericBars && result.raw_scores && (
+          {showGenericBars && view.raw_scores && (
             <div className="mb-8">
               <h2 className="font-extrabold text-slate-900 mb-4">📊 Breakdown Skor</h2>
               <div className="space-y-3">
-                {Object.entries(result.raw_scores as Record<string, number>)
+                {Object.entries(view.raw_scores as Record<string, number>)
                   .sort((a, b) => b[1] - a[1])
                   .map(([key, val]) => {
-                    const total = Object.values(result.raw_scores as Record<string, number>).reduce((a, b) => a + b, 0);
+                    const total = Object.values(view.raw_scores as Record<string, number>).reduce((a, b) => a + b, 0);
                     const pct = total > 0 ? Math.round((val / total) * 100) : 0;
                     return (
                       <div key={key}>

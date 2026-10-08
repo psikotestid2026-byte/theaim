@@ -8,6 +8,10 @@ import { msaiBlockForOrder, msaiScaleOptions } from "@/lib/msai-form";
 import { initialQuestionIndex } from "@/lib/test-access";
 import { EXPIRY_AUTO_SUBMIT_HEADING, EXPIRY_NOTICE_MS, expiryAnsweredLine } from "@/lib/test-timer";
 import { isAnswerComplete, widgetForItem, type AnswerWidget } from "@/lib/test-widget";
+import { itemMeta } from "@/lib/scoring/item-meta";
+import ItemMedia from "@/components/test/ItemMedia";
+import { withAssetToken } from "@/lib/test-assets";
+import TypedAnswer from "@/components/test/TypedAnswer";
 
 interface Props {
   sessionId: number;
@@ -188,10 +192,6 @@ export default function TestEngine({
       });
       const payload = (await res.json().catch(() => ({}))) as { error?: string };
       if (!res.ok) {
-        if (payload.error === "bank_incomplete") {
-          setError("Bank soal belum lengkap. Jawaban tidak disimpan.");
-          return false;
-        }
         setFailedSaves((prev) => ({ ...prev, [itemId]: value }));
         if (res.status === 409 && payload.error === "expired") setRemaining(0);
         return false;
@@ -279,12 +279,6 @@ export default function TestEngine({
       });
       const data = await res.json().catch(() => ({}));
       const nextToken = typeof data.result_token === "string" ? data.result_token : "";
-      if (res.status === 409 && data.error === "bank_incomplete") {
-        setError("Bank soal belum lengkap. Hasil tidak dihitung.");
-        setSubmitting(false);
-        autoSubmitted.current = false;
-        return;
-      }
       if (res.status === 422 && data.error === "incomplete") {
         const missing = typeof data.missing === "number" ? data.missing : 0;
         setError(`Masih ada ${missing} soal yang belum tersimpan. Lengkapi jawaban, lalu coba lagi.`);
@@ -434,10 +428,20 @@ export default function TestEngine({
                 Pilih 1 Paling (P) dan 1 Kurang (K)
               </span>
             )}
-            <p className="text-xl font-bold text-slate-900 leading-relaxed">{item.question_text}</p>
+            <p className="text-xl font-bold text-slate-900 leading-relaxed whitespace-pre-line">{item.question_text}</p>
+            <ItemMedia item={item} token={token} />
           </div>
 
-          {widget === "likert" ? (
+          {widget === "text" ? (
+            <TypedAnswer
+              key={item.id}
+              itemId={item.id}
+              saved={answers[item.id]}
+              numeric={itemMeta(item).answer_type === "number"}
+              saving={saving}
+              onSave={(value) => remember(item.id, value)}
+            />
+          ) : widget === "likert" ? (
             <LikertScale
               options={options}
               selected={answers[item.id]}
@@ -494,7 +498,14 @@ export default function TestEngine({
                     <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black shrink-0 ${selected ? "bg-red-600 text-white" : "bg-slate-100 text-slate-500"}`}>
                       {String.fromCharCode(65 + index)}
                     </span>
-                    <span className="flex-1 text-left">{opt.label}</span>
+                    <span className="flex-1 text-left">
+                      {opt.image ? (
+                        // eslint-disable-next-line @next/next/no-img-element -- token-gated test figure
+                        <img src={withAssetToken(opt.image, token) ?? opt.image} alt={opt.label} className="max-h-24 w-auto" />
+                      ) : (
+                        opt.label
+                      )}
+                    </span>
                     {saving && selected && <span className="text-xs text-slate-400">Menyimpan...</span>}
                   </button>
                 );

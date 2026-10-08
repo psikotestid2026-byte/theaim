@@ -20,7 +20,7 @@ function item(partial: Partial<TestItem> & Pick<TestItem, "options">): TestItem 
 
 const wpt = item({
   test_code: "wpt",
-  options: ["Januari", "Maret", "Juni", "September", "Oktober"].map((label, index) => ({
+  options: ["Pilihan A", "Pilihan B", "Pilihan C", "Pilihan D", "Pilihan E"].map((label, index) => ({
     value: String(index + 1),
     label,
     score_key: "",
@@ -42,8 +42,18 @@ const disc = item({
 describe("answer validation", () => {
   it("accepts only a stored option value", () => {
     assert.equal(isAllowedAnswer("wpt", wpt, "1"), true);
-    assert.equal(isAllowedAnswer("wpt", wpt, "Januari"), false);
+    assert.equal(isAllowedAnswer("wpt", wpt, "Pilihan A"), false);
     assert.equal(isAllowedAnswer("wpt", wpt, "9"), false);
+  });
+
+  it("accepts typed answers for isian items, digits only for number items", () => {
+    const isian = item({ test_code: "wpt", options: [], scoring_meta: { answer_type: "text", match: "number" } });
+    assert.equal(isAllowedAnswer("wpt", isian, "1,5"), true);
+    assert.equal(isAllowedAnswer("wpt", isian, "   "), false);
+    assert.equal(isAllowedAnswer("wpt", isian, "x".repeat(81)), false);
+    const ra = item({ test_code: "ist", options: [], scoring_meta: { subtest: "RA", answer_type: "number" } });
+    assert.equal(isAllowedAnswer("ist", ra, "246"), true);
+    assert.equal(isAllowedAnswer("ist", ra, "2,4"), false);
   });
 
   it("accepts a complete DISC pair inside the option list", () => {

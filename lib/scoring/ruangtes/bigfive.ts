@@ -210,3 +210,79 @@ export function calculateBigFiveScore(answers: Record<string, string>) {
 export function thinBigFiveNote(name: string, itemCount: number): string {
   return `${name} punya ${itemCount} butir, terlalu sedikit untuk dijadikan faktor utama.`;
 }
+
+/* ------------------------------------------------------------------ IPIP-BFM-50 */
+
+export const IPIP_FACTORS = [
+  { code: "E", name: "Ekstraversi" },
+  { code: "A", name: "Keramahan (Agreeableness)" },
+  { code: "C", name: "Kesungguhan (Conscientiousness)" },
+  { code: "ES", name: "Stabilitas Emosi" },
+  { code: "O", name: "Intelek/Imajinasi (Openness)" },
+] as const;
+
+export type IpipFactor = (typeof IPIP_FACTORS)[number]["code"];
+
+export const IPIP_NO_NORMS_NOTE =
+  "Tanpa norma: skor mentah (10–50), rerata (1–5), dan persen dari skor maksimum. Angka ini bukan perbandingan dengan populasi.";
+
+type IpipMeta = { instrument?: unknown; factor?: unknown; keyed?: unknown };
+
+function ipipKey(meta: unknown): { factor: IpipFactor; keyed: "+" | "-" } | null {
+  if (!meta || typeof meta !== "object") return null;
+  const row = meta as IpipMeta;
+  if (row.instrument !== "IPIP-BFM-50") return null;
+  const factor = IPIP_FACTORS.find((f) => f.code === row.factor)?.code;
+  if (!factor || (row.keyed !== "+" && row.keyed !== "-")) return null;
+  return { factor, keyed: row.keyed };
+}
+
+/** True when every item carries an IPIP-BFM-50 key (factor + keyed) in scoring_meta. */
+export function isIpipBfm50Bank(items: { scoring_meta?: unknown }[]): boolean {
+  return items.length > 0 && items.every((item) => ipipKey(item.scoring_meta) !== null);
+}
+
+export type IpipFactorRow = {
+  code: IpipFactor;
+  name: string;
+  raw: number;
+  max: number;
+  mean: number;
+  percent: number;
+  answered: number;
+  itemCount: number;
+};
+
+/** Official IPIP scoring: + keyed 1..5 as is, − keyed 6 − response; factor = sum of its items. */
+export function calculateIpipBfm50(
+  items: { id: number; scoring_meta?: unknown }[],
+  responses: Record<number, string>,
+): IpipFactorRow[] {
+  const sums = new Map<IpipFactor, { raw: number; answered: number; itemCount: number }>();
+  for (const f of IPIP_FACTORS) sums.set(f.code, { raw: 0, answered: 0, itemCount: 0 });
+  for (const item of items) {
+    const key = ipipKey(item.scoring_meta);
+    if (!key) continue;
+    const bucket = sums.get(key.factor)!;
+    bucket.itemCount += 1;
+    const value = responses[item.id];
+    const score = value ? parseLikert(value) : null;
+    if (score === null) continue;
+    bucket.raw += key.keyed === "+" ? score : 6 - score;
+    bucket.answered += 1;
+  }
+  return IPIP_FACTORS.map(({ code, name }) => {
+    const { raw, answered, itemCount } = sums.get(code)!;
+    const max = answered * 5;
+    return {
+      code,
+      name,
+      raw,
+      max,
+      mean: answered ? Number((raw / answered).toFixed(2)) : 0,
+      percent: max ? Number(((raw / max) * 100).toFixed(1)) : 0,
+      answered,
+      itemCount,
+    };
+  });
+}

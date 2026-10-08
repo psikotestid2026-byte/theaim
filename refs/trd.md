@@ -543,6 +543,13 @@ The transition `in_progress → completed` is a single `UPDATE … WHERE status 
 
 The `confirm_attempts` increment is similarly guarded: `UPDATE … SET confirm_attempts = confirm_attempts + 1 WHERE id = $1 AND confirm_attempts < 3 RETURNING confirm_attempts`. If the result is 0 rows (race condition on the 3rd attempt), the session is treated as already locked.
 
+### Timed cognitive tests (WPT, IST)
+
+- **WPT**: one 12-minute clock (`test_sessions.timer_started_at`, `lib/test-timer.ts`). Answers after the deadline + 10 s grace return 409 `expired`.
+- **IST**: nine subtests, each with its own server clock in `test_sessions.section_started_at` (`{ "SE": <epoch ms>, ... }`, migration 0006). The schedule (order, time limits, instructions, worked examples) is read from the IST `scoring_configs.config_data`, not from a file in git. `POST /api/test-sessions/section-timer` starts a subtest only after every earlier one has started; a key is written once, so reloads never restart a clock. `POST /api/test-responses` rejects an IST answer (409 `section_closed`) unless its subtest is the latest one started and inside its answer phase (+10 s grace). ME has a memorize phase before the answer phase. The word list is returned only by `POST /api/test-sessions/memorize-list` while that server clock is still in the memorize phase. `complete` allows blanks once the last subtest has started. Pure rules live in `lib/ist-flow.ts`; the runner is `components/test/IstRunner.tsx`.
+- Item keys and answer types live in `test_items.scoring_meta`. IST norms live in `test_norms` plus the IST `scoring_configs` row. Big Five IPIP-BFM-50 is the only bank seeded from git (`db/seeds/testbank/003-bigfive-ipip50.sql`). IST and WPT banks, keys, norms, instructions, and the ME word list stay in the database. Scoring stays pure TS: `lib/scoring/ruangtes/wpt.ts`, `lib/scoring/ist.ts` (tables passed in), `lib/scoring/ruangtes/bigfive.ts`.
+- IST/WPT figures live in `test_assets` (migration 0007) and are served by `GET /api/test-assets/{path}?t=`. `t` must be an access token for a session that is not completed, or any result token. The runner and `/hasil` append that token on `<img>` URLs. Cache-Control is `private, max-age=3600`. A missing or unauthorized asset is 404.
+
 ### Result page (`app/(test)/hasil/[resultToken]/page.tsx`)
 
 ```ts

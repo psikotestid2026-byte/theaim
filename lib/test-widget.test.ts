@@ -28,6 +28,12 @@ describe("answer widget selection", () => {
     assert.equal(widgetForItem("msai", { item_order: 74, options: fiveNumeric }), "choice");
     assert.equal(widgetForItem("msai", { item_order: 75, section: "career", options: fiveNumeric }), "choice");
   });
+
+  it("uses a typed answer for WPT isian and IST GE/RA/ZR items", () => {
+    assert.equal(widgetForItem("wpt", { item_order: 8, options: [], scoring_meta: { answer_type: "text" } }), "text");
+    assert.equal(widgetForItem("ist", { item_order: 77, section: "RA", options: [], scoring_meta: { answer_type: "number" } }), "text");
+    assert.equal(widgetForItem("ist", { item_order: 1, section: "SE", options: fiveNumeric, scoring_meta: { answer_type: "choice" } }), "choice");
+  });
 });
 
 function four(label: string) {

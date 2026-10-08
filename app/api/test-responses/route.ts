@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getItemForTest, getItemsByTestCode } from "@/lib/queries/test-items";
-import { incompleteTestBank, IST_BANK_INCOMPLETE } from "@/lib/ist-bank";
+import { getItemForTest } from "@/lib/queries/test-items";
 import { upsertResponse } from "@/lib/queries/test-responses";
-import { getSessionByAccessToken, markTimerStarted, readAttemptTimer } from "@/lib/queries/test-sessions";
+import { getSessionByAccessToken, markTimerStarted, readAttemptTimer, readSectionTimers } from "@/lib/queries/test-sessions";
+import { istAnswerWindowOpen } from "@/lib/ist-flow";
+import { getIstSchedule } from "@/lib/queries/ist-content";
+import { istSubtestOf } from "@/lib/scoring/ist";
 import { bufferAnswer } from "@/lib/redis";
 import { logRouteError } from "@/lib/log-error";
 import { isAllowedAnswer } from "@/lib/test-answer";
@@ -25,17 +27,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "not_confirmed" }, { status: 403 });
     }
 
-    if (session.test_code.toLowerCase() === "ist") {
-      const bankItems = await getItemsByTestCode(session.test_code);
-      const bank = incompleteTestBank(session.test_code, bankItems);
-      if (bank) {
-        return NextResponse.json({ error: IST_BANK_INCOMPLETE, messages: bank.messages }, { status: 409 });
-      }
-    }
-
     const item = await getItemForTest(data.item_id, session.test_code);
     if (!item || !isAllowedAnswer(session.test_code, item, data.answer_value)) {
       return NextResponse.json({ error: "invalid_answer" }, { status: 400 });
+    }
+
+    if (session.test_code.toLowerCase() === "ist") {
+      const code = istSubtestOf(item);
+      const [timers, schedule] = await Promise.all([readSectionTimers(session.id), getIstSchedule()]);
+      if (!code || !timers || !schedule || !istAnswerWindowOpen(schedule, code, timers.starts, timers.nowMs)) {
+        return NextResponse.json({ error: "section_closed" }, { status: 409 });
+      }
     }
 
     if (isTimedTest(session.test_code)) {

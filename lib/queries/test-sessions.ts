@@ -180,3 +180,48 @@ export async function countActiveSessions(): Promise<number> {
   `;
   return (rows[0] as { count: number }).count;
 }
+
+export type SectionTimers = { starts: Record<string, number>; nowMs: number };
+
+function toSectionTimers(row: { section_started_at?: unknown; server_now_ms?: unknown } | undefined): SectionTimers | null {
+  if (!row) return null;
+  const starts: Record<string, number> = {};
+  const raw = row.section_started_at;
+  if (raw && typeof raw === "object" && !Array.isArray(raw)) {
+    for (const [code, value] of Object.entries(raw as Record<string, unknown>)) {
+      const ms = Number(value);
+      if (Number.isFinite(ms)) starts[code] = ms;
+    }
+  }
+  const nowMs = Number(row.server_now_ms);
+  return Number.isFinite(nowMs) ? { starts, nowMs } : null;
+}
+
+/** IST subtest clocks (epoch ms per subtest) plus the database clock. In-progress sessions only. */
+export async function readSectionTimers(id: number): Promise<SectionTimers | null> {
+  const rows = await sql`
+    SELECT section_started_at, (extract(epoch from clock_timestamp()) * 1000)::bigint AS server_now_ms
+    FROM test_sessions
+    WHERE id = ${asId(id)}
+      AND status = 'in_progress'
+    LIMIT 1
+  `;
+  return toSectionTimers(rows[0] as { section_started_at?: unknown; server_now_ms?: unknown } | undefined);
+}
+
+/**
+ * Starts one IST subtest clock. The first write wins; later calls keep the
+ * original start, so reloading never restarts a subtest.
+ */
+export async function startSectionTimer(id: number, section: string): Promise<SectionTimers | null> {
+  await sql`
+    UPDATE test_sessions
+    SET section_started_at = section_started_at || jsonb_build_object(${section}::text, (extract(epoch from clock_timestamp()) * 1000)::bigint),
+        timer_started_at = COALESCE(timer_started_at, now()),
+        updated_at = now()
+    WHERE id = ${asId(id)}
+      AND status = 'in_progress'
+      AND NOT (section_started_at ? ${section}::text)
+  `;
+  return readSectionTimers(id);
+}
