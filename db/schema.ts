@@ -12,6 +12,7 @@ import {
   index,
   check,
   unique,
+  customType,
 } from "drizzle-orm/pg-core";
 
 export const serviceCategories = pgTable("service_categories", {
@@ -248,12 +249,28 @@ export const testSessions = pgTable("test_sessions", {
   expires_at: timestamp("expires_at").notNull(),
   started_at: timestamp("started_at"),
   timer_started_at: timestamp("timer_started_at"),
+  /** IST: { [subtest]: epoch ms } when each subtest clock started. Set once per subtest. */
+  section_started_at: jsonb("section_started_at").$type<Record<string, number>>().default({}).notNull(),
   completed_at: timestamp("completed_at"),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 }, (table) => [
   index("idx_test_sessions_test_id").on(table.test_id),
 ]);
+
+const bytea = customType<{ data: Buffer }>({
+  dataType() {
+    return "bytea";
+  },
+});
+
+/** IST/WPT figures. Bytes stay in the database and are served only with a session or result token. */
+export const testAssets = pgTable("test_assets", {
+  path: text("path").primaryKey(),
+  content_type: text("content_type").notNull(),
+  data: bytea("data").notNull(),
+  created_at: timestamp("created_at", { withTimezone: true, mode: "string" }).defaultNow().notNull(),
+});
 
 export const testItems = pgTable("test_items", {
   id: bigserial("id", { mode: "number" }).primaryKey(),

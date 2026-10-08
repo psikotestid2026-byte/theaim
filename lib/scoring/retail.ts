@@ -1,18 +1,26 @@
 import type { TestItem, TestResultPayload } from "@/types/db";
-import { choiceLabel, discIndexAnswers, indexAnswers, itemOptions } from "./answer-map";
-import { calculateBigFiveFromItems, MIN_HEADLINE_ITEMS, thinBigFiveNote } from "./ruangtes/bigfive";
+import { choiceLabel, discIndexAnswers, indexAnswers } from "./answer-map";
+import {
+  calculateBigFiveFromItems,
+  calculateIpipBfm50,
+  IPIP_NO_NORMS_NOTE,
+  isIpipBfm50Bank,
+  MIN_HEADLINE_ITEMS,
+  thinBigFiveNote,
+} from "./ruangtes/bigfive";
 import { calculateDiscScore } from "./ruangtes/disc";
 import { findDiscTypeInfo } from "./ruangtes/disc_dictionary";
 import { getEnneagramCoreInfo, getEnneagramWingInfo } from "./ruangtes/enneagram_dictionary";
 import { ENNEAGRAM_QUESTION_TYPES } from "./ruangtes/enneagram_mapping";
-import { IST_CORRECT_BY_ORDER } from "./ruangtes/ist-correct";
+import { calculateIstScore } from "./ist";
+import type { IstScoringTables } from "@/lib/ist-types";
 import { calculateMbtiScore } from "./ruangtes/mbti";
 import { calculateMsaiScore } from "./ruangtes/msai";
 import { calculateMsdtScore, MSDT_TYPE_DETAILS } from "./ruangtes/msdt";
 import { calculatePapiScore, PAPI_ASPECT_DETAILS, type PapiAspect } from "./ruangtes/papi";
 import { calculateRiasecScore, RIASEC_TYPE_DETAILS } from "./ruangtes/riasec";
-import { calculateWptScore } from "./ruangtes/wpt";
-import { istIsAboveAverage, mbtiStrengthLines, positiveTraitLines, wptIsAboveAverage } from "../result-strengths";
+import { calculateWptFromItems } from "./ruangtes/wpt";
+import { IST_STRONG_SW, mbtiStrengthLines, positiveTraitLines, wptIsAboveAverage } from "../result-strengths";
 
 const BIGFIVE_NAMES: Record<string, string> = {
   O: "Openness",
@@ -100,7 +108,27 @@ function computeDiscRetail(responses: Record<number, string>, items: TestItem[])
   };
 }
 
+function computeIpip(responses: Record<number, string>, items: TestItem[]): TestResultPayload {
+  const factors = calculateIpipBfm50(items, responses);
+  const raw_scores: Record<string, number> = {};
+  for (const row of factors) raw_scores[row.code] = row.raw;
+  const line = factors.map((row) => `${row.name} ${row.raw}/50`).join(", ");
+  return {
+    raw_scores,
+    result_type: "IPIP-BFM-50",
+    result_label: "Profil lima faktor (skor mentah)",
+    interpretation: {
+      description: `Skor lima faktor kepribadian IPIP-BFM-50. ${IPIP_NO_NORMS_NOTE}`,
+      strengths: [],
+      challenges: [],
+      detail: { kind: "bigfive_ipip", instrument: "IPIP-BFM-50", factors, note: IPIP_NO_NORMS_NOTE },
+    },
+    wa_summary_text: summary("Big Five", `Skor mentah: ${line}.`),
+  };
+}
+
 function computeBigFive(responses: Record<number, string>, items: TestItem[]): TestResultPayload {
+  if (isIpipBfm50Bank(items)) return computeIpip(responses, items);
   const scored = calculateBigFiveFromItems(items, responses);
   const dimensions = Object.entries(scored.dimensions).map(([code, row]) => ({
     code,
@@ -240,57 +268,62 @@ function computePapi(responses: Record<number, string>, items: TestItem[]): Test
 }
 
 function computeWpt(responses: Record<number, string>, items: TestItem[]): TestResultPayload {
-  const scored = calculateWptScore(indexAnswers(items, responses, "label"));
+  const scored = calculateWptFromItems(items, responses);
+  const extrapolatedNote = scored.extrapolated
+    ? " Skor ini di luar tabel Dodrill (1981) 1–44; nilai IQ adalah ekstrapolasi."
+    : "";
   return {
     raw_scores: { benar: scored.raw_score, iq: scored.iq },
     result_type: String(scored.iq),
     result_label: scored.label,
     interpretation: {
-      description: `${scored.description} Jawaban benar: ${scored.raw_score} dari 50.`,
+      description: `${scored.description} Jawaban benar: ${scored.raw_score} dari ${scored.keyed_items || 50}.${extrapolatedNote}`,
       strengths: wptIsAboveAverage(scored.iq) ? [`IQ ${scored.iq}`, scored.label] : [],
       challenges: [],
-      detail: { kind: "wpt", rawScore: scored.raw_score, iq: scored.iq, label: scored.label },
+      detail: {
+        kind: "wpt",
+        rawScore: scored.raw_score,
+        iq: scored.iq,
+        label: scored.label,
+        extrapolated: scored.extrapolated,
+        normSource: "Dodrill (1981) Table 1",
+      },
     },
     wa_summary_text: summary("WPT", `IQ ${scored.iq} (${scored.label}).`),
   };
 }
 
-/** True only when the chosen option's label is the key. The stored value is an index and is never a key. */
-export function istAnswerMatchesKey(item: TestItem, raw: string, correct: string): boolean {
-  const chosen = itemOptions(item).find((option) => option.value === raw);
-  if (!chosen || typeof chosen.label !== "string") return false;
-  return normText(chosen.label) === normText(correct);
-}
-
-function computeIst(responses: Record<number, string>, items: TestItem[]): TestResultPayload {
-  let raScore = 0;
-  let zrScore = 0;
-  for (const item of items) {
-    const correct = IST_CORRECT_BY_ORDER[item.item_order];
-    if (!correct) continue;
-    const raw = responses[item.id];
-    if (!raw || !istAnswerMatchesKey(item, raw, correct)) continue;
-    if (item.item_order <= 96) raScore += 1;
-    else zrScore += 1;
-  }
-  const numeric = raScore + zrScore;
-  const note =
-    "Hanya subtes RA (aritmatika) dan ZR (deret angka) yang diskor. " +
-    "Subtes verbal tidak diskor, dan angka ini bukan IQ IST.";
+function computeIst(responses: Record<number, string>, items: TestItem[], tables: IstScoringTables | undefined): TestResultPayload {
+  if (!tables) throw new Error("IST scoring tables are not loaded");
+  const scored = calculateIstScore(items, responses, tables);
+  const raw_scores: Record<string, number> = {};
+  for (const row of scored.subtests) raw_scores[row.code] = row.rw;
+  raw_scores.total_rw = scored.totalRw;
+  raw_scores.total_sw = scored.totalSw;
+  raw_scores.iq = scored.iq;
+  const strongest = [...scored.subtests].sort((a, b) => b.sw - a.sw || a.code.localeCompare(b.code))[0];
   return {
-    raw_scores: { RA: raScore, ZR: zrScore },
-    result_type: `${numeric}/40`,
-    result_label: "Numerik dan logika (parsial)",
+    raw_scores,
+    result_type: String(scored.iq),
+    result_label: scored.category ? `IQ ${scored.iq} · ${scored.category}` : `IQ ${scored.iq}`,
     interpretation: {
-      description: `${note} RA ${raScore}/20, ZR ${zrScore}/20.`,
-      strengths: [
-        istIsAboveAverage(raScore) ? `RA ${raScore}/20` : "",
-        istIsAboveAverage(zrScore) ? `ZR ${zrScore}/20` : "",
-      ].filter((line) => line.length > 0),
+      description: `IQ ${scored.iq} (${scored.category}), SW total ${scored.totalSw} dari jumlah RW ${scored.totalRw}. ${scored.notes.join(" ")}`,
+      strengths: strongest && strongest.sw >= IST_STRONG_SW ? [`${strongest.code} — ${strongest.name}: SW ${strongest.sw}`] : [],
       challenges: [],
-      detail: { kind: "ist", raScore, zrScore, numeric, note },
+      detail: {
+        kind: "ist",
+        subtests: scored.subtests,
+        totalRw: scored.totalRw,
+        totalSw: scored.totalSw,
+        iq: scored.iq,
+        percentile: scored.percentile,
+        category: scored.category,
+        ageGroup: scored.ageGroup,
+        provisionalItems: scored.provisionalItems,
+        notes: scored.notes,
+      },
     },
-    wa_summary_text: summary("IST", `Skor numerik parsial ${numeric}/40. Bukan IQ penuh.`),
+    wa_summary_text: summary("IST", `IQ ${scored.iq} (${scored.category}).`),
   };
 }
 
@@ -359,7 +392,6 @@ const RETAIL: Record<string, (responses: Record<number, string>, items: TestItem
   riasec: computeRiasec,
   papi: computePapi,
   wpt: computeWpt,
-  ist: computeIst,
   msdt: computeMsdt,
   msai: computeMsai,
 };
@@ -368,12 +400,14 @@ export function computeRetail(
   testCode: string,
   responses: Record<number, string>,
   items: TestItem[],
+  context?: { ist?: IstScoringTables },
 ): TestResultPayload {
+  if (testCode === "ist") return computeIst(responses, items, context?.ist);
   const fn = RETAIL[testCode];
   if (!fn) throw new Error(`No scoring function for test_code: ${testCode}`);
   return fn(responses, items);
 }
 
 export function isRetailCode(testCode: string): boolean {
-  return testCode in RETAIL;
+  return testCode === "ist" || testCode in RETAIL;
 }

@@ -165,6 +165,89 @@ export default function RetailScoreDetail({ detail }: { detail: unknown }) {
     );
   }
 
+  if (data.kind === "bigfive_ipip" && Array.isArray(data.factors)) {
+    return (
+      <div className="space-y-4 mb-8">
+        <h2 className="font-extrabold text-slate-900">Lima faktor (IPIP-BFM-50)</h2>
+        <p className="text-xs font-semibold text-amber-900 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">{String(data.note ?? "")}</p>
+        {data.factors.map((row) => {
+          const item = asRecord(row);
+          if (!item) return null;
+          const percent = asNumber(item.percent) ?? 0;
+          return (
+            <div key={String(item.code)} className="print-avoid">
+              <div className="flex justify-between text-sm font-semibold mb-1 gap-3">
+                <span>{String(item.name)}</span>
+                <span className="tabular-nums">
+                  {String(item.raw)}/50 · rerata {String(item.mean)} · {percent}% dari maks.
+                </span>
+              </div>
+              <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                <div className="h-full bg-red-600 rounded-full" style={{ width: `${Math.max(0, Math.min(100, percent))}%` }} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
+  if (data.kind === "ist" && Array.isArray(data.subtests)) {
+    const notes = Array.isArray(data.notes) ? data.notes.filter((line): line is string => typeof line === "string") : [];
+    return (
+      <div className="mb-8 space-y-4">
+        <div className="grid grid-cols-3 gap-3">
+          <div className="rounded-2xl bg-slate-50 p-4">
+            <p className="text-xs font-bold text-slate-500">IQ</p>
+            <p className="text-2xl font-black text-slate-900">{String(data.iq ?? "")}</p>
+            <p className="text-xs text-slate-500">{String(data.category ?? "")}</p>
+          </div>
+          <div className="rounded-2xl bg-slate-50 p-4">
+            <p className="text-xs font-bold text-slate-500">Jumlah RW</p>
+            <p className="text-2xl font-black text-slate-900">{String(data.totalRw ?? "")}</p>
+          </div>
+          <div className="rounded-2xl bg-slate-50 p-4">
+            <p className="text-xs font-bold text-slate-500">SW total</p>
+            <p className="text-2xl font-black text-slate-900">{String(data.totalSw ?? "")}</p>
+          </div>
+        </div>
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="text-left text-xs text-slate-500">
+              <th className="py-2">Subtes</th>
+              <th className="py-2 text-right">Terjawab</th>
+              <th className="py-2 text-right">RW</th>
+              <th className="py-2 text-right">SW</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.subtests.map((row) => {
+              const sub = asRecord(row);
+              if (!sub) return null;
+              return (
+                <tr key={String(sub.code)} className="border-t border-slate-100">
+                  <td className="py-2 font-semibold text-slate-800">
+                    {String(sub.code)} <span className="font-normal text-slate-500">{String(sub.name ?? "")}</span>
+                  </td>
+                  <td className="py-2 text-right tabular-nums">{String(sub.answered ?? "")}/{String(sub.items ?? "")}</td>
+                  <td className="py-2 text-right tabular-nums">{String(sub.rw ?? "")}{sub.code === "GE" ? ` (skor ${String(sub.raw ?? "")})` : ""}</td>
+                  <td className="py-2 text-right tabular-nums font-bold">{String(sub.sw ?? "")}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        {notes.length > 0 && (
+          <ul className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-900 space-y-1 list-disc list-inside">
+            {notes.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ul>
+        )}
+      </div>
+    );
+  }
+
   if (data.kind === "ist") {
     return (
       <div className="mb-8 rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">
@@ -277,6 +360,11 @@ export default function RetailScoreDetail({ detail }: { detail: unknown }) {
             <p className="text-2xl font-black text-slate-900">{String(data.iq ?? "")}</p>
           </div>
         </div>
+        {data.extrapolated === true && (
+          <p className="mt-3 text-xs font-semibold text-amber-900 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
+            Skor di luar tabel Dodrill (1981) 1–44; nilai IQ adalah ekstrapolasi.
+          </p>
+        )}
       </div>
     );
   }

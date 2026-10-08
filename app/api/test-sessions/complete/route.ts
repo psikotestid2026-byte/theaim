@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSessionByAccessToken, markSessionCompleted, readAttemptTimer } from "@/lib/queries/test-sessions";
+import { getSessionByAccessToken, markSessionCompleted, readAttemptTimer, readSectionTimers } from "@/lib/queries/test-sessions";
+import { istFlowReachedEnd } from "@/lib/ist-flow";
+import { getIstSchedule, getIstScoringTables } from "@/lib/queries/ist-content";
 import { getResponsesBySession } from "@/lib/queries/test-responses";
 import { getItemsByTestCode } from "@/lib/queries/test-items";
 import { insertTestResultOnce } from "@/lib/queries/test-results";
@@ -12,7 +14,6 @@ import { canWriteTest } from "@/lib/test-access";
 import { completeBody } from "@/lib/validators/test-attempt";
 import { appendResultLink, resultPageUrl, siteOrigin } from "@/lib/site-url";
 import { isAttemptExpired, isTimedTest, parseDbTimestamp, timedDurationSec } from "@/lib/test-timer";
-import { incompleteTestBank, IST_BANK_INCOMPLETE } from "@/lib/ist-bank";
 import { stampExpirySubmission, unansweredCount } from "@/lib/test-completion";
 import { ZodError } from "zod";
 
@@ -35,14 +36,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "not_confirmed" }, { status: 403 });
     }
 
-    const [items, responses] = await Promise.all([
+    const isIst = session.test_code.toLowerCase() === "ist";
+    const [items, responses, istTables] = await Promise.all([
       getItemsByTestCode(session.test_code),
       getResponsesBySession(session_id),
+      isIst ? getIstScoringTables() : Promise.resolve(null),
     ]);
-
-    const bank = incompleteTestBank(session.test_code, items);
-    if (bank) {
-      return NextResponse.json({ error: IST_BANK_INCOMPLETE, messages: bank.messages }, { status: 409 });
+    if (isIst && !istTables) {
+      return NextResponse.json({ error: "scoring_unavailable" }, { status: 503 });
     }
 
     const responsesMap: Record<number, string> = {};
@@ -56,14 +57,20 @@ export async function POST(req: NextRequest) {
       const nowMs = parseDbTimestamp(timer?.server_now);
       expired = startedMs !== null && nowMs !== null && isAttemptExpired(startedMs, durationSec, nowMs);
     }
-    if (!expired) {
+    // IST subtests close on their own clocks, so blanks are expected once the last subtest has started.
+    let istReachedEnd = false;
+    if (isIst) {
+      const [timers, schedule] = await Promise.all([readSectionTimers(session.id), getIstSchedule()]);
+      istReachedEnd = timers !== null && schedule !== null && istFlowReachedEnd(schedule, timers.starts);
+    }
+    if (!expired && !istReachedEnd) {
       const missing = unansweredCount(session.test_code, items, responsesMap);
       if (missing > 0) {
         return NextResponse.json({ error: "incomplete", missing }, { status: 422 });
       }
     }
 
-    let payload = computeResult(session.test_code, responsesMap, items);
+    let payload = computeResult(session.test_code, responsesMap, items, istTables ? { ist: istTables } : undefined);
     if (expired) {
       const total = items.length;
       const answered = total - unansweredCount(session.test_code, items, responsesMap);

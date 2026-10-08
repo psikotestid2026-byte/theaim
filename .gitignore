@@ -39,3 +39,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# IST/WPT question banks, answer keys, norms, and figures stay out of git.
+# They live in the database (test_items, scoring_configs, test_norms, test_assets).
+db/seeds/testbank/001-wpt.sql
+db/seeds/testbank/002-ist.sql
+public/tests/ist/
+public/tests/wpt/
+lib/ist-subtests.data.ts
+lib/scoring/ist-norms.data.ts

@@ -88,6 +88,9 @@ function wptFromStored(stored: string[]): StrengthPresentation {
   return { strengths, summary };
 }
 
+/** Full-IST subtest standard score (mean 100, SD 10) shown as a strength: one SD above the mean. */
+export const IST_STRONG_SW = 110;
+
 export function istIsAboveAverage(score: number): boolean {
   return score > IST_SUBTEST_ITEMS / 2;
 }
@@ -221,6 +224,17 @@ export function presentStrengths(input: {
   }
 
   if (kind === "ist") {
+    const iq = asNumber(detail?.iq);
+    if (iq !== null && Array.isArray(detail?.subtests)) {
+      const category = typeof detail?.category === "string" ? detail.category : "";
+      const strengths: string[] = [];
+      for (const row of detail.subtests) {
+        const sub = asRecord(row);
+        const sw = asNumber(sub?.sw);
+        if (sub && sw !== null && sw >= IST_STRONG_SW) strengths.push(`${String(sub.code)} — ${String(sub.name)}: SW ${sw}`);
+      }
+      return { strengths, summary: [`IQ ${iq}${category ? ` · ${category}` : ""}`] };
+    }
     const ra = asNumber(detail?.raScore);
     const zr = asNumber(detail?.zrScore);
     if (ra !== null && zr !== null) return istLines(ra, zr);
