@@ -74,6 +74,7 @@ describe("answer save policy", () => {
     const src = readFileSync(new URL("../app/api/test-responses/route.ts", import.meta.url), "utf8");
     assert.equal(src.includes("await bufferAnswer"), false);
     assert.match(src, /void bufferAnswer/);
-    assert.match(src, /loadAnswerWriteContext/);
+    assert.match(src, /saveAnswerOnce/);
+    assert.equal(src.includes("loadAnswerWriteContext"), false);
   });
 });

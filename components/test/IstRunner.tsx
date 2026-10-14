@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { TestItem, TestItemOption } from "@/types/db";
 import type { IstMemorizeList, IstSubtestPublic } from "@/lib/ist-types";
-import { istLastStartedIndex, istPhaseAt, MEMORIZE_LIST_READ_ATTEMPTS, MEMORIZE_LIST_READ_GAP_MS, type SectionStarts } from "@/lib/ist-flow";
+import { istLastStartedIndex, istPhaseAt, shouldFetchMemorizeList, type SectionStarts } from "@/lib/ist-flow";
 import { istSubtestOf } from "@/lib/scoring/ist";
 import { itemMeta } from "@/lib/scoring/item-meta";
 import { choicePresentation } from "@/lib/choice-option";
@@ -386,6 +386,8 @@ export default function IstRunner({ sessionId, token, testName, subtests, items,
         code={sub.code}
         remaining={remaining}
         initialList={memorizeList}
+        reload={typeof initialStarts[sub.code] === "number"}
+        clockStarted={typeof starts[sub.code] === "number" ? starts[sub.code] : null}
       />
     );
   }
@@ -545,6 +547,8 @@ function MemorizeBoard({
   code,
   remaining,
   initialList,
+  reload,
+  clockStarted,
 }: {
   sessionId: number;
   token: string;
@@ -552,49 +556,47 @@ function MemorizeBoard({
   code: string;
   remaining: number;
   initialList: IstMemorizeList | null;
+  reload: boolean;
+  clockStarted: number | null;
 }) {
   const [fetched, setFetched] = useState<IstMemorizeList | null>(null);
   const [failed, setFailed] = useState(false);
   const list = initialList ?? fetched;
 
   useEffect(() => {
-    if (initialList) return;
+    if (!shouldFetchMemorizeList(Boolean(initialList), reload, clockStarted != null)) return;
     let cancelled = false;
     void (async () => {
-      for (let attempt = 0; attempt < MEMORIZE_LIST_READ_ATTEMPTS && !cancelled; attempt++) {
-        if (attempt > 0) await new Promise((resolve) => setTimeout(resolve, MEMORIZE_LIST_READ_GAP_MS));
-        try {
-          const res = await fetch("/api/test-sessions/memorize-list", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ token, session_id: Number(sessionId) }),
-          });
-          const data = (await res.json().catch(() => null)) as { list?: unknown } | null;
-          if (cancelled) return;
-          const words = data?.list;
-          if (res.ok && words && typeof words === "object" && !Array.isArray(words)) {
-            setFetched(words as IstMemorizeList);
-            setFailed(false);
-            return;
-          }
-          if (res.status !== 404) break;
-        } catch {
-          if (cancelled) return;
+      try {
+        const res = await fetch("/api/test-sessions/memorize-list", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token, session_id: Number(sessionId) }),
+        });
+        const data = (await res.json().catch(() => null)) as { list?: unknown } | null;
+        if (cancelled) return;
+        const words = data?.list;
+        if (res.ok && words && typeof words === "object" && !Array.isArray(words)) {
+          setFetched(words as IstMemorizeList);
+          setFailed(false);
+          return;
         }
+        setFailed(true);
+      } catch {
+        if (!cancelled) setFailed(true);
       }
-      if (!cancelled) setFailed(true);
     })();
     return () => {
       cancelled = true;
     };
-  }, [sessionId, token, code, initialList]);
+  }, [sessionId, token, initialList, reload, clockStarted]);
 
   return (
     <Shell>
       <Header testName={testName} title={`${code} — Hafalkan`} clock={remaining} sub="Daftar ditutup otomatis saat waktu hafalan habis." />
       <div className="bg-white rounded-3xl p-8 shadow-lg border border-slate-100">
-        {!list && !failed && <p className="mb-4 text-sm text-slate-600">Daftar hafalan sedang dimuat.</p>}
-        {!list && failed && <p className="mb-4 text-sm text-amber-900">Daftar hafalan belum bisa dimuat. Muat ulang halaman.</p>}
+        {!list && !failed && reload && <p className="mb-4 text-sm text-slate-600">Daftar hafalan sedang dimuat.</p>}
+        {!list && (failed || !reload) && <p className="mb-4 text-sm text-amber-900">Daftar hafalan belum bisa dimuat. Muat ulang halaman.</p>}
         <div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
           {Object.entries(list ?? {}).map(([group, words]) => (
             <div key={group}>

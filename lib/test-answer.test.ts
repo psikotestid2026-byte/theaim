@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { encodeDiscAnswer } from "./scoring/disc-answer";
+import { DISC_ANSWER_PATTERN, encodeDiscAnswer } from "./scoring/disc-answer";
 import { isAllowedAnswer } from "./test-answer";
 import type { TestItem, TestItemOption } from "@/types/db";
 
@@ -60,5 +60,13 @@ describe("answer validation", () => {
     assert.equal(isAllowedAnswer("disc", disc, encodeDiscAnswer({ P: 0, K: 1 })), true);
     assert.equal(isAllowedAnswer("disc", disc, encodeDiscAnswer({ P: 0, K: 6 })), false);
     assert.equal(isAllowedAnswer("disc", disc, "1"), false);
+  });
+
+  it("matches the DISC JSON shape the answer upsert checks in SQL", () => {
+    const pattern = new RegExp(DISC_ANSWER_PATTERN);
+    assert.equal(pattern.test(encodeDiscAnswer({ P: 0, K: 1 })), true);
+    assert.equal(pattern.test(encodeDiscAnswer({ P: null, K: 1 })), true);
+    assert.equal(pattern.test('{"P": 0, "K": 1}'), false);
+    assert.equal(pattern.test("1"), false);
   });
 });

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";
 import type { IstScheduleEntry } from "./ist-types";
-import { istAnswerWindowOpen, istCanStartSection, istFlowReachedEnd, istMemorizePhaseOpen, istPhaseAt, istSubtestByCode, pollUntil, IST_SECTION_GRACE_MS } from "./ist-flow";
+import { istAnswerWindowOpen, istCanStartSection, istFlowReachedEnd, istMemorizePhaseOpen, istPhaseAt, istSubtestByCode, pollUntil, shouldFetchMemorizeList, IST_SECTION_GRACE_MS } from "./ist-flow";
 
 const T0 = 1_800_000_000_000;
 
@@ -76,10 +76,25 @@ describe("IST subtest flow", () => {
     assert.deepEqual(seen, [25, 25]);
   });
 
+  it("asks for the memorize list only on reload, after the clock is already visible", () => {
+    assert.equal(shouldFetchMemorizeList(true, false, true), false);
+    assert.equal(shouldFetchMemorizeList(false, false, true), false);
+    assert.equal(shouldFetchMemorizeList(false, true, false), false);
+    assert.equal(shouldFetchMemorizeList(false, true, true), true);
+  });
+
   it("returns the memorize list from the same response that starts the section", () => {
     const src = readFileSync(new URL("../app/api/test-sessions/section-timer/route.ts", import.meta.url), "utf8");
-    assert.match(src, /istMemorizePhaseOpen/);
+    assert.match(src, /openIstSection/);
     assert.match(src, /memorize_list/);
+    const query = readFileSync(new URL("./queries/test-sessions.ts", import.meta.url), "utf8");
+    const open = query.slice(query.indexOf("export async function openIstSection"));
+    assert.match(open, /memorizeList/);
+    assert.match(open, /GREATEST/);
+    assert.match(open, /status = 'in_progress'/);
+    const runner = readFileSync(new URL("../components/test/IstRunner.tsx", import.meta.url), "utf8");
+    assert.match(runner, /shouldFetchMemorizeList/);
+    assert.equal(runner.includes("MEMORIZE_LIST_READ_ATTEMPTS"), false);
     const listRoute = readFileSync(new URL("../app/api/test-sessions/memorize-list/route.ts", import.meta.url), "utf8");
     assert.match(listRoute, /pollUntil/);
   });

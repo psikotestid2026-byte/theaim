@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+
+/** Neon is in ap-southeast-1. vercel.json sets the same default for every function. */
+export const preferredRegion = "sin1";
 import { z, ZodError } from "zod";
 import { istMemorizePhaseOpen, pollUntil } from "@/lib/ist-flow";
 import { getIstMemorizeList, getIstSchedule } from "@/lib/queries/ist-content";

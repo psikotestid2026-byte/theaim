@@ -91,6 +91,15 @@ export function istMemorizePhaseOpen(schedule: readonly IstScheduleEntry[], star
   return istPhaseAt(me, started, at).phase === "memorize";
 }
 
+/**
+ * Section start already returns the word list. Call memorize-list only when
+ * this page was reloaded into a running memorize phase, and only once that
+ * clock is already on screen.
+ */
+export function shouldFetchMemorizeList(hasList: boolean, reloadedWithClock: boolean, clockVisible: boolean): boolean {
+  return !hasList && reloadedWithClock && clockVisible;
+}
+
 /** How many times the memorize-list route re-reads the clock before it 404s. */
 export const MEMORIZE_LIST_READ_ATTEMPTS = 4;
 export const MEMORIZE_LIST_READ_GAP_MS = 200;
