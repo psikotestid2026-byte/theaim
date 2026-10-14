@@ -8,6 +8,7 @@ import type { IstMemorizeList, IstSubtestPublic } from "@/lib/ist-types";
 import { istLastStartedIndex, istPhaseAt, type SectionStarts } from "@/lib/ist-flow";
 import { istSubtestOf } from "@/lib/scoring/ist";
 import { itemMeta } from "@/lib/scoring/item-meta";
+import { choicePresentation } from "@/lib/choice-option";
 import { withAssetToken } from "@/lib/test-assets";
 import ItemMedia from "@/components/test/ItemMedia";
 import TypedAnswer from "@/components/test/TypedAnswer";
@@ -60,10 +61,15 @@ export default function IstRunner({ sessionId, token, testName, subtests, items,
   const [cursor, setCursor] = useState<Record<string, number>>({});
   const [busy, setBusy] = useState(false);
   const [pending, setPending] = useState(0);
+  const [finishWaiting, setFinishWaiting] = useState(false);
+  const [finishPrompt, setFinishPrompt] = useState<{ sectionIndex: number; code: string; blank: number } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const submitted = useRef(false);
   const advanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pendingRef = useRef(0);
+  const answersRef = useRef<Record<number, string>>(answers);
+  const queuedFinish = useRef<{ sectionIndex: number; code: string; itemIds: number[] } | null>(null);
 
   useEffect(() => {
     if (offsetRef.current === null) offsetRef.current = serverNowMs - Date.now();
@@ -116,8 +122,14 @@ export default function IstRunner({ sessionId, token, testName, subtests, items,
     }
   }
 
+  function openFinishPrompt(snapshot: { sectionIndex: number; code: string; itemIds: number[] }) {
+    const blank = snapshot.itemIds.filter((id) => !answersRef.current[id]).length;
+    setFinishPrompt({ sectionIndex: snapshot.sectionIndex, code: snapshot.code, blank });
+  }
+
   async function saveAnswer(itemId: number, value: string) {
-    setPending((n) => n + 1);
+    pendingRef.current += 1;
+    setPending(pendingRef.current);
     try {
       const res = await fetch("/api/test-responses", {
         method: "POST",
@@ -135,13 +147,22 @@ export default function IstRunner({ sessionId, token, testName, subtests, items,
     } catch {
       setError("Jawaban belum tersimpan. Periksa koneksi, lalu pilih jawaban lagi.");
     } finally {
-      setPending((n) => Math.max(0, n - 1));
+      pendingRef.current = Math.max(0, pendingRef.current - 1);
+      setPending(pendingRef.current);
+      const waiting = queuedFinish.current;
+      if (pendingRef.current === 0 && waiting) {
+        queuedFinish.current = null;
+        setFinishWaiting(false);
+        openFinishPrompt(waiting);
+      }
     }
   }
 
   function remember(itemId: number, value: string) {
     setError(null);
-    setAnswers((prev) => ({ ...prev, [itemId]: value }));
+    const next = { ...answersRef.current, [itemId]: value };
+    answersRef.current = next;
+    setAnswers(next);
     void saveAnswer(itemId, value);
   }
 
@@ -268,12 +289,14 @@ export default function IstRunner({ sessionId, token, testName, subtests, items,
   const answeredCount = list.filter((row) => answers[row.id]).length;
   const typed = item ? itemMeta(item).answer_type === "text" || itemMeta(item).answer_type === "number" : false;
 
-  function finishEarly() {
-    const open = list.length - answeredCount;
-    const message = open > 0
-      ? `Masih ada ${open} soal kosong di subtes ${sub.code}. Selesaikan subtes ini? Anda tidak bisa kembali.`
-      : `Selesaikan subtes ${sub.code}? Anda tidak bisa kembali.`;
-    if (window.confirm(message)) setClosedThrough(last);
+  function requestFinish() {
+    const snapshot = { sectionIndex: last, code: sub.code, itemIds: list.map((row) => row.id) };
+    if (pendingRef.current > 0) {
+      queuedFinish.current = snapshot;
+      setFinishWaiting(true);
+      return;
+    }
+    openFinishPrompt(snapshot);
   }
 
   return (
@@ -302,13 +325,16 @@ export default function IstRunner({ sessionId, token, testName, subtests, items,
           ) : (
             <div className="space-y-3">
               {optionsOf(item).map((opt, i) => {
+                const shown = choicePresentation(i, opt);
                 const selected = answers[item.id] === opt.value;
                 return (
                   <button
                     key={`${opt.value}-${i}`}
                     type="button"
                     aria-pressed={selected}
+                    aria-label={shown.ariaLabel}
                     onClick={() => {
+                      if (!opt.value) return;
                       remember(item.id, opt.value);
                       if (advanceTimer.current) clearTimeout(advanceTimer.current);
                       if (index < list.length - 1) advanceTimer.current = setTimeout(() => goTo(index + 1), 300);
@@ -316,10 +342,13 @@ export default function IstRunner({ sessionId, token, testName, subtests, items,
                     className={`test-option-btn ${selected ? "selected" : ""}`}
                   >
                     <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black shrink-0 ${selected ? "bg-red-600 text-white" : "bg-slate-100 text-slate-500"}`}>
-                      {String.fromCharCode(65 + i)}
+                      {shown.letter}
                     </span>
-                    <span className="flex-1 text-left">
-                      {opt.image ? <img src={withAssetToken(opt.image, token) ?? opt.image} alt={opt.label} className="max-h-24 w-auto" /> : opt.label}
+                    <span className="flex-1 flex items-center gap-3 text-left">
+                      {opt.image ? (
+                        <img src={withAssetToken(opt.image, token) ?? opt.image} alt="" className="max-h-24 w-auto" />
+                      ) : null}
+                      <span className="text-base font-semibold text-slate-900">{shown.text}</span>
                     </span>
                   </button>
                 );
@@ -351,11 +380,38 @@ export default function IstRunner({ sessionId, token, testName, subtests, items,
             Selanjutnya →
           </button>
         ) : (
-          <button type="button" onClick={finishEarly} disabled={pending > 0} className="btn-primary px-6 py-3 rounded-xl text-sm disabled:opacity-40">
-            Selesai subtes {sub.code}
+          <button type="button" onClick={requestFinish} className="btn-primary px-6 py-3 rounded-xl text-sm">
+            {finishWaiting ? "Menyimpan jawaban..." : `Selesai subtes ${sub.code}`}
           </button>
         )}
       </div>
+      {finishPrompt && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4">
+          <div role="dialog" aria-modal="true" aria-labelledby="finish-subtest-title" className="w-full max-w-md rounded-3xl bg-white p-6 shadow-xl">
+            <h2 id="finish-subtest-title" className="text-lg font-black text-slate-900">Selesaikan subtes {finishPrompt.code}?</h2>
+            <p className="mt-3 text-sm leading-relaxed text-slate-600">
+              {finishPrompt.blank > 0
+                ? `Masih ada ${finishPrompt.blank} soal kosong di subtes ${finishPrompt.code}. Setelah selesai, Anda tidak bisa kembali ke subtes ini.`
+                : `Setelah selesai, Anda tidak bisa kembali ke subtes ${finishPrompt.code}.`}
+            </p>
+            <div className="mt-6 flex flex-wrap justify-end gap-3">
+              <button type="button" onClick={() => setFinishPrompt(null)} className="btn-outline px-5 py-2.5 rounded-xl text-sm">
+                Kembali mengerjakan
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setClosedThrough(finishPrompt.sectionIndex);
+                  setFinishPrompt(null);
+                }}
+                className="btn-primary px-5 py-2.5 rounded-xl text-sm"
+              >
+                Selesaikan
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </Shell>
   );
 }

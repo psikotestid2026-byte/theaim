@@ -54,5 +54,7 @@ describe("test asset paths", () => {
     assert.match(query, /status = 'in_progress'|status === "in_progress"/);
     assert.match(query, /test_items/);
     assert.match(query, /HASIL_RENDERS_ITEM_FIGURES/);
+    assert.match(query, /exampleImage/);
+    assert.match(query, /scoring_configs/);
   });
 });
