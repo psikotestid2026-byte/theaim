@@ -15,7 +15,13 @@ const SECRET_META_KEYS = [
   "ge_answers",
 ] as const;
 
-const PROVISIONAL_NOTE = /\d+\s+butir memakai kunci sementara[^.]*\.?\s*/gi;
+const PROVISIONAL_SENTENCE = /\d+\s+butir memakai kunci sementara[\s\S]*?ditinjau psikolog\.?\s*/gi;
+const PROVISIONAL_NUMBERS = /\(\s*no\.\s*\d[\d,\s]*\)/gi;
+
+/** True when a stored note may be shown to the participant. Item numbers stay on the admin record. */
+export function participantNoteVisible(line: string): boolean {
+  return !/kunci sementara|\(no\.\s*\d/i.test(line);
+}
 
 function asObject(value: unknown): Record<string, unknown> | null {
   if (typeof value === "string") {
@@ -80,7 +86,11 @@ function rewriteAssetStrings(value: unknown, token: string): unknown {
 }
 
 function scrubProvisionalText(text: string): string {
-  return text.replace(PROVISIONAL_NOTE, "").replace(/\s{2,}/g, " ").trim();
+  return text
+    .replace(PROVISIONAL_SENTENCE, "")
+    .replace(PROVISIONAL_NUMBERS, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
 }
 
 /**
@@ -97,7 +107,7 @@ export function presentTakerResult<T extends { interpretation?: unknown }>(resul
     delete detail.provisionalItems;
     if (Array.isArray(detail.notes)) {
       detail.notes = detail.notes
-        .filter((line): line is string => typeof line === "string" && !/kunci sementara/i.test(line))
+        .filter((line): line is string => typeof line === "string" && participantNoteVisible(line))
         .map((line) => scrubProvisionalText(line));
     }
     copy.detail = rewriteAssetStrings(detail, resultToken);

@@ -14,7 +14,7 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ path: strin
   const { path: segments } = await ctx.params;
   const token = req.nextUrl.searchParams.get("t") ?? "";
   const assetPath = safeAssetPath((segments ?? []).join("/"));
-  if (!assetPath || !(await assetTokenCanRead(token))) return notFound();
+  if (!assetPath || !(await assetTokenCanRead(token, assetPath))) return notFound();
 
   const asset = await getTestAsset(assetPath).catch(() => null);
   const contentType = asset ? safeImageContentType(asset.content_type) : null;
@@ -24,7 +24,7 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ path: strin
     status: 200,
     headers: {
       "Content-Type": contentType,
-      "Content-Length": String(asset.data.length),
+      "Content-Length": String(asset.data.byteLength),
       "Cache-Control": "private, max-age=3600",
       "X-Content-Type-Options": "nosniff",
     },

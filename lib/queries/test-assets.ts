@@ -1,18 +1,7 @@
 import { sql } from "@/lib/db";
+import { decodeBytea, HASIL_RENDERS_ITEM_FIGURES, safeAssetPath, sessionMayReadAsset } from "@/lib/test-assets";
 
-function decodeBytea(value: unknown): Buffer | null {
-  if (Buffer.isBuffer(value)) return value;
-  if (value instanceof Uint8Array) return Buffer.from(value);
-  if (typeof value !== "string" || value.length === 0) return null;
-  if (value.startsWith("\\x")) {
-    const hex = Buffer.from(value.slice(2), "hex");
-    return hex.length > 0 ? hex : null;
-  }
-  const decoded = Buffer.from(value, "base64");
-  return decoded.length > 0 ? decoded : null;
-}
-
-export async function getTestAsset(path: string): Promise<{ content_type: string; data: Buffer } | null> {
+export async function getTestAsset(path: string): Promise<{ content_type: string; data: Uint8Array } | null> {
   const rows = await sql`
     SELECT content_type, data
     FROM test_assets
@@ -26,24 +15,57 @@ export async function getTestAsset(path: string): Promise<{ content_type: string
   return { content_type: row.content_type, data };
 }
 
+function asBool(value: unknown): boolean {
+  return value === true || value === "t" || value === "true" || value === 1;
+}
+
 /**
- * Access tokens work until the session is completed.
- * A result token works for /hasil, including after completion.
- * Anything else is denied. Callers respond 404 either way.
+ * An access token may read a figure only after identity confirmation
+ * (`in_progress`), before completion, and only when an item of that
+ * session's own test references the path.
+ * A result token is allowed only when /hasil actually renders that figure.
+ * /hasil does not, so result tokens are denied. Callers respond 404 either way.
  */
-export async function assetTokenCanRead(token: string): Promise<boolean> {
-  if (!token || token.length > 128) return false;
+export async function assetTokenCanRead(token: string, assetPath: string): Promise<boolean> {
+  if (!token || token.length > 128 || !safeAssetPath(assetPath)) return false;
   const rows = await sql`
-    SELECT (access_token = ${token}) AS is_access,
-           (result_token = ${token}) AS is_result,
-           status
+    SELECT status,
+           test_code,
+           (access_token = ${token}) AS is_access,
+           (result_token = ${token}) AS is_result
     FROM test_sessions
     WHERE access_token = ${token} OR result_token = ${token}
     LIMIT 2
   `;
-  for (const row of rows as { is_access?: boolean; is_result?: boolean; status?: string }[]) {
-    if (row.is_result) return true;
-    if (row.is_access && row.status !== "completed") return true;
+  for (const row of rows as { status?: unknown; test_code?: unknown; is_access?: unknown; is_result?: unknown }[]) {
+    const isAccess = asBool(row.is_access);
+    const isResult = asBool(row.is_result);
+    const status = typeof row.status === "string" ? row.status : "";
+    const testCode = typeof row.test_code === "string" ? row.test_code : "";
+    const needsLookup = (isAccess && status === "in_progress") || (isResult && HASIL_RENDERS_ITEM_FIGURES);
+    const referenced = needsLookup && testCode ? await itemBankReferencesAsset(testCode, assetPath) : false;
+    if (sessionMayReadAsset({ isAccess, isResult, status, referencedByOwnTest: referenced })) return true;
   }
   return false;
+}
+
+async function itemBankReferencesAsset(testCode: string, assetPath: string): Promise<boolean> {
+  const rows = await sql`
+    SELECT 1
+    FROM test_items ti
+    WHERE lower(ti.test_code) = lower(${testCode})
+      AND (
+        regexp_replace(split_part(split_part(COALESCE(ti.scoring_meta->>'image', ''), '#', 1), '?', 1), '^(/api/test-assets/|/)', '') = ${assetPath}
+        OR regexp_replace(split_part(split_part(COALESCE(ti.scoring_meta->>'options_image', ''), '#', 1), '?', 1), '^(/api/test-assets/|/)', '') = ${assetPath}
+        OR EXISTS (
+          SELECT 1
+          FROM jsonb_array_elements(
+            CASE WHEN jsonb_typeof(ti.options) = 'array' THEN ti.options ELSE '[]'::jsonb END
+          ) AS opt
+          WHERE regexp_replace(split_part(split_part(COALESCE(opt->>'image', ''), '#', 1), '?', 1), '^(/api/test-assets/|/)', '') = ${assetPath}
+        )
+      )
+    LIMIT 1
+  `;
+  return rows.length > 0;
 }

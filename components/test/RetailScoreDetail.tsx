@@ -3,6 +3,7 @@ import { getEnneagramCoreInfo, getEnneagramWingInfo } from "@/lib/scoring/ruangt
 import { MIN_HEADLINE_ITEMS, thinBigFiveNote } from "@/lib/scoring/ruangtes/bigfive";
 import { msaiQuadrantLeaders } from "@/lib/msai-label";
 import { EXPIRY_AUTO_SUBMIT_HEADING, expiryAnsweredLine } from "@/lib/test-timer";
+import { participantNoteVisible } from "@/lib/taker-view";
 
 type Detail = Record<string, unknown>;
 
@@ -193,7 +194,9 @@ export default function RetailScoreDetail({ detail }: { detail: unknown }) {
   }
 
   if (data.kind === "ist" && Array.isArray(data.subtests)) {
-    const notes = Array.isArray(data.notes) ? data.notes.filter((line): line is string => typeof line === "string") : [];
+    const notes = Array.isArray(data.notes)
+      ? data.notes.filter((line): line is string => typeof line === "string" && participantNoteVisible(line))
+      : [];
     return (
       <div className="mb-8 space-y-4">
         <div className="grid grid-cols-3 gap-3">

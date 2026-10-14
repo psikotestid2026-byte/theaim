@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";
-import { assetPathFromStoredRef, safeAssetPath, safeImageContentType, withAssetToken } from "./test-assets";
+import { assetPathFromStoredRef, decodeBytea, safeAssetPath, safeImageContentType, sessionMayReadAsset, withAssetToken } from "./test-assets";
 
 describe("test asset paths", () => {
   it("accepts the staging figure paths and rejects traversal", () => {
@@ -28,5 +29,30 @@ describe("test asset paths", () => {
   it("allows image content types only", () => {
     assert.equal(safeImageContentType("image/png"), "image/png");
     assert.equal(safeImageContentType("text/html"), null);
+  });
+
+  it("lets a confirmed session read its own figure and rejects everyone else", () => {
+    const own = { referencedByOwnTest: true };
+    assert.equal(sessionMayReadAsset({ isAccess: true, isResult: false, status: "in_progress", ...own }), true);
+    assert.equal(sessionMayReadAsset({ isAccess: true, isResult: false, status: "issued", ...own }), false);
+    assert.equal(sessionMayReadAsset({ isAccess: true, isResult: false, status: "confirming", ...own }), false);
+    assert.equal(sessionMayReadAsset({ isAccess: true, isResult: false, status: "completed", ...own }), false);
+    assert.equal(sessionMayReadAsset({ isAccess: true, isResult: false, status: "locked", ...own }), false);
+    assert.equal(sessionMayReadAsset({ isAccess: true, isResult: false, status: "in_progress", referencedByOwnTest: false }), false);
+    assert.equal(sessionMayReadAsset({ isAccess: false, isResult: true, status: "completed", ...own }), false);
+  });
+
+  it("decodes bytea without the Buffer constructor", () => {
+    assert.deepEqual(Array.from(decodeBytea("\\x0102") ?? []), [1, 2]);
+    assert.deepEqual(Array.from(decodeBytea("AQID") ?? []), [1, 2, 3]);
+    assert.equal(decodeBytea(""), null);
+    assert.equal(decodeBytea("\\xzz"), null);
+    const source = readFileSync(new URL("./test-assets.ts", import.meta.url), "utf8");
+    const query = readFileSync(new URL("./queries/test-assets.ts", import.meta.url), "utf8");
+    assert.equal(/Buffer\s*\(/.test(source), false);
+    assert.equal(/Buffer\s*\(/.test(query), false);
+    assert.match(query, /status = 'in_progress'|status === "in_progress"/);
+    assert.match(query, /test_items/);
+    assert.match(query, /HASIL_RENDERS_ITEM_FIGURES/);
   });
 });

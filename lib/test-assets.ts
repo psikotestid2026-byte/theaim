@@ -43,3 +43,54 @@ export function safeImageContentType(value: string): string | null {
   const type = value.trim().toLowerCase();
   return /^image\/[a-z0-9.+-]+$/.test(type) ? type : null;
 }
+
+/**
+ * /hasil renders scores and narrative, not item figures.
+ * Result tokens stay denied until a figure is actually painted on that page.
+ */
+export const HASIL_RENDERS_ITEM_FIGURES = false;
+
+export function sessionMayReadAsset(input: {
+  isAccess: boolean;
+  isResult: boolean;
+  status: string;
+  referencedByOwnTest: boolean;
+}): boolean {
+  if (!input.referencedByOwnTest) return false;
+  if (input.isAccess && input.status === "in_progress") return true;
+  if (input.isResult && HASIL_RENDERS_ITEM_FIGURES) return true;
+  return false;
+}
+
+/** Decode a Neon bytea value without the deprecated Buffer constructor. */
+export function decodeBytea(value: unknown): Uint8Array | null {
+  if (value instanceof Uint8Array) {
+    return value.byteLength > 0 ? new Uint8Array(value) : null;
+  }
+  if (typeof value !== "string" || value.length === 0) return null;
+  if (value.startsWith("\\x")) return decodeHex(value.slice(2));
+  return decodeBase64(value);
+}
+
+function decodeHex(hex: string): Uint8Array | null {
+  if (hex.length === 0 || hex.length % 2 !== 0 || /[^0-9a-fA-F]/.test(hex)) return null;
+  const out = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < out.length; i += 1) {
+    out[i] = Number.parseInt(hex.slice(i * 2, i * 2 + 2), 16);
+  }
+  return out;
+}
+
+function decodeBase64(value: string): Uint8Array | null {
+  const cleaned = value.replace(/\s/g, "");
+  if (!cleaned || cleaned.length % 4 !== 0 || /[^A-Za-z0-9+/=]/.test(cleaned)) return null;
+  try {
+    const binary = globalThis.atob(cleaned);
+    if (binary.length === 0) return null;
+    const out = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i += 1) out[i] = binary.charCodeAt(i);
+    return out;
+  } catch {
+    return null;
+  }
+}

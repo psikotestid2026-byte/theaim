@@ -66,6 +66,9 @@ describe("taker payload", () => {
     assert.equal(json.includes("provisionalItems"), false);
     assert.equal(json.includes("kunci sementara"), false);
     assert.equal(json.includes("no. 4"), false);
+    assert.equal(json.includes("4, 9"), false);
+    assert.equal(/\b4\b/.test(json), false);
+    assert.equal(/\b9\b/.test(json), false);
     assert.match(json, /FA_117\.png\?t=result-token/);
     assert.match(view.interpretation.description, /IQ 100/);
   });

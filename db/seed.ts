@@ -474,6 +474,10 @@ async function seedTalentCatalog() {
   const idByCode = new Map(tests.map((t) => [t.code, t.id]));
 
   for (const row of MASTER_TEST_SEEDS) {
+    if (row.code === "ist" || row.code === "wpt") {
+      console.log(`Skipping scoring config for ${row.code}: not present in git seed data.`);
+      continue;
+    }
     if (!row.formula_type) continue;
     const testId = idByCode.get(row.code);
     if (!testId) continue;
