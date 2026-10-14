@@ -18,7 +18,7 @@
 | Catalog & Pricing | `service_categories`, `services`, `service_packages`, `consultants`, `service_consultants` |
 | Customer & Booking | `customers`, `registrations`, `payments` |
 | Payment Infrastructure & Notifications | `payment_methods`, `payment_instructions`, `payment_logs`, `notification_templates`, `notification_logs` |
-| **Psychometric Test Engine** | **`master_tests`, `scoring_configs`, `test_norms`, `talent_themes`, `strength_activities`, `strength_typologies`, `test_sessions`, `test_items`, `test_responses`, `test_results`, `tm_results`** |
+| **Psychometric Test Engine** | **`master_tests`, `scoring_configs`, `test_norms`, `talent_themes`, `strength_activities`, `strength_typologies`, `test_sessions`, `test_items`, `test_assets`, `test_responses`, `test_results`, `tm_results`** |
 | Corporate / Partnership | `corporate_inquiries`, `partnership_submissions`, `proposal_download_leads` |
 | Recruitment | `job_postings`, `job_applications` |
 | Content & Marketing | `articles`, `testimonials`, `corporate_partners` |
@@ -53,6 +53,7 @@ erDiagram
     master_tests ||--o{ test_items : "optional test_id"
     master_tests ||--o| scoring_configs : "formula"
     master_tests ||--o{ test_norms : "lookup"
+    test_items }o--o| test_assets : "figure path, not an FK"
     test_sessions ||--o{ test_responses : "records answers"
     test_items ||--o{ test_responses : "answered in"
     test_sessions ||--|| test_results : "produces"
@@ -568,6 +569,7 @@ CREATE TABLE test_sessions (
     expires_at      timestamptz NOT NULL,        -- 30 days; NULL after started
     started_at      timestamptz,
     timer_started_at timestamptz,             -- set once when a timed attempt begins; null for untimed tests
+    section_started_at jsonb NOT NULL DEFAULT '{}', -- IST only: { "SE": <epoch ms>, ... } per-subtest clock, each key written once
     completed_at    timestamptz,
     created_at      timestamptz NOT NULL DEFAULT now(),
     updated_at      timestamptz NOT NULL DEFAULT now(),
@@ -603,12 +605,31 @@ CREATE TABLE test_items (
     -- each option: {"value": "A", "label": "Saya lebih suka...", "score_key": "E", "score_val": 1}
     -- score_key and score_val drive server-side computation in lib/scoring/{test_code}.ts
     scoring_meta    jsonb,
+    -- Keys live in the database, never in git, for IST and WPT.
+    --   answer_type 'choice' | 'text' | 'number'
+    --   image / options_image = /api/test-assets/tests/... (bytes in test_assets)
+    --   WPT: match ('choice'|'number'|'numbers_set'|'text') + accepted[]
+    --   IST: subtest, key | accepted_digits | ge_answers {"2":[],"1":[]};
+    --        key_provisional + candidate_keys when sources disagree
+    --   Big Five: instrument 'IPIP-BFM-50', factor (E|A|C|ES|O), keyed (+|-)
+    -- options may carry "image" for figure choices
+    -- Taker payloads strip accepted, key, key_letter, key_provisional, candidate_keys,
+    -- key_note, accepted_digits, ge_answers, and option score_key / score_val.
     created_at      timestamptz NOT NULL DEFAULT now(),
     updated_at      timestamptz NOT NULL DEFAULT now(),
     CONSTRAINT uq_test_items_code_order UNIQUE (test_code, item_order)
 );
 -- All questions for a test are loaded at once at test start; test_code is the only filter
 CREATE INDEX idx_test_items_test_code ON test_items (test_code, item_order);
+
+-- IST/WPT figure bytes. path is the public-relative name (tests/ist/..., tests/wpt/...).
+-- No FK: test_items.scoring_meta stores /api/test-assets/{path}. Served only with a session or result token.
+CREATE TABLE test_assets (
+    path         text PRIMARY KEY,
+    content_type text NOT NULL,
+    data         bytea NOT NULL,
+    created_at   timestamptz NOT NULL DEFAULT now()
+);
 
 
 CREATE TABLE test_responses (
@@ -670,6 +691,13 @@ CREATE TABLE scoring_configs (
     test_id      bigint NOT NULL UNIQUE REFERENCES master_tests(id) ON DELETE CASCADE,
     formula_type varchar(100) NOT NULL,
     config_data  jsonb NOT NULL,
+    -- IST config_data keys read by lib/ist-config.ts:
+    --   subtests[]: code, name, from, to, timeLimitSec, memorizeSec (ME),
+    --               instructions, examples[{stem?, options?, key}], exampleImage?,
+    --               memorizeList? (ME only; {group: string[]})
+    --   ge_raw_to_rw: number[], iq_categories[{label, iq_min?, iq_max?}], provisional_items: number[]
+    -- RW→SW, GESAMT, and SW→IQ live in test_norms, not in this JSON.
+    -- memorizeList is loaded only while the ME server clock is in the memorize phase.
     created_at   timestamptz NOT NULL DEFAULT now()
 );
 

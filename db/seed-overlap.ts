@@ -18,11 +18,12 @@ const EXPECTED_COUNTS: Record<string, number> = {
   enneagram: 180,
   riasec: 108,
   papi: 90,
-  wpt: 50,
-  ist: 137,
   msdt: 64,
   msai: 87,
 };
+
+/** Copyrighted banks live in the database. Git seed files may omit them. */
+const DB_ONLY_CODES = ["ist", "wpt"] as const;
 
 const LIKERT_LABELS = [
   "Sangat Tidak Setuju",
@@ -132,10 +133,27 @@ function distinctNorms(rows: NormRow[]) {
   return distinct;
 }
 
+function isDbOnly(code: string): boolean {
+  return (DB_ONLY_CODES as readonly string[]).includes(code.toLowerCase());
+}
+
 export async function seedOverlapBanks() {
-  const questions = loadJson<QuestionBankRow[]>("question_banks.json");
-  const scoring = loadJson<ScoringRow[]>("scoring_configs.json");
-  const norms = loadJson<NormRow[]>("test_norms.json");
+  const allQuestions = loadJson<QuestionBankRow[]>("question_banks.json");
+  const allScoring = loadJson<ScoringRow[]>("scoring_configs.json");
+  const allNorms = loadJson<NormRow[]>("test_norms.json");
+  for (const code of DB_ONLY_CODES) {
+    const items = allQuestions.filter((row) => row.code.toLowerCase() === code).length;
+    const configs = allScoring.filter((row) => row.code.toLowerCase() === code).length;
+    const normRows = allNorms.filter((row) => row.code.toLowerCase() === code).length;
+    if (items + configs + normRows === 0) {
+      console.log(`Skipping overlap bank ${code}: not present in git seed data.`);
+    } else {
+      console.log(`Skipping overlap bank ${code}: ${items} items, ${configs} configs, ${normRows} norms are not loaded from git.`);
+    }
+  }
+  const questions = allQuestions.filter((row) => !isDbOnly(row.code));
+  const scoring = allScoring.filter((row) => !isDbOnly(row.code));
+  const norms = allNorms.filter((row) => !isDbOnly(row.code));
   const codes = Object.keys(EXPECTED_COUNTS);
 
   const counts = new Map<string, number>();

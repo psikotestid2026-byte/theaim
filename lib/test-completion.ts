@@ -6,6 +6,7 @@ type CompletionItem = {
   section?: string | null;
   options?: { value?: string }[] | string;
   item_order?: number;
+  scoring_meta?: unknown;
 };
 
 export function unansweredItemIds(

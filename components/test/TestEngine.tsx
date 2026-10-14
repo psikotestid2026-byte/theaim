@@ -8,6 +8,11 @@ import { msaiBlockForOrder, msaiScaleOptions } from "@/lib/msai-form";
 import { initialQuestionIndex } from "@/lib/test-access";
 import { EXPIRY_AUTO_SUBMIT_HEADING, EXPIRY_NOTICE_MS, expiryAnsweredLine } from "@/lib/test-timer";
 import { isAnswerComplete, widgetForItem, type AnswerWidget } from "@/lib/test-widget";
+import { itemMeta } from "@/lib/scoring/item-meta";
+import ItemMedia from "@/components/test/ItemMedia";
+import { ACCESS_ENDED_COPY, classifyFetchedSave, readApiJson } from "@/lib/answer-save";
+import { withAssetToken } from "@/lib/test-assets";
+import TypedAnswer from "@/components/test/TypedAnswer";
 
 interface Props {
   sessionId: number;
@@ -171,7 +176,7 @@ export default function TestEngine({
   const failedCount = Object.keys(failedSaves).length;
   const timeUp = remaining === 0;
 
-  async function saveAnswer(itemId: number, value: string): Promise<boolean> {
+  async function saveAnswer(itemId: number, value: string): Promise<"saved" | "failed" | "access"> {
     pendingRef.current += 1;
     setPendingSaves(pendingRef.current);
     setSaving(true);
@@ -186,15 +191,17 @@ export default function TestEngine({
           answer_value: value,
         }),
       });
-      const payload = (await res.json().catch(() => ({}))) as { error?: string };
-      if (!res.ok) {
-        if (payload.error === "bank_incomplete") {
-          setError("Bank soal belum lengkap. Jawaban tidak disimpan.");
-          return false;
-        }
+      const payload = await readApiJson(res);
+      const classified = classifyFetchedSave(res.status, payload);
+      if (classified.accessEnded) {
         setFailedSaves((prev) => ({ ...prev, [itemId]: value }));
-        if (res.status === 409 && payload.error === "expired") setRemaining(0);
-        return false;
+        setError(ACCESS_ENDED_COPY);
+        return "access";
+      }
+      if (classified.outcome !== "saved") {
+        setFailedSaves((prev) => ({ ...prev, [itemId]: value }));
+        if (res.status === 409 && payload?.error === "expired") setRemaining(0);
+        return "failed";
       }
       setFailedSaves((prev) => {
         if (!(itemId in prev)) return prev;
@@ -202,10 +209,11 @@ export default function TestEngine({
         delete next[itemId];
         return next;
       });
-      return true;
+      setError((prev) => (prev === ACCESS_ENDED_COPY ? null : prev));
+      return "saved";
     } catch {
       setFailedSaves((prev) => ({ ...prev, [itemId]: value }));
-      return false;
+      return "failed";
     } finally {
       pendingRef.current = Math.max(0, pendingRef.current - 1);
       setPendingSaves(pendingRef.current);
@@ -213,14 +221,15 @@ export default function TestEngine({
     }
   }
 
-  async function retryFailed(): Promise<boolean> {
+  async function retryFailed(): Promise<"saved" | "failed" | "access"> {
     const pending = Object.entries(failedRef.current);
-    let ok = true;
+    let worst: "saved" | "failed" | "access" = "saved";
     for (const [id, value] of pending) {
-      const savedOk = await saveAnswer(Number(id), value);
-      if (!savedOk) ok = false;
+      const result = await saveAnswer(Number(id), value);
+      if (result === "access") worst = "access";
+      else if (result === "failed" && worst !== "access") worst = "failed";
     }
-    return ok;
+    return worst;
   }
 
   function remember(itemId: number, value: string) {
@@ -263,9 +272,9 @@ export default function TestEngine({
     setSubmitting(true);
     setError(null);
     if (Object.keys(failedRef.current).length > 0) {
-      const savedOk = await retryFailed();
-      if (!savedOk && remaining !== 0) {
-        setError("Beberapa jawaban belum tersimpan. Simpan ulang sebelum menyelesaikan tes.");
+      const saved = await retryFailed();
+      if (saved !== "saved" && remaining !== 0) {
+        if (saved !== "access") setError("Beberapa jawaban belum tersimpan. Simpan ulang sebelum menyelesaikan tes.");
         setSubmitting(false);
         autoSubmitted.current = false;
         return;
@@ -279,12 +288,6 @@ export default function TestEngine({
       });
       const data = await res.json().catch(() => ({}));
       const nextToken = typeof data.result_token === "string" ? data.result_token : "";
-      if (res.status === 409 && data.error === "bank_incomplete") {
-        setError("Bank soal belum lengkap. Hasil tidak dihitung.");
-        setSubmitting(false);
-        autoSubmitted.current = false;
-        return;
-      }
       if (res.status === 422 && data.error === "incomplete") {
         const missing = typeof data.missing === "number" ? data.missing : 0;
         setError(`Masih ada ${missing} soal yang belum tersimpan. Lengkapi jawaban, lalu coba lagi.`);
@@ -434,10 +437,20 @@ export default function TestEngine({
                 Pilih 1 Paling (P) dan 1 Kurang (K)
               </span>
             )}
-            <p className="text-xl font-bold text-slate-900 leading-relaxed">{item.question_text}</p>
+            <p className="text-xl font-bold text-slate-900 leading-relaxed whitespace-pre-line">{item.question_text}</p>
+            <ItemMedia item={item} token={token} />
           </div>
 
-          {widget === "likert" ? (
+          {widget === "text" ? (
+            <TypedAnswer
+              key={item.id}
+              itemId={item.id}
+              saved={answers[item.id]}
+              numeric={itemMeta(item).answer_type === "number"}
+              saving={saving}
+              onSave={(value) => remember(item.id, value)}
+            />
+          ) : widget === "likert" ? (
             <LikertScale
               options={options}
               selected={answers[item.id]}
@@ -494,7 +507,14 @@ export default function TestEngine({
                     <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black shrink-0 ${selected ? "bg-red-600 text-white" : "bg-slate-100 text-slate-500"}`}>
                       {String.fromCharCode(65 + index)}
                     </span>
-                    <span className="flex-1 text-left">{opt.label}</span>
+                    <span className="flex-1 text-left">
+                      {opt.image ? (
+                        // eslint-disable-next-line @next/next/no-img-element -- token-gated test figure
+                        <img src={withAssetToken(opt.image, token) ?? opt.image} alt={opt.label} className="max-h-24 w-auto" />
+                      ) : (
+                        opt.label
+                      )}
+                    </span>
                     {saving && selected && <span className="text-xs text-slate-400">Menyimpan...</span>}
                   </button>
                 );

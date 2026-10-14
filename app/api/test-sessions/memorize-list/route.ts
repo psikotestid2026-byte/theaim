@@ -1,0 +1,53 @@
+import { NextRequest, NextResponse } from "next/server";
+
+/** Neon is in ap-southeast-1. vercel.json sets the same default for every function. */
+export const preferredRegion = "sin1";
+import { z, ZodError } from "zod";
+import { istMemorizePhaseOpen, pollUntil } from "@/lib/ist-flow";
+import { getIstMemorizeList, getIstSchedule } from "@/lib/queries/ist-content";
+import { getSessionByAccessToken, readSectionTimers } from "@/lib/queries/test-sessions";
+import { logRouteError } from "@/lib/log-error";
+import { canWriteTest } from "@/lib/test-access";
+import { positiveId } from "@/lib/validators/test-attempt";
+
+const body = z.object({
+  token: z.string().uuid(),
+  session_id: positiveId,
+});
+
+function unavailable(): NextResponse {
+  return NextResponse.json({ error: "not_available" }, { status: 404 });
+}
+
+/**
+ * Returns the ME word list only while that subtest's server clock is still in the memorize phase.
+ * Answer-phase, other subtests, and completed sessions get 404 with no list.
+ */
+export async function POST(req: NextRequest) {
+  try {
+    const { token, session_id } = body.parse(await req.json());
+    const session = await getSessionByAccessToken(token);
+    if (!session || session.id !== session_id || session.status === "completed" || !canWriteTest(session.status)) {
+      return unavailable();
+    }
+    if (session.test_code.toLowerCase() !== "ist") return unavailable();
+
+    const schedule = await getIstSchedule();
+    if (!schedule) return unavailable();
+    // The start and this read are different requests. Re-read a few times so a
+    // just-written clock is visible before we answer 404.
+    const timers = await pollUntil(
+      () => readSectionTimers(session.id),
+      (row) => row !== null && typeof row.starts.ME === "number",
+    );
+    if (!timers || !istMemorizePhaseOpen(schedule, timers.starts, timers.nowMs)) return unavailable();
+
+    const list = await getIstMemorizeList();
+    if (!list) return unavailable();
+    return NextResponse.json({ list });
+  } catch (err) {
+    if (err instanceof ZodError) return unavailable();
+    logRouteError("memorize-list", err);
+    return unavailable();
+  }
+}

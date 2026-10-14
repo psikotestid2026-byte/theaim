@@ -2,7 +2,8 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import type { TestItem, TestItemOption } from "@/types/db";
 import { computeResult } from "./index";
-import { calculateBigFiveFromItems, resolveBigFiveKey } from "./ruangtes/bigfive";
+import { calculateBigFiveFromItems, calculateIpipBfm50, isIpipBfm50Bank, resolveBigFiveKey } from "./ruangtes/bigfive";
+import { seedItems } from "./seed-bank";
 
 describe("Big Five item keys", () => {
   it("maps the stored stems instead of BFI-44 positions", () => {
@@ -85,5 +86,39 @@ describe("Big Five item keys", () => {
     assert.match(scored.interpretation.description, /Agreeableness punya 1 butir/);
     assert.match(scored.interpretation.description, /terlalu sedikit/);
     assert.equal(scored.interpretation.strengths.some((line) => line.includes("Agreeableness")), false);
+  });
+});
+
+describe("IPIP-BFM-50 (seed, official IPIP keying)", () => {
+  const bank = seedItems("003-bigfive-ipip50.sql", "bigfive");
+
+  it("has 10 items per factor with the published +/- keys", () => {
+    assert.equal(bank.length, 50);
+    assert.equal(isIpipBfm50Bank(bank), true);
+    const counts: Record<string, number> = {};
+    for (const item of bank) {
+      const meta = item.scoring_meta as { factor: string };
+      counts[meta.factor] = (counts[meta.factor] ?? 0) + 1;
+    }
+    assert.deepEqual(counts, { E: 10, A: 10, C: 10, ES: 10, O: 10 });
+  });
+
+  it("all 5 → E 30, A 34, C 34, ES 18, O 38 (5 per + item, 1 per − item)", () => {
+    const responses: Record<number, string> = {};
+    for (const item of bank) responses[item.id] = "5";
+    const rows = Object.fromEntries(calculateIpipBfm50(bank, responses).map((row) => [row.code, row.raw]));
+    assert.deepEqual(rows, { E: 30, A: 34, C: 34, ES: 18, O: 38 });
+  });
+
+  it("all 3 → 30 on every factor; result has no norm categories", () => {
+    const responses: Record<number, string> = {};
+    for (const item of bank) responses[item.id] = "3";
+    const result = computeResult("bigfive", responses, bank);
+    assert.deepEqual(result.raw_scores, { E: 30, A: 30, C: 30, ES: 30, O: 30 });
+    const detail = result.interpretation.detail as { kind: string; factors: { mean: number; percent: number }[]; note: string };
+    assert.equal(detail.kind, "bigfive_ipip");
+    assert.equal(detail.factors[0].mean, 3);
+    assert.equal(detail.factors[0].percent, 60);
+    assert.match(detail.note, /Tanpa norma/);
   });
 });

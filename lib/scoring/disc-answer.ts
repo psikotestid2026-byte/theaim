@@ -8,6 +8,13 @@ export const discAnswerSchema = z.object({
 
 export type DiscAnswer = z.infer<typeof discAnswerSchema>;
 
+/**
+ * Same shape `JSON.stringify({ P, K })` produces, with no spaces.
+ * Postgres ARE and JS both treat this as that shape. The upsert still rejects
+ * a null side and equal indexes after the match.
+ */
+export const DISC_ANSWER_PATTERN = '^\\{"P":(null|[0-9]+),"K":(null|[0-9]+)\\}$';
+
 export function encodeDiscAnswer(answer: DiscAnswer): string {
   return JSON.stringify({ P: answer.P, K: answer.K });
 }

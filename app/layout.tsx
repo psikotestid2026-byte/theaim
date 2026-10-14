@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Lexend } from "next/font/google";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -6,7 +7,8 @@ export const metadata: Metadata = {
   description: "Psikologi, Coaching & HR Solutions",
 };
 
-import { Lexend } from "next/font/google";
+/** Neon is in ap-southeast-1. Keep the app next to it; vercel.json sets the same default. */
+export const preferredRegion = "sin1";
 
 const lexend = Lexend({
   subsets: ["latin"],

@@ -1,63 +1,41 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getItemForTest, getItemsByTestCode } from "@/lib/queries/test-items";
-import { incompleteTestBank, IST_BANK_INCOMPLETE } from "@/lib/ist-bank";
-import { upsertResponse } from "@/lib/queries/test-responses";
-import { getSessionByAccessToken, markTimerStarted, readAttemptTimer } from "@/lib/queries/test-sessions";
+import { saveAnswerOnce } from "@/lib/queries/test-responses";
 import { bufferAnswer } from "@/lib/redis";
 import { logRouteError } from "@/lib/log-error";
-import { isAllowedAnswer } from "@/lib/test-answer";
-import { canWriteTest } from "@/lib/test-access";
 import { testResponseBody } from "@/lib/validators/test-attempt";
-import { answersStillAccepted, isTimedTest, parseDbTimestamp, timedDurationSec } from "@/lib/test-timer";
 import { ZodError } from "zod";
 
-// POST /api/test-responses — one item check, one upsert, one Redis HSET
+/** Neon is in ap-southeast-1. vercel.json sets the same default for every function. */
+export const preferredRegion = "sin1";
+
+function timed(started: number, body: unknown, status = 200) {
+  const res = NextResponse.json(body, { status });
+  res.headers.set("Server-Timing", `app;dur=${Math.max(0, Math.round(performance.now() - started))}`);
+  return res;
+}
+
+// POST /api/test-responses — one statement. Redis is best-effort and not awaited.
 export async function POST(req: NextRequest) {
+  const started = performance.now();
   try {
     const body = await req.json();
     const data = testResponseBody.parse(body);
-
-    const session = await getSessionByAccessToken(data.token);
-    if (!session || session.id !== data.session_id) {
-      return NextResponse.json({ error: "not_found" }, { status: 404 });
-    }
-    if (!canWriteTest(session.status)) {
-      return NextResponse.json({ error: "not_confirmed" }, { status: 403 });
-    }
-
-    if (session.test_code.toLowerCase() === "ist") {
-      const bankItems = await getItemsByTestCode(session.test_code);
-      const bank = incompleteTestBank(session.test_code, bankItems);
-      if (bank) {
-        return NextResponse.json({ error: IST_BANK_INCOMPLETE, messages: bank.messages }, { status: 409 });
-      }
-    }
-
-    const item = await getItemForTest(data.item_id, session.test_code);
-    if (!item || !isAllowedAnswer(session.test_code, item, data.answer_value)) {
-      return NextResponse.json({ error: "invalid_answer" }, { status: 400 });
-    }
-
-    if (isTimedTest(session.test_code)) {
-      const durationSec = timedDurationSec(session.test_code);
-      let timer = durationSec === null ? null : await readAttemptTimer(session.id);
-      if (timer && !timer.timer_started_at) timer = await markTimerStarted(session.id);
-      const startedMs = parseDbTimestamp(timer?.timer_started_at);
-      const nowMs = parseDbTimestamp(timer?.server_now);
-      if (durationSec === null || !timer || startedMs === null || nowMs === null || !answersStillAccepted(startedMs, durationSec, nowMs)) {
-        return NextResponse.json({ error: "expired" }, { status: 409 });
-      }
-    }
-
-    await upsertResponse(data);
-    await bufferAnswer(data.session_id, data.item_id, data.answer_value).catch((err) =>
-      logRouteError("response cache", err),
-    );
-
-    return NextResponse.json({ ok: true });
+    const reason = await saveAnswerOnce({
+      token: data.token,
+      sessionId: data.session_id,
+      itemId: data.item_id,
+      answerValue: data.answer_value,
+    });
+    if (reason === "not_found") return timed(started, { error: "not_found" }, 404);
+    if (reason === "not_confirmed") return timed(started, { error: "not_confirmed" }, 403);
+    if (reason === "invalid_answer") return timed(started, { error: "invalid_answer" }, 400);
+    if (reason === "section_closed") return timed(started, { error: "section_closed" }, 409);
+    if (reason === "expired") return timed(started, { error: "expired" }, 409);
+    void bufferAnswer(data.session_id, data.item_id, data.answer_value).catch((err) => logRouteError("response cache", err));
+    return timed(started, { ok: true });
   } catch (err) {
-    if (err instanceof ZodError) return NextResponse.json({ error: err.flatten().fieldErrors }, { status: 400 });
+    if (err instanceof ZodError) return timed(started, { error: err.flatten().fieldErrors }, 400);
     logRouteError("test-responses", err);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return timed(started, { error: "Internal server error" }, 500);
   }
 }

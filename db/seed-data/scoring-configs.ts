@@ -1,7 +1,7 @@
 // Copied verbatim from the uploaded product seed SQL (SEED 4: scoring_configs).
 // The mbti_bipolar F item list overlaps the E list in that source. It is stored unchanged.
 // tm_rank_scale is the rank-band map for 170 statements. It is not an ST-30 scoring formula.
-// ist and tech_js are omitted: the seed SQL has no config JSON for them.
+// ist, wpt, and tech_js are omitted. IST/WPT keys and norms stay in the database.
 
 export const SCORING_CONFIG_BY_CODE: Record<string, { formula_type: string; config_data: Record<string, unknown> }> = {
   "mbti": {
@@ -483,43 +483,6 @@ export const SCORING_CONFIG_BY_CODE: Record<string, { formula_type: string; conf
         "9": [
           "9w8",
           "9w1"
-        ]
-      }
-    }
-  },
-  "wpt": {
-    "formula_type": "wpt_correct_count",
-    "config_data": {
-      "total_items": 50,
-      "time_limit_sec": 720,
-      "scoring": "correct_count",
-      "norms": {
-        "iq_range": [
-          {
-            "min": 0,
-            "max": 10,
-            "label": "Di Bawah Rata-rata"
-          },
-          {
-            "min": 11,
-            "max": 18,
-            "label": "Rata-rata Rendah"
-          },
-          {
-            "min": 19,
-            "max": 24,
-            "label": "Rata-rata"
-          },
-          {
-            "min": 25,
-            "max": 30,
-            "label": "Di Atas Rata-rata"
-          },
-          {
-            "min": 31,
-            "max": 50,
-            "label": "Sangat Tinggi"
-          }
         ]
       }
     }

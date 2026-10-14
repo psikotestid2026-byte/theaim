@@ -88,6 +88,23 @@ describe("strength sections", () => {
     assert.deepEqual(midpoint.summary, ["ZR 10/20"]);
   });
 
+  it("shows full-IST IQ as summary and subtests with SW ≥ 110 as strengths", () => {
+    const view = presentStrengths({
+      testCode: "ist",
+      detail: {
+        kind: "ist",
+        iq: 112,
+        category: "Di atas rata-rata",
+        subtests: [
+          { code: "RA", name: "Hitungan", sw: 115 },
+          { code: "ZR", name: "Deret angka", sw: 98 },
+        ],
+      },
+    });
+    assert.deepEqual(view.summary, ["IQ 112 · Di atas rata-rata"]);
+    assert.deepEqual(view.strengths, ["RA — Hitungan: SW 115"]);
+  });
+
   it("keeps only high MSDT orientations, including on a stored Rendah list", () => {
     const view = presentStrengths({
       testCode: "msdt",
