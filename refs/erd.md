@@ -18,7 +18,7 @@
 | Catalog & Pricing | `service_categories`, `services`, `service_packages`, `consultants`, `service_consultants` |
 | Customer & Booking | `customers`, `registrations`, `payments` |
 | Payment Infrastructure & Notifications | `payment_methods`, `payment_instructions`, `payment_logs`, `notification_templates`, `notification_logs` |
-| **Psychometric Test Engine** | **`test_sessions`, `test_items`, `test_responses`, `test_results`** |
+| **Psychometric Test Engine** | **`master_tests`, `scoring_configs`, `test_norms`, `talent_themes`, `strength_activities`, `strength_typologies`, `test_sessions`, `test_items`, `test_assets`, `test_responses`, `test_results`, `tm_results`** |
 | Corporate / Partnership | `corporate_inquiries`, `partnership_submissions`, `proposal_download_leads` |
 | Recruitment | `job_postings`, `job_applications` |
 | Content & Marketing | `articles`, `testimonials`, `corporate_partners` |
@@ -49,9 +49,17 @@ erDiagram
     registrations ||--o{ test_sessions : "grants test access"
     customers ||--o{ test_sessions : "owns"
     service_packages ||--o{ test_sessions : "purchased"
+    master_tests ||--o{ test_sessions : "optional test_id"
+    master_tests ||--o{ test_items : "optional test_id"
+    master_tests ||--o| scoring_configs : "formula"
+    master_tests ||--o{ test_norms : "lookup"
+    test_items }o--o| test_assets : "figure path, not an FK"
     test_sessions ||--o{ test_responses : "records answers"
     test_items ||--o{ test_responses : "answered in"
     test_sessions ||--|| test_results : "produces"
+    test_results ||--o| tm_results : "talents mapping payload"
+    test_sessions ||--o| tm_results : "one report"
+    customers ||--o{ tm_results : "owns"
     registrations ||--o{ ecourse_enrollments : "grants access"
     customers ||--o{ ecourse_enrollments : "enrolled in"
     job_postings ||--o{ job_applications : "receives"
@@ -560,6 +568,8 @@ CREATE TABLE test_sessions (
     issued_at       timestamptz NOT NULL DEFAULT now(),
     expires_at      timestamptz NOT NULL,        -- 30 days; NULL after started
     started_at      timestamptz,
+    timer_started_at timestamptz,             -- set once when a timed attempt begins; null for untimed tests
+    section_started_at jsonb NOT NULL DEFAULT '{}', -- IST only: { "SE": <epoch ms>, ... } per-subtest clock, each key written once
     completed_at    timestamptz,
     created_at      timestamptz NOT NULL DEFAULT now(),
     updated_at      timestamptz NOT NULL DEFAULT now(),
@@ -595,12 +605,31 @@ CREATE TABLE test_items (
     -- each option: {"value": "A", "label": "Saya lebih suka...", "score_key": "E", "score_val": 1}
     -- score_key and score_val drive server-side computation in lib/scoring/{test_code}.ts
     scoring_meta    jsonb,
+    -- Keys live in the database, never in git, for IST and WPT.
+    --   answer_type 'choice' | 'text' | 'number'
+    --   image / options_image = /api/test-assets/tests/... (bytes in test_assets)
+    --   WPT: match ('choice'|'number'|'numbers_set'|'text') + accepted[]
+    --   IST: subtest, key | accepted_digits | ge_answers {"2":[],"1":[]};
+    --        key_provisional + candidate_keys when sources disagree
+    --   Big Five: instrument 'IPIP-BFM-50', factor (E|A|C|ES|O), keyed (+|-)
+    -- options may carry "image" for figure choices
+    -- Taker payloads strip accepted, key, key_letter, key_provisional, candidate_keys,
+    -- key_note, accepted_digits, ge_answers, and option score_key / score_val.
     created_at      timestamptz NOT NULL DEFAULT now(),
     updated_at      timestamptz NOT NULL DEFAULT now(),
     CONSTRAINT uq_test_items_code_order UNIQUE (test_code, item_order)
 );
 -- All questions for a test are loaded at once at test start; test_code is the only filter
 CREATE INDEX idx_test_items_test_code ON test_items (test_code, item_order);
+
+-- IST/WPT figure bytes. path is the public-relative name (tests/ist/..., tests/wpt/...).
+-- No FK: test_items.scoring_meta stores /api/test-assets/{path}. Served only with a session or result token.
+CREATE TABLE test_assets (
+    path         text PRIMARY KEY,
+    content_type text NOT NULL,
+    data         bytea NOT NULL,
+    created_at   timestamptz NOT NULL DEFAULT now()
+);
 
 
 CREATE TABLE test_responses (
@@ -633,6 +662,116 @@ CREATE TABLE test_results (
 );
 -- session_id is UNIQUE so this already has an implicit index; add test_code for admin reporting
 CREATE INDEX idx_test_results_test_code ON test_results (test_code);
+
+-- Phase A catalog. test_code on sessions and items stays the runner key.
+-- test_id is nullable so existing MBTI rows backfill onto master_tests.code = 'mbti'
+-- without rewriting the string the scorer already uses.
+
+CREATE TABLE master_tests (
+    id               bigserial PRIMARY KEY,
+    code             varchar(50) NOT NULL,
+    name             varchar(255) NOT NULL,
+    category         varchar(50) NOT NULL DEFAULT 'PERSONALITY',
+    description      text,
+    instructions     text,
+    duration_sec     integer NOT NULL DEFAULT 0,
+    total_questions  integer NOT NULL DEFAULT 0,
+    is_active        boolean NOT NULL DEFAULT true,
+    created_at       timestamptz NOT NULL DEFAULT now(),
+    updated_at       timestamptz NOT NULL DEFAULT now(),
+    CONSTRAINT uq_master_tests_code UNIQUE (code),
+    CONSTRAINT ck_master_tests_category CHECK (
+        category IN ('PERSONALITY','COGNITIVE','LEADERSHIP','VOKASIONAL','TECHNICAL','GENERAL')
+    )
+);
+CREATE INDEX idx_master_tests_category ON master_tests (category);
+
+CREATE TABLE scoring_configs (
+    id           bigserial PRIMARY KEY,
+    test_id      bigint NOT NULL UNIQUE REFERENCES master_tests(id) ON DELETE CASCADE,
+    formula_type varchar(100) NOT NULL,
+    config_data  jsonb NOT NULL,
+    -- IST config_data keys read by lib/ist-config.ts:
+    --   subtests[]: code, name, from, to, timeLimitSec, memorizeSec (ME),
+    --               instructions, examples[{stem?, options?, key}], exampleImage?,
+    --               memorizeList? (ME only; {group: string[]})
+    --   ge_raw_to_rw: number[], iq_categories[{label, iq_min?, iq_max?}], provisional_items: number[]
+    -- RW→SW, GESAMT, and SW→IQ live in test_norms, not in this JSON.
+    -- memorizeList is loaded only while the ME server clock is in the memorize phase.
+    created_at   timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE test_norms (
+    id           bigserial PRIMARY KEY,
+    test_id      bigint NOT NULL REFERENCES master_tests(id) ON DELETE CASCADE,
+    age_group    varchar(30),
+    raw_score    varchar(20) NOT NULL,
+    norm_score   varchar(50) NOT NULL,
+    label        varchar(50) NOT NULL,
+    description  text,
+    created_at   timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX idx_test_norms_test_raw ON test_norms (test_id, raw_score);
+
+CREATE TABLE talent_themes (
+    id             bigserial PRIMARY KEY,
+    code           varchar(5) NOT NULL,
+    name           varchar(100) NOT NULL,
+    domain         varchar(20) NOT NULL,
+    description    text,
+    suitable_roles jsonb NOT NULL DEFAULT '[]',
+    strengths      text,
+    watch_out      text,
+    created_at     timestamptz NOT NULL DEFAULT now(),
+    CONSTRAINT uq_talent_themes_code UNIQUE (code),
+    CONSTRAINT ck_talent_themes_domain CHECK (
+        domain IN ('Striving','Thinking','Relating','Influencing','Executing')
+    )
+);
+
+CREATE TABLE strength_activities (
+    id          bigserial PRIMARY KEY,
+    code        varchar(40) NOT NULL,
+    name        varchar(100) NOT NULL,
+    cluster     varchar(30),
+    definition  text,
+    created_at  timestamptz NOT NULL DEFAULT now(),
+    CONSTRAINT uq_strength_activities_code UNIQUE (code)
+);
+
+CREATE TABLE strength_typologies (
+    id                 bigserial PRIMARY KEY,
+    code               varchar(5) NOT NULL,
+    name               varchar(50) NOT NULL,
+    category           varchar(50),
+    description        text,
+    personal_branding  text,
+    created_at         timestamptz NOT NULL DEFAULT now(),
+    CONSTRAINT uq_strength_typologies_code UNIQUE (code)
+);
+
+ALTER TABLE test_sessions
+    ADD COLUMN test_id bigint REFERENCES master_tests(id);
+CREATE INDEX idx_test_sessions_test_id ON test_sessions (test_id);
+
+ALTER TABLE test_items
+    ADD COLUMN test_id bigint REFERENCES master_tests(id);
+CREATE INDEX idx_test_items_test_id ON test_items (test_id);
+
+CREATE TABLE tm_results (
+    id                      bigserial PRIMARY KEY,
+    test_result_id          bigint NOT NULL UNIQUE REFERENCES test_results(id) ON DELETE CASCADE,
+    session_id              bigint NOT NULL UNIQUE REFERENCES test_sessions(id),
+    customer_id             bigint NOT NULL REFERENCES customers(id),
+    talent_ranking          jsonb NOT NULL DEFAULT '[]',
+    domain_distribution     jsonb NOT NULL DEFAULT '{}',
+    strength_potentials     jsonb NOT NULL DEFAULT '[]',
+    st30_scores             jsonb NOT NULL DEFAULT '[]',
+    personal_branding       jsonb NOT NULL DEFAULT '[]',
+    career_recommendations  jsonb NOT NULL DEFAULT '[]',
+    created_at              timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX idx_tm_results_customer ON tm_results (customer_id);
 ```
 
 ### Scoring Logic Convention

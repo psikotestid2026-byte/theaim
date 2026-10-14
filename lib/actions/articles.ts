@@ -44,7 +44,7 @@ export async function createArticle(formData: FormData) {
     )
   `;
 
-  revalidateTag("articles");
+  revalidateTag("articles", { expire: 0 });
   revalidatePath("/panel/articles");
   redirect("/panel/articles");
 }
@@ -83,7 +83,7 @@ export async function updateArticle(id: number, formData: FormData) {
     WHERE id = ${id}
   `;
 
-  revalidateTag("articles");
+  revalidateTag("articles", { expire: 0 });
   revalidatePath("/panel/articles");
   redirect("/panel/articles");
 }

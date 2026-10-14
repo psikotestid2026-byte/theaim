@@ -1,4 +1,5 @@
 import { sql } from "@/lib/db";
+import { presentStrengths, SUMMARY_HEADING } from "@/lib/result-strengths";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronLeft, FileText, CheckCircle, Search, AlertTriangle } from "lucide-react";
@@ -18,8 +19,22 @@ export default async function TestResultDetailPage({ params }: { params: { id: s
   if (results.length === 0) notFound();
   const res = results[0];
 
-  const interpretation = res.interpretation as any || {};
-  const rawScores = res.raw_scores as any || {};
+  const interpretation = (res.interpretation ?? {}) as {
+    description?: string;
+    strengths?: string[];
+    challenges?: string[];
+    detail?: unknown;
+    color_hex?: string;
+    label_id?: string;
+    label_en?: string;
+    tagline?: string;
+  };
+  const rawScores = (res.raw_scores ?? {}) as Record<string, unknown>;
+  const listed = presentStrengths({
+    testCode: String(res.test_code ?? ""),
+    strengths: interpretation.strengths,
+    detail: interpretation.detail,
+  });
 
   return (
     <div className="space-y-6">
@@ -78,14 +93,22 @@ export default async function TestResultDetailPage({ params }: { params: { id: s
               <div>
                 <p className="text-sm font-semibold text-emerald-700 bg-emerald-50 px-3 py-1 rounded inline-block mb-3">Potensi Kekuatan</p>
                 <ul className="list-disc pl-5 space-y-1 text-sm text-slate-600">
-                  {(interpretation.strengths || []).map((s: string, i: number) => <li key={i}>{s}</li>)}
-                  {(!interpretation.strengths || interpretation.strengths.length === 0) && <li>Tidak ada data tersimpan</li>}
+                  {listed.strengths.map((s, i) => <li key={i}>{s}</li>)}
+                  {listed.strengths.length === 0 && <li>Tidak ada kekuatan yang menonjol</li>}
                 </ul>
+                {listed.summary.length > 0 && (
+                  <div className="mt-4">
+                    <p className="text-sm font-semibold text-slate-700 bg-slate-50 px-3 py-1 rounded inline-block mb-3">{SUMMARY_HEADING}</p>
+                    <ul className="list-disc pl-5 space-y-1 text-sm text-slate-600">
+                      {listed.summary.map((s, i) => <li key={i}>{s}</li>)}
+                    </ul>
+                  </div>
+                )}
               </div>
               <div>
                 <p className="text-sm font-semibold text-rose-700 bg-rose-50 px-3 py-1 rounded inline-block mb-3">Tantangan</p>
                 <ul className="list-disc pl-5 space-y-1 text-sm text-slate-600">
-                  {(interpretation.challenges || []).map((s: string, i: number) => <li key={i}>{s}</li>)}
+                  {(interpretation.challenges || []).map((s, i) => <li key={i}>{s}</li>)}
                   {(!interpretation.challenges || interpretation.challenges.length === 0) && <li>Tidak ada data tersimpan</li>}
                 </ul>
               </div>

@@ -213,6 +213,8 @@ export interface TestItemOption {
   label: string;
   score_key: string;
   score_val: number;
+  /** Optional option figure. Stored as /api/test-assets/tests/...; bytes live in test_assets. */
+  image?: string;
 }
 
 export interface TestResponse {
@@ -230,12 +232,7 @@ export interface TestResult {
   raw_scores: Record<string, number>;
   result_type: string;
   result_label: string;
-  interpretation: {
-    description: string;
-    strengths: string[];
-    challenges: string[];
-    careers?: string[];
-  };
+  interpretation: TestInterpretation;
   wa_summary_text: string;
   created_at: string;
   // joined
@@ -243,16 +240,20 @@ export interface TestResult {
   whatsapp_number?: string;
 }
 
+export interface TestInterpretation {
+  description: string;
+  strengths: string[];
+  challenges: string[];
+  careers?: string[];
+  /** Structured report fields for /hasil. Never log this object. */
+  detail?: Record<string, unknown>;
+}
+
 export interface TestResultPayload {
   raw_scores: Record<string, number>;
   result_type: string;
   result_label: string;
-  interpretation: {
-    description: string;
-    strengths: string[];
-    challenges: string[];
-    careers?: string[];
-  };
+  interpretation: TestInterpretation;
   wa_summary_text: string;
 }
 

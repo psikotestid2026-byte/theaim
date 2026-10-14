@@ -19,6 +19,7 @@ import {
   Mail,
   Brain,
   FileQuestion,
+  Library,
   LineChart,
   Scale,
   Building2,
@@ -130,6 +131,7 @@ export default function AdminSidebar() {
           <div className="mt-6 mb-2">
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-3">Test Management</p>
           </div>
+          {navItem("/panel/master-tests", "Master Tests", Library)}
           {navItem("/panel/test-sessions", "Test Sessions", Brain)}
           {navItem("/panel/test-items", "Question Bank", FileQuestion)}
           {navItem("/panel/test-results", "Test Results", LineChart)}

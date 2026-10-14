@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { maskWhatsApp } from "@/lib/utils";
 
 interface Props {
   token: string;

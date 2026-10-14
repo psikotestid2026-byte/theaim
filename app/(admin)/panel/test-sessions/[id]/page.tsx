@@ -1,4 +1,5 @@
 import { sql } from "@/lib/db";
+import { invalidateTestAccess } from "@/lib/redis";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { ChevronLeft, Key, Lock, Fingerprint, Calendar, Copy, Clock } from "lucide-react";
@@ -27,7 +28,7 @@ export default async function TestSessionDetailPage({ params }: { params: { id: 
         updated_at = now()
       WHERE id = ${sessionId}
     `;
-    // In a real app, delete Redis cache here as well.
+    await invalidateTestAccess(String(session.access_token));
     revalidatePath(`/panel/test-sessions/${sessionId}`);
     revalidatePath("/panel/test-sessions");
     redirect(`/panel/test-sessions/${sessionId}`);

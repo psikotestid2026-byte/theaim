@@ -1,6 +1,28 @@
 import { sql } from "@/lib/db";
 import type { TestResult, TestResultPayload } from "@/types/db";
 
+/** Insert the result once. A second call returns the existing row and does not rewrite scores. */
+export async function insertTestResultOnce(
+  sessionId: number,
+  testCode: string,
+  payload: TestResultPayload,
+): Promise<TestResult> {
+  const rows = await sql`
+    INSERT INTO test_results
+      (session_id, test_code, raw_scores, result_type, result_label, interpretation, wa_summary_text)
+    VALUES
+      (${sessionId}, ${testCode}, ${JSON.stringify(payload.raw_scores)},
+       ${payload.result_type}, ${payload.result_label},
+       ${JSON.stringify(payload.interpretation)}, ${payload.wa_summary_text})
+    ON CONFLICT (session_id) DO NOTHING
+    RETURNING *
+  `;
+  if (rows[0]) return rows[0] as TestResult;
+  const existing = await getResultBySessionId(sessionId);
+  if (!existing) throw new Error("test result insert did not return a row");
+  return existing;
+}
+
 export async function createTestResult(
   sessionId: number,
   testCode: string,

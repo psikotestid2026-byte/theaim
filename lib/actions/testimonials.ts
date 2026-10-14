@@ -13,7 +13,7 @@ const testimonialSchema = z.object({
   rating: z.string().transform(val => val ? parseInt(val, 10) : null).nullable(),
   photo_url: z.string().url().optional().or(z.literal("")),
   is_published: z.boolean().default(true),
-  display_order: z.string().transform(val => parseInt(val, 10)).default("0"),
+  display_order: z.string().default("0").transform(val => parseInt(val, 10) || 0),
 });
 
 export async function createTestimonial(formData: FormData) {
@@ -41,7 +41,7 @@ export async function createTestimonial(formData: FormData) {
     )
   `;
 
-  revalidateTag("testimonials");
+  revalidateTag("testimonials", { expire: 0 });
   revalidatePath("/panel/testimonials");
   redirect("/panel/testimonials");
 }
@@ -74,7 +74,7 @@ export async function updateTestimonial(id: number, formData: FormData) {
     WHERE id = ${id}
   `;
 
-  revalidateTag("testimonials");
+  revalidateTag("testimonials", { expire: 0 });
   revalidatePath("/panel/testimonials");
   redirect("/panel/testimonials");
 }

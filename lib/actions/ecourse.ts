@@ -39,7 +39,7 @@ export async function createEcourse(formData: FormData) {
     )
   `;
 
-  revalidateTag("ecourse_modules");
+  revalidateTag("ecourse_modules", { expire: 0 });
   revalidatePath("/panel/ecourse-modules");
   redirect("/panel/ecourse-modules");
 }
@@ -70,7 +70,7 @@ export async function updateEcourse(id: number, formData: FormData) {
     WHERE id = ${id}
   `;
 
-  revalidateTag("ecourse_modules");
+  revalidateTag("ecourse_modules", { expire: 0 });
   revalidatePath("/panel/ecourse-modules");
   redirect("/panel/ecourse-modules");
 }

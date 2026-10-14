@@ -38,7 +38,7 @@ export async function createConsultant(formData: FormData) {
     )
   `;
 
-  revalidateTag("consultants");
+  revalidateTag("consultants", { expire: 0 });
   revalidatePath("/panel/consultants");
   redirect("/panel/consultants");
 }
@@ -69,7 +69,7 @@ export async function updateConsultant(id: number, formData: FormData) {
     WHERE id = ${id}
   `;
 
-  revalidateTag("consultants");
+  revalidateTag("consultants", { expire: 0 });
   revalidatePath("/panel/consultants");
   redirect("/panel/consultants");
 }

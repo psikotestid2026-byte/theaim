@@ -183,7 +183,7 @@ TheAIM is one Next.js application split into two route groups: a **Public Sectio
 | About TheAIM / Ecosystem | Static company narrative | Hardcoded (low change frequency) |
 | E-Course access pages | `ecourse_modules`, `ecourse_enrollments` | Dynamic |
 | **Test page** (`/tes/[token]`) | `test_sessions` (token validation), `test_items` (question bank); writes to `test_responses` | Questions dynamic; page layout hardcoded |
-| **Result page** (`/hasil/[resultToken]`) | `test_sessions`, `test_results` | Fully dynamic; page layout + `@media print` stylesheet hardcoded |
+| **Result page** (`/hasil/[resultToken]`) | `test_sessions`, `test_results`, `tm_results` when the session is Talents Mapping | Fully dynamic; page layout + `@media print` stylesheet hardcoded. Browser print only. |
 | Global navigation, footer, legal text, SEO defaults | — | Hardcoded (in code/config, not the database) |
 
 ### 6.2 Admin Panel — Full Menu Structure
@@ -196,7 +196,7 @@ The Admin Panel menu is organized into the same domains as the ERD, so every tab
 | Catalog & Pricing | Service Categories · Services · Service Packages · Consultants · Service ↔ Consultant Map |
 | Customers & Booking | Customers · Registrations · Payments |
 | Payment Infrastructure | Payment Methods · Payment Instructions · Payment Logs · Notification Templates · Notification Logs |
-| **Test Management** | **Test Sessions · Test Items (Question Bank) · Test Results** |
+| **Test Management** | **Master Tests · Test Sessions · Test Items (Question Bank) · Test Results** |
 | Corporate & Partnership | Corporate Inquiries · Partnership Submissions · Proposal Download Leads |
 | Recruitment | Job Postings · Job Applications |
 | Content & Marketing | Articles · Testimonials · Corporate Partners |
@@ -204,6 +204,8 @@ The Admin Panel menu is organized into the same domains as the ERD, so every tab
 | System | Admin Users |
 
 This structure matches the reference admin panel artifact built earlier in this project and is the authoritative menu list for implementation — no table in `erd.md` is left without a corresponding screen, and no screen exists without a backing table.
+
+Phase A adds a read-only Master Tests screen over `master_tests` (with `scoring_configs.formula_type` on the same row). `talent_themes`, `strength_activities`, `strength_typologies`, `test_norms`, and `tm_results` are catalog or future report tables and do not have their own screens yet. Overlap question banks from the approved RuangTes export live on `test_items` under the lowercase `master_tests.code`. The older uppercase `MBTI` demo items stay in place for sessions that already use that code.
 
 ### 6.3 Dynamic vs Hardcoded — Quick Reference
 
