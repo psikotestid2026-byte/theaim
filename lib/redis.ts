@@ -7,6 +7,39 @@ let client: Redis | null | undefined;
 /** Fail fast when the REST host is gone. The default client retries with backoff for several seconds. */
 export const REDIS_REQUEST_TIMEOUT_MS = 1_500;
 
+/** After a dead host, skip the answer buffer so later clicks do not pay DNS again. */
+export const REDIS_BUFFER_COOLDOWN_MS = 30_000;
+
+let bufferSkippedUntil = 0;
+
+export function redisBufferSkipped(now = Date.now()): boolean {
+  return now < bufferSkippedUntil;
+}
+
+export function resetRedisBufferCircuit(): void {
+  bufferSkippedUntil = 0;
+}
+
+/** DNS and abort failures only. A live host that returns an error still gets the next try. */
+export function isUnreachableRedisHost(err: unknown): boolean {
+  const parts: string[] = [];
+  let current: unknown = err;
+  for (let depth = 0; depth < 5 && current instanceof Error; depth++) {
+    parts.push(current.name, current.message);
+    if ("code" in current && typeof current.code === "string") parts.push(current.code);
+    const cause: unknown = current.cause;
+    if (cause && typeof cause === "object" && "code" in cause && typeof (cause as { code: unknown }).code === "string") {
+      parts.push((cause as { code: string }).code);
+    }
+    current = cause;
+  }
+  return /ENOTFOUND|EAI_AGAIN|ENETUNREACH|EHOSTUNREACH|TimeoutError|AbortError|timed out/i.test(parts.join(" "));
+}
+
+export function noteRedisBufferFailure(err: unknown, now = Date.now()): void {
+  if (isUnreachableRedisHost(err)) bufferSkippedUntil = now + REDIS_BUFFER_COOLDOWN_MS;
+}
+
 export function redisClientOptions() {
   return {
     keepAlive: false as const,
@@ -85,12 +118,22 @@ export async function getCachedTestResult(resultToken: string) {
   }
 }
 
-/** Buffer an answer in Redis (48h TTL) */
+/**
+ * Buffer an answer in Redis (48h TTL). Best-effort: the database row is the
+ * source of truth. A dead REST host is skipped until the cooldown passes so
+ * answer saves are not stuck on DNS.
+ */
 export async function bufferAnswer(sessionId: number, itemId: number, value: string) {
-  await run("redis bufferAnswer", async (redis) => {
+  if (redisBufferSkipped()) return;
+  const redis = getRedis();
+  if (!redis) return;
+  try {
     await redis.hset(redisKeys.testAnswers(sessionId), { [itemId]: value });
     await redis.expire(redisKeys.testAnswers(sessionId), 48 * 3600);
-  });
+  } catch (err) {
+    noteRedisBufferFailure(err);
+    logRouteError("redis bufferAnswer", err);
+  }
 }
 
 /** Get all buffered answers */

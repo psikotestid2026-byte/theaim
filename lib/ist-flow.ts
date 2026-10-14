@@ -77,3 +77,39 @@ export function istAnswerWindowOpen(schedule: readonly IstScheduleEntry[], code:
 export function istFlowReachedEnd(schedule: readonly IstScheduleEntry[], starts: SectionStarts): boolean {
   return schedule.length > 0 && istLastStartedIndex(schedule, starts) === schedule.length - 1;
 }
+
+/** ME word list may be sent only while that subtest is the latest one and still in its memorize phase. */
+export function istMemorizePhaseOpen(schedule: readonly IstScheduleEntry[], starts: SectionStarts, nowMs: number): boolean {
+  const me = istSubtestByCode(schedule, "ME");
+  const index = istSectionIndex(schedule, "ME");
+  if (!me || index < 0) return false;
+  const started = starts[me.code];
+  if (typeof started !== "number") return false;
+  if (istLastStartedIndex(schedule, starts) !== index) return false;
+  // A follower read can report "now" a little earlier than the start just written.
+  const at = Math.max(nowMs, started);
+  return istPhaseAt(me, started, at).phase === "memorize";
+}
+
+/** How many times the memorize-list route re-reads the clock before it 404s. */
+export const MEMORIZE_LIST_READ_ATTEMPTS = 4;
+export const MEMORIZE_LIST_READ_GAP_MS = 200;
+
+/**
+ * Re-read until `ready` or attempts run out. The first read is immediate.
+ * Used so a section start and the following list read survive a short replica lag.
+ */
+export async function pollUntil<T>(
+  read: () => Promise<T>,
+  ready: (value: T) => boolean,
+  attempts = MEMORIZE_LIST_READ_ATTEMPTS,
+  gapMs = MEMORIZE_LIST_READ_GAP_MS,
+  sleep: (ms: number) => Promise<void> = (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
+): Promise<T> {
+  let value = await read();
+  for (let i = 1; i < attempts && !ready(value); i++) {
+    await sleep(gapMs);
+    value = await read();
+  }
+  return value;
+}

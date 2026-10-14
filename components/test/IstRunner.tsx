@@ -5,10 +5,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { TestItem, TestItemOption } from "@/types/db";
 import type { IstMemorizeList, IstSubtestPublic } from "@/lib/ist-types";
-import { istLastStartedIndex, istPhaseAt, type SectionStarts } from "@/lib/ist-flow";
+import { istLastStartedIndex, istPhaseAt, MEMORIZE_LIST_READ_ATTEMPTS, MEMORIZE_LIST_READ_GAP_MS, type SectionStarts } from "@/lib/ist-flow";
 import { istSubtestOf } from "@/lib/scoring/ist";
 import { itemMeta } from "@/lib/scoring/item-meta";
 import { choicePresentation } from "@/lib/choice-option";
+import { AnswerSaver, SAVE_ATTEMPT_TIMEOUT_MS, SAVE_MAX_INFLIGHT, classifySaveResponse, sectionAdvance } from "@/lib/answer-save";
 import { withAssetToken } from "@/lib/test-assets";
 import ItemMedia from "@/components/test/ItemMedia";
 import TypedAnswer from "@/components/test/TypedAnswer";
@@ -61,15 +62,22 @@ export default function IstRunner({ sessionId, token, testName, subtests, items,
   const [cursor, setCursor] = useState<Record<string, number>>({});
   const [busy, setBusy] = useState(false);
   const [pending, setPending] = useState(0);
+  const [unsavedIds, setUnsavedIds] = useState<number[]>([]);
   const [finishWaiting, setFinishWaiting] = useState(false);
   const [finishPrompt, setFinishPrompt] = useState<{ sectionIndex: number; code: string; blank: number } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [memorizeList, setMemorizeList] = useState<IstMemorizeList | null>(null);
   const submitted = useRef(false);
   const advanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const pendingRef = useRef(0);
   const answersRef = useRef<Record<number, string>>(answers);
+  const saverRef = useRef(new AnswerSaver(answers));
+  const timersRef = useRef(new Map<number, ReturnType<typeof setTimeout>>());
   const queuedFinish = useRef<{ sectionIndex: number; code: string; itemIds: number[] } | null>(null);
+  const expireIndex = useRef<number | null>(null);
+  const pumpRef = useRef<() => void>(() => {});
+  const settleRef = useRef<() => void>(() => {});
+  const beginExpireRef = useRef<(sectionIndex: number) => void>(() => {});
 
   useEffect(() => {
     if (offsetRef.current === null) offsetRef.current = serverNowMs - Date.now();
@@ -92,7 +100,9 @@ export default function IstRunner({ sessionId, token, testName, subtests, items,
   const last = istLastStartedIndex(subtests, starts);
   const current = last >= 0 ? subtests[last] : null;
   const phase = current ? istPhaseAt(current, starts[current.code], now) : null;
-  const sectionOpen = Boolean(current && phase && phase.phase !== "over" && closedThrough < last);
+  const phaseName = phase?.phase ?? null;
+  const holdingExpired = Boolean(current && phaseName === "over" && closedThrough < last);
+  const sectionOpen = Boolean(current && phase && closedThrough < last && (phaseName !== "over" || holdingExpired));
   const nextIndex = last + 1;
   const view: "section" | "intro" | "finish" = sectionOpen ? "section" : nextIndex < subtests.length ? "intro" : "finish";
 
@@ -111,9 +121,12 @@ export default function IstRunner({ sessionId, token, testName, subtests, items,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, session_id: Number(sessionId), section: code }),
       });
-      const data = await res.json().catch(() => ({}));
-      if (data && typeof data.starts === "object" && data.starts) setStarts(data.starts as SectionStarts);
+      const data = (await res.json().catch(() => ({}))) as { starts?: SectionStarts; server_now_ms?: unknown; memorize_list?: unknown };
+      if (data && typeof data.starts === "object" && data.starts) setStarts(data.starts);
       syncClock(data?.server_now_ms);
+      if (data.memorize_list && typeof data.memorize_list === "object" && !Array.isArray(data.memorize_list)) {
+        setMemorizeList(data.memorize_list as IstMemorizeList);
+      }
       if (!res.ok) setError("Subtes belum bisa dimulai. Muat ulang halaman, lalu coba lagi.");
     } catch {
       setError("Gagal terhubung ke server. Periksa koneksi, lalu coba lagi.");
@@ -122,40 +135,115 @@ export default function IstRunner({ sessionId, token, testName, subtests, items,
     }
   }
 
-  function openFinishPrompt(snapshot: { sectionIndex: number; code: string; itemIds: number[] }) {
-    const blank = snapshot.itemIds.filter((id) => !answersRef.current[id]).length;
-    setFinishPrompt({ sectionIndex: snapshot.sectionIndex, code: snapshot.code, blank });
+  function publishSave() {
+    const saver = saverRef.current;
+    setPending(saver.busy() + timersRef.current.size);
+    setUnsavedIds(saver.unsavedIds());
   }
 
-  async function saveAnswer(itemId: number, value: string) {
-    pendingRef.current += 1;
-    setPending(pendingRef.current);
+  function clearSaveTimers() {
+    for (const timer of timersRef.current.values()) clearTimeout(timer);
+    timersRef.current.clear();
+    saverRef.current.hurry();
+  }
+
+  function settle() {
+    const saver = saverRef.current;
+    const decision = sectionAdvance({
+      intent: saver.intent,
+      busy: saver.busy() + timersRef.current.size,
+      retryable: saver.retryableIds().length,
+    });
+    if (decision === "confirm") {
+      saver.intent = "none";
+      setFinishWaiting(false);
+      const snapshot = queuedFinish.current;
+      if (snapshot) openFinishPrompt(snapshot);
+      return;
+    }
+    if (decision === "advance") {
+      const index = expireIndex.current;
+      saver.intent = "none";
+      setFinishWaiting(false);
+      setFinishPrompt(null);
+      if (typeof index === "number") setClosedThrough(index);
+    }
+  }
+
+  function pump() {
+    const saver = saverRef.current;
+    while (true) {
+      const itemId = saver.claim(SAVE_MAX_INFLIGHT);
+      if (itemId === null) break;
+      void runOne(itemId);
+    }
+    publishSave();
+  }
+
+  async function runOne(itemId: number) {
+    const saver = saverRef.current;
+    const value = saver.value(itemId) ?? "";
+    let outcome: ReturnType<typeof classifySaveResponse> = "retry";
     try {
       const res = await fetch("/api/test-responses", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, session_id: Number(sessionId), item_id: Number(itemId), answer_value: value }),
+        signal: AbortSignal.timeout(SAVE_ATTEMPT_TIMEOUT_MS),
       });
       const data = (await res.json().catch(() => ({}))) as { error?: string };
-      if (!res.ok) {
-        setError(
-          data.error === "section_closed"
-            ? "Waktu subtes ini sudah habis. Jawaban terakhir tidak disimpan."
-            : "Jawaban belum tersimpan. Periksa koneksi, lalu pilih jawaban lagi.",
-        );
-      }
+      outcome = classifySaveResponse(res.status, typeof data.error === "string" ? data.error : undefined);
     } catch {
-      setError("Jawaban belum tersimpan. Periksa koneksi, lalu pilih jawaban lagi.");
-    } finally {
-      pendingRef.current = Math.max(0, pendingRef.current - 1);
-      setPending(pendingRef.current);
-      const waiting = queuedFinish.current;
-      if (pendingRef.current === 0 && waiting) {
-        queuedFinish.current = null;
-        setFinishWaiting(false);
-        openFinishPrompt(waiting);
-      }
+      outcome = "retry";
     }
+    if (outcome === "closed") {
+      saver.finish(itemId, "rejected", value);
+      publishSave();
+      if (saver.intent !== "expire") {
+        saver.intent = "expire";
+        saver.resetAttempts();
+        clearSaveTimers();
+        setFinishWaiting(true);
+        setFinishPrompt(null);
+      }
+      pumpRef.current();
+      settleRef.current();
+      return;
+    }
+    const delay = saver.finish(itemId, outcome, value);
+    if (delay !== null && delay > 0) {
+      const timer = setTimeout(() => {
+        timersRef.current.delete(itemId);
+        saverRef.current.releaseBackoff(itemId);
+        pumpRef.current();
+        settleRef.current();
+      }, delay);
+      timersRef.current.set(itemId, timer);
+    }
+    publishSave();
+    if (outcome === "retry" && delay === null && saver.intent !== "expire") {
+      setError("Jawaban belum tersimpan. Periksa koneksi, lalu pilih jawaban lagi.");
+    }
+    pumpRef.current();
+    settleRef.current();
+  }
+
+  function beginExpire(sectionIndex: number) {
+    const saver = saverRef.current;
+    if (saver.intent === "expire" && expireIndex.current === sectionIndex) return;
+    expireIndex.current = sectionIndex;
+    saver.intent = "expire";
+    saver.resetAttempts();
+    clearSaveTimers();
+    setFinishWaiting(true);
+    setFinishPrompt(null);
+    pump();
+    settle();
+  }
+
+  function openFinishPrompt(snapshot: { sectionIndex: number; code: string; itemIds: number[] }) {
+    const blank = snapshot.itemIds.filter((id) => !answersRef.current[id]).length;
+    setFinishPrompt({ sectionIndex: snapshot.sectionIndex, code: snapshot.code, blank });
   }
 
   function remember(itemId: number, value: string) {
@@ -163,7 +251,9 @@ export default function IstRunner({ sessionId, token, testName, subtests, items,
     const next = { ...answersRef.current, [itemId]: value };
     answersRef.current = next;
     setAnswers(next);
-    void saveAnswer(itemId, value);
+    saverRef.current.local(itemId, value);
+    publishSave();
+    pump();
   }
 
   async function submit() {
@@ -193,10 +283,19 @@ export default function IstRunner({ sessionId, token, testName, subtests, items,
   const submitRef = useRef(submit);
   useEffect(() => {
     submitRef.current = submit;
+    pumpRef.current = pump;
+    settleRef.current = settle;
+    beginExpireRef.current = beginExpire;
   });
   useEffect(() => {
     if (view === "finish" && pending === 0 && !submitted.current) void submitRef.current();
   }, [view, pending]);
+  useEffect(() => {
+    if (view !== "section" || phaseName !== "over" || closedThrough >= last) return;
+    beginExpireRef.current(last);
+  }, [view, phaseName, closedThrough, last]);
+
+  if (phaseName !== "memorize" && memorizeList) setMemorizeList(null);
 
   if (view === "finish") {
     return (
@@ -279,7 +378,16 @@ export default function IstRunner({ sessionId, token, testName, subtests, items,
   const remaining = info.endsMs - now;
 
   if (info.phase === "memorize") {
-    return <MemorizeBoard sessionId={sessionId} token={token} testName={testName} code={sub.code} remaining={remaining} />;
+    return (
+      <MemorizeBoard
+        sessionId={sessionId}
+        token={token}
+        testName={testName}
+        code={sub.code}
+        remaining={remaining}
+        initialList={memorizeList}
+      />
+    );
   }
 
   const list = bySection.get(sub.code) ?? [];
@@ -290,13 +398,14 @@ export default function IstRunner({ sessionId, token, testName, subtests, items,
   const typed = item ? itemMeta(item).answer_type === "text" || itemMeta(item).answer_type === "number" : false;
 
   function requestFinish() {
+    if (phaseName === "over") return;
     const snapshot = { sectionIndex: last, code: sub.code, itemIds: list.map((row) => row.id) };
-    if (pendingRef.current > 0) {
-      queuedFinish.current = snapshot;
-      setFinishWaiting(true);
-      return;
-    }
-    openFinishPrompt(snapshot);
+    queuedFinish.current = snapshot;
+    saverRef.current.intent = "confirm";
+    setFinishWaiting(true);
+    clearSaveTimers();
+    pump();
+    settle();
   }
 
   return (
@@ -357,19 +466,32 @@ export default function IstRunner({ sessionId, token, testName, subtests, items,
           )}
         </>
       )}
+      {holdingExpired && (
+        <p className="mt-4 text-sm font-semibold text-amber-900 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
+          Waktu habis. Menyimpan sisa jawaban...
+        </p>
+      )}
+      {unsavedIds.length > 0 && (
+        <p className="mt-4 text-sm font-semibold text-amber-900 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3" role="status">
+          {unsavedIds.length} jawaban belum tersimpan. Mencoba lagi secara otomatis.
+        </p>
+      )}
       {error && <p className="mt-4 text-sm text-red-700 bg-red-50 border border-red-100 rounded-xl px-4 py-3">{error}</p>}
       <div className="mt-6 flex flex-wrap gap-1.5">
-        {list.map((row, i) => (
-          <button
-            key={row.id}
-            type="button"
-            onClick={() => goTo(i)}
-            aria-label={`Soal ${row.item_order}`}
-            className={`w-9 h-9 rounded-lg text-xs font-bold ${i === index ? "bg-red-600 text-white" : answers[row.id] ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-500"}`}
-          >
-            {row.item_order}
-          </button>
-        ))}
+        {list.map((row, i) => {
+          const unsaved = unsavedIds.includes(row.id);
+          return (
+            <button
+              key={row.id}
+              type="button"
+              onClick={() => goTo(i)}
+              aria-label={unsaved ? `Soal ${row.item_order} belum tersimpan` : `Soal ${row.item_order}`}
+              className={`w-9 h-9 rounded-lg text-xs font-bold ${i === index ? "bg-red-600 text-white" : unsaved ? "bg-amber-100 text-amber-900" : answers[row.id] ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-500"}`}
+            >
+              {row.item_order}
+            </button>
+          );
+        })}
       </div>
       <div className="mt-6 flex items-center justify-between gap-4">
         <button type="button" onClick={() => goTo(index - 1)} disabled={index === 0} className="btn-outline px-6 py-3 rounded-xl text-sm disabled:opacity-40">
@@ -422,42 +544,57 @@ function MemorizeBoard({
   testName,
   code,
   remaining,
+  initialList,
 }: {
   sessionId: number;
   token: string;
   testName: string;
   code: string;
   remaining: number;
+  initialList: IstMemorizeList | null;
 }) {
-  const [list, setList] = useState<IstMemorizeList | null>(null);
+  const [fetched, setFetched] = useState<IstMemorizeList | null>(null);
+  const [failed, setFailed] = useState(false);
+  const list = initialList ?? fetched;
 
   useEffect(() => {
+    if (initialList) return;
     let cancelled = false;
     void (async () => {
-      try {
-        const res = await fetch("/api/test-sessions/memorize-list", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token, session_id: Number(sessionId) }),
-        });
-        const data = (await res.json().catch(() => null)) as { list?: unknown } | null;
-        if (cancelled) return;
-        const words = data?.list;
-        if (res.ok && words && typeof words === "object" && !Array.isArray(words)) setList(words as IstMemorizeList);
-      } catch {
-        if (!cancelled) setList(null);
+      for (let attempt = 0; attempt < MEMORIZE_LIST_READ_ATTEMPTS && !cancelled; attempt++) {
+        if (attempt > 0) await new Promise((resolve) => setTimeout(resolve, MEMORIZE_LIST_READ_GAP_MS));
+        try {
+          const res = await fetch("/api/test-sessions/memorize-list", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token, session_id: Number(sessionId) }),
+          });
+          const data = (await res.json().catch(() => null)) as { list?: unknown } | null;
+          if (cancelled) return;
+          const words = data?.list;
+          if (res.ok && words && typeof words === "object" && !Array.isArray(words)) {
+            setFetched(words as IstMemorizeList);
+            setFailed(false);
+            return;
+          }
+          if (res.status !== 404) break;
+        } catch {
+          if (cancelled) return;
+        }
       }
+      if (!cancelled) setFailed(true);
     })();
     return () => {
       cancelled = true;
     };
-  }, [sessionId, token, code]);
+  }, [sessionId, token, code, initialList]);
 
   return (
     <Shell>
       <Header testName={testName} title={`${code} — Hafalkan`} clock={remaining} sub="Daftar ditutup otomatis saat waktu hafalan habis." />
       <div className="bg-white rounded-3xl p-8 shadow-lg border border-slate-100">
-        {!list && <p className="mb-4 text-sm text-slate-600">Daftar hafalan sedang dimuat. Jika kosong, muat ulang halaman.</p>}
+        {!list && !failed && <p className="mb-4 text-sm text-slate-600">Daftar hafalan sedang dimuat.</p>}
+        {!list && failed && <p className="mb-4 text-sm text-amber-900">Daftar hafalan belum bisa dimuat. Muat ulang halaman.</p>}
         <div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
           {Object.entries(list ?? {}).map(([group, words]) => (
             <div key={group}>

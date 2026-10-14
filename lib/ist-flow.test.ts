@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";
 import type { IstScheduleEntry } from "./ist-types";
-import { istAnswerWindowOpen, istCanStartSection, istFlowReachedEnd, istPhaseAt, istSubtestByCode, IST_SECTION_GRACE_MS } from "./ist-flow";
+import { istAnswerWindowOpen, istCanStartSection, istFlowReachedEnd, istMemorizePhaseOpen, istPhaseAt, istSubtestByCode, pollUntil, IST_SECTION_GRACE_MS } from "./ist-flow";
 
 const T0 = 1_800_000_000_000;
 
@@ -51,5 +52,35 @@ describe("IST subtest flow", () => {
     assert.equal(istAnswerWindowOpen(SCHEDULE, "ME", starts, T0 + 200_000), true);
     assert.equal(istFlowReachedEnd(SCHEDULE, starts), true);
     assert.equal(istFlowReachedEnd(SCHEDULE, { SE: T0 }), false);
+    assert.equal(istMemorizePhaseOpen(SCHEDULE, starts, T0 + 100_000), true);
+    assert.equal(istMemorizePhaseOpen(SCHEDULE, starts, T0 + 200_000), false);
+    assert.equal(istMemorizePhaseOpen(SCHEDULE, { SE: T0 }, T0), false);
+  });
+
+  it("re-reads a memorize clock that appears a moment after the section starts", async () => {
+    const seen: number[] = [];
+    let reads = 0;
+    const value = await pollUntil(
+      async () => {
+        reads += 1;
+        return reads >= 3 ? "open" : "missing";
+      },
+      (row) => row === "open",
+      4,
+      25,
+      async (ms) => {
+        seen.push(ms);
+      },
+    );
+    assert.equal(value, "open");
+    assert.deepEqual(seen, [25, 25]);
+  });
+
+  it("returns the memorize list from the same response that starts the section", () => {
+    const src = readFileSync(new URL("../app/api/test-sessions/section-timer/route.ts", import.meta.url), "utf8");
+    assert.match(src, /istMemorizePhaseOpen/);
+    assert.match(src, /memorize_list/);
+    const listRoute = readFileSync(new URL("../app/api/test-sessions/memorize-list/route.ts", import.meta.url), "utf8");
+    assert.match(listRoute, /pollUntil/);
   });
 });

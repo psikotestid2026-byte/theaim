@@ -4,8 +4,8 @@ import { getSessionByAccessToken, readSectionTimers, startSectionTimer } from "@
 import { logRouteError } from "@/lib/log-error";
 import { canWriteTest } from "@/lib/test-access";
 import { positiveId } from "@/lib/validators/test-attempt";
-import { istCanStartSection } from "@/lib/ist-flow";
-import { getIstSchedule } from "@/lib/queries/ist-content";
+import { istCanStartSection, istMemorizePhaseOpen } from "@/lib/ist-flow";
+import { getIstMemorizeList, getIstSchedule } from "@/lib/queries/ist-content";
 
 const body = z.object({
   token: z.string().uuid(),
@@ -34,8 +34,8 @@ export async function POST(req: NextRequest) {
     let timers = await readSectionTimers(session.id);
     if (!timers) return NextResponse.json({ error: "timer_unavailable" }, { status: 409 });
 
+    const schedule = session.test_code.toLowerCase() === "ist" ? await getIstSchedule() : null;
     if (section) {
-      const schedule = await getIstSchedule();
       if (!schedule) return NextResponse.json({ error: "config_unavailable" }, { status: 409 });
       const check = istCanStartSection(schedule, section, timers.starts);
       if (!check.ok) return NextResponse.json({ error: check.reason, starts: timers.starts, server_now_ms: timers.nowMs }, { status: 409 });
@@ -45,7 +45,15 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    return NextResponse.json({ starts: timers.starts, server_now_ms: timers.nowMs });
+    // Same response as the clock start, so the runner does not race a second request.
+    const memorizeList =
+      schedule && timers && istMemorizePhaseOpen(schedule, timers.starts, timers.nowMs) ? await getIstMemorizeList() : null;
+
+    return NextResponse.json({
+      starts: timers.starts,
+      server_now_ms: timers.nowMs,
+      ...(memorizeList ? { memorize_list: memorizeList } : {}),
+    });
   } catch (err) {
     if (err instanceof ZodError) return NextResponse.json({ error: err.flatten().fieldErrors }, { status: 400 });
     logRouteError("section-timer", err);

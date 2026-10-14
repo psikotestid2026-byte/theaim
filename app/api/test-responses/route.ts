@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getItemForTest } from "@/lib/queries/test-items";
-import { upsertResponse } from "@/lib/queries/test-responses";
-import { getSessionByAccessToken, markTimerStarted, readAttemptTimer, readSectionTimers } from "@/lib/queries/test-sessions";
+import { loadAnswerWriteContext, upsertResponse } from "@/lib/queries/test-responses";
+import { markTimerStarted } from "@/lib/queries/test-sessions";
 import { istAnswerWindowOpen } from "@/lib/ist-flow";
 import { getIstSchedule } from "@/lib/queries/ist-content";
 import { istSubtestOf } from "@/lib/scoring/ist";
@@ -13,48 +12,54 @@ import { testResponseBody } from "@/lib/validators/test-attempt";
 import { answersStillAccepted, isTimedTest, parseDbTimestamp, timedDurationSec } from "@/lib/test-timer";
 import { ZodError } from "zod";
 
-// POST /api/test-responses — one item check, one upsert, one Redis HSET
+// POST /api/test-responses — one joined read, one upsert. Redis is best-effort and not awaited.
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const data = testResponseBody.parse(body);
+    let scheduleError: unknown = null;
+    const schedulePromise = getIstSchedule().catch((err) => {
+      scheduleError = err;
+      return null;
+    });
 
-    const session = await getSessionByAccessToken(data.token);
-    if (!session || session.id !== data.session_id) {
+    const ctx = await loadAnswerWriteContext(data.token, data.session_id, data.item_id);
+    if (!ctx || ctx.sessionId !== data.session_id) {
       return NextResponse.json({ error: "not_found" }, { status: 404 });
     }
-    if (!canWriteTest(session.status)) {
+    if (!canWriteTest(ctx.status)) {
       return NextResponse.json({ error: "not_confirmed" }, { status: 403 });
     }
-
-    const item = await getItemForTest(data.item_id, session.test_code);
-    if (!item || !isAllowedAnswer(session.test_code, item, data.answer_value)) {
+    if (!ctx.item || !isAllowedAnswer(ctx.testCode, ctx.item, data.answer_value)) {
       return NextResponse.json({ error: "invalid_answer" }, { status: 400 });
     }
 
-    if (session.test_code.toLowerCase() === "ist") {
-      const code = istSubtestOf(item);
-      const [timers, schedule] = await Promise.all([readSectionTimers(session.id), getIstSchedule()]);
-      if (!code || !timers || !schedule || !istAnswerWindowOpen(schedule, code, timers.starts, timers.nowMs)) {
+    if (ctx.testCode.toLowerCase() === "ist") {
+      const code = istSubtestOf(ctx.item);
+      const schedule = await schedulePromise;
+      if (scheduleError) throw scheduleError;
+      if (!code || !schedule || !Number.isFinite(ctx.nowMs) || !istAnswerWindowOpen(schedule, code, ctx.starts, ctx.nowMs)) {
         return NextResponse.json({ error: "section_closed" }, { status: 409 });
       }
     }
 
-    if (isTimedTest(session.test_code)) {
-      const durationSec = timedDurationSec(session.test_code);
-      let timer = durationSec === null ? null : await readAttemptTimer(session.id);
-      if (timer && !timer.timer_started_at) timer = await markTimerStarted(session.id);
-      const startedMs = parseDbTimestamp(timer?.timer_started_at);
-      const nowMs = parseDbTimestamp(timer?.server_now);
-      if (durationSec === null || !timer || startedMs === null || nowMs === null || !answersStillAccepted(startedMs, durationSec, nowMs)) {
+    if (isTimedTest(ctx.testCode)) {
+      const durationSec = timedDurationSec(ctx.testCode);
+      let startedMs = parseDbTimestamp(ctx.timerStartedAt);
+      let nowMs = Number.isFinite(ctx.nowMs) ? ctx.nowMs : parseDbTimestamp(ctx.serverNow);
+      if (!ctx.timerStartedAt) {
+        const timer = await markTimerStarted(ctx.sessionId);
+        startedMs = parseDbTimestamp(timer?.timer_started_at);
+        nowMs = parseDbTimestamp(timer?.server_now);
+      }
+      if (durationSec === null || startedMs === null || nowMs === null || !answersStillAccepted(startedMs, durationSec, nowMs)) {
         return NextResponse.json({ error: "expired" }, { status: 409 });
       }
     }
 
     await upsertResponse(data);
-    await bufferAnswer(data.session_id, data.item_id, data.answer_value).catch((err) =>
-      logRouteError("response cache", err),
-    );
+    // The row above is the answer. Do not make the client wait on the buffer.
+    void bufferAnswer(data.session_id, data.item_id, data.answer_value).catch((err) => logRouteError("response cache", err));
 
     return NextResponse.json({ ok: true });
   } catch (err) {

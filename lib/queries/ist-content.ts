@@ -2,11 +2,22 @@ import { sql } from "@/lib/db";
 import { parseIstMemorizeList, parseIstPublicSubtests, parseIstSchedule, parseIstScoringTables, type IstNormRow } from "@/lib/ist-config";
 import type { IstMemorizeList, IstScheduleEntry, IstScoringTables, IstSubtestPublic } from "@/lib/ist-types";
 
+const SCHEDULE_TTL_MS = 60_000;
+let scheduleCache: { at: number; value: IstScheduleEntry[] } | null = null;
+
+/** Test hook. The schedule is static for the life of a warm server. */
+export function clearIstScheduleCache(): void {
+  scheduleCache = null;
+}
+
 /**
  * Subtest clocks only. The SELECT lists code, name, bounds, and time limits.
  * It does not read instructions, examples, or the memorize word list.
+ * Warm invocations reuse the last read for a minute so answer saves do not
+ * re-aggregate the config on every click.
  */
 export async function getIstSchedule(): Promise<IstScheduleEntry[] | null> {
+  if (scheduleCache && Date.now() - scheduleCache.at < SCHEDULE_TTL_MS) return scheduleCache.value;
   const rows = await sql`
     SELECT COALESCE(jsonb_agg(
       jsonb_build_object(
@@ -25,7 +36,9 @@ export async function getIstSchedule(): Promise<IstScheduleEntry[] | null> {
     WHERE lower(mt.code) = 'ist'
   `;
   const subtests = (rows[0] as { subtests?: unknown } | undefined)?.subtests;
-  return parseIstSchedule(subtests);
+  const parsed = parseIstSchedule(subtests);
+  if (parsed) scheduleCache = { at: Date.now(), value: parsed };
+  return parsed;
 }
 
 /**

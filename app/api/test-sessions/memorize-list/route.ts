@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z, ZodError } from "zod";
-import { istLastStartedIndex, istPhaseAt, istSubtestByCode } from "@/lib/ist-flow";
+import { istMemorizePhaseOpen, pollUntil } from "@/lib/ist-flow";
 import { getIstMemorizeList, getIstSchedule } from "@/lib/queries/ist-content";
 import { getSessionByAccessToken, readSectionTimers } from "@/lib/queries/test-sessions";
 import { logRouteError } from "@/lib/log-error";
@@ -29,20 +29,15 @@ export async function POST(req: NextRequest) {
     }
     if (session.test_code.toLowerCase() !== "ist") return unavailable();
 
-    const [schedule, timers] = await Promise.all([getIstSchedule(), readSectionTimers(session.id)]);
-    const me = schedule ? istSubtestByCode(schedule, "ME") : null;
-    const meIndex = schedule ? schedule.findIndex((row) => row.code === "ME") : -1;
-    const started = me && timers ? timers.starts[me.code] : undefined;
-    const inMemorize = Boolean(
-      schedule &&
-        me &&
-        timers &&
-        meIndex >= 0 &&
-        typeof started === "number" &&
-        istLastStartedIndex(schedule, timers.starts) === meIndex &&
-        istPhaseAt(me, started, timers.nowMs).phase === "memorize",
+    const schedule = await getIstSchedule();
+    if (!schedule) return unavailable();
+    // The start and this read are different requests. Re-read a few times so a
+    // just-written clock is visible before we answer 404.
+    const timers = await pollUntil(
+      () => readSectionTimers(session.id),
+      (row) => row !== null && typeof row.starts.ME === "number",
     );
-    if (!inMemorize) return unavailable();
+    if (!timers || !istMemorizePhaseOpen(schedule, timers.starts, timers.nowMs)) return unavailable();
 
     const list = await getIstMemorizeList();
     if (!list) return unavailable();

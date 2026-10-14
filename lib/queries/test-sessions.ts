@@ -183,18 +183,21 @@ export async function countActiveSessions(): Promise<number> {
 
 export type SectionTimers = { starts: Record<string, number>; nowMs: number };
 
-function toSectionTimers(row: { section_started_at?: unknown; server_now_ms?: unknown } | undefined): SectionTimers | null {
-  if (!row) return null;
+export function sectionStartsFrom(raw: unknown): Record<string, number> {
   const starts: Record<string, number> = {};
-  const raw = row.section_started_at;
   if (raw && typeof raw === "object" && !Array.isArray(raw)) {
     for (const [code, value] of Object.entries(raw as Record<string, unknown>)) {
       const ms = Number(value);
       if (Number.isFinite(ms)) starts[code] = ms;
     }
   }
+  return starts;
+}
+
+function toSectionTimers(row: { section_started_at?: unknown; server_now_ms?: unknown } | undefined): SectionTimers | null {
+  if (!row) return null;
   const nowMs = Number(row.server_now_ms);
-  return Number.isFinite(nowMs) ? { starts, nowMs } : null;
+  return Number.isFinite(nowMs) ? { starts: sectionStartsFrom(row.section_started_at), nowMs } : null;
 }
 
 /** IST subtest clocks (epoch ms per subtest) plus the database clock. In-progress sessions only. */
