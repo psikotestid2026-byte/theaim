@@ -10,6 +10,7 @@ import { EXPIRY_AUTO_SUBMIT_HEADING, EXPIRY_NOTICE_MS, expiryAnsweredLine } from
 import { isAnswerComplete, widgetForItem, type AnswerWidget } from "@/lib/test-widget";
 import { itemMeta } from "@/lib/scoring/item-meta";
 import ItemMedia from "@/components/test/ItemMedia";
+import { ACCESS_ENDED_COPY, classifyFetchedSave, readApiJson } from "@/lib/answer-save";
 import { withAssetToken } from "@/lib/test-assets";
 import TypedAnswer from "@/components/test/TypedAnswer";
 
@@ -175,7 +176,7 @@ export default function TestEngine({
   const failedCount = Object.keys(failedSaves).length;
   const timeUp = remaining === 0;
 
-  async function saveAnswer(itemId: number, value: string): Promise<boolean> {
+  async function saveAnswer(itemId: number, value: string): Promise<"saved" | "failed" | "access"> {
     pendingRef.current += 1;
     setPendingSaves(pendingRef.current);
     setSaving(true);
@@ -190,11 +191,17 @@ export default function TestEngine({
           answer_value: value,
         }),
       });
-      const payload = (await res.json().catch(() => ({}))) as { error?: string };
-      if (!res.ok) {
+      const payload = await readApiJson(res);
+      const classified = classifyFetchedSave(res.status, payload);
+      if (classified.accessEnded) {
         setFailedSaves((prev) => ({ ...prev, [itemId]: value }));
-        if (res.status === 409 && payload.error === "expired") setRemaining(0);
-        return false;
+        setError(ACCESS_ENDED_COPY);
+        return "access";
+      }
+      if (classified.outcome !== "saved") {
+        setFailedSaves((prev) => ({ ...prev, [itemId]: value }));
+        if (res.status === 409 && payload?.error === "expired") setRemaining(0);
+        return "failed";
       }
       setFailedSaves((prev) => {
         if (!(itemId in prev)) return prev;
@@ -202,10 +209,11 @@ export default function TestEngine({
         delete next[itemId];
         return next;
       });
-      return true;
+      setError((prev) => (prev === ACCESS_ENDED_COPY ? null : prev));
+      return "saved";
     } catch {
       setFailedSaves((prev) => ({ ...prev, [itemId]: value }));
-      return false;
+      return "failed";
     } finally {
       pendingRef.current = Math.max(0, pendingRef.current - 1);
       setPendingSaves(pendingRef.current);
@@ -213,14 +221,15 @@ export default function TestEngine({
     }
   }
 
-  async function retryFailed(): Promise<boolean> {
+  async function retryFailed(): Promise<"saved" | "failed" | "access"> {
     const pending = Object.entries(failedRef.current);
-    let ok = true;
+    let worst: "saved" | "failed" | "access" = "saved";
     for (const [id, value] of pending) {
-      const savedOk = await saveAnswer(Number(id), value);
-      if (!savedOk) ok = false;
+      const result = await saveAnswer(Number(id), value);
+      if (result === "access") worst = "access";
+      else if (result === "failed" && worst !== "access") worst = "failed";
     }
-    return ok;
+    return worst;
   }
 
   function remember(itemId: number, value: string) {
@@ -263,9 +272,9 @@ export default function TestEngine({
     setSubmitting(true);
     setError(null);
     if (Object.keys(failedRef.current).length > 0) {
-      const savedOk = await retryFailed();
-      if (!savedOk && remaining !== 0) {
-        setError("Beberapa jawaban belum tersimpan. Simpan ulang sebelum menyelesaikan tes.");
+      const saved = await retryFailed();
+      if (saved !== "saved" && remaining !== 0) {
+        if (saved !== "access") setError("Beberapa jawaban belum tersimpan. Simpan ulang sebelum menyelesaikan tes.");
         setSubmitting(false);
         autoSubmitted.current = false;
         return;

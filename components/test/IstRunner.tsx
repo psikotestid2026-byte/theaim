@@ -9,7 +9,7 @@ import { istLastStartedIndex, istPhaseAt, shouldFetchMemorizeList, type SectionS
 import { istSubtestOf } from "@/lib/scoring/ist";
 import { itemMeta } from "@/lib/scoring/item-meta";
 import { choicePresentation } from "@/lib/choice-option";
-import { AnswerSaver, SAVE_ATTEMPT_TIMEOUT_MS, SAVE_MAX_INFLIGHT, classifySaveResponse, sectionAdvance } from "@/lib/answer-save";
+import { ACCESS_ENDED_COPY, AnswerSaver, SAVE_ATTEMPT_TIMEOUT_MS, SAVE_MAX_INFLIGHT, classifyFetchedSave, readApiJson, sectionAdvance, sectionStartError } from "@/lib/answer-save";
 import { withAssetToken } from "@/lib/test-assets";
 import ItemMedia from "@/components/test/ItemMedia";
 import TypedAnswer from "@/components/test/TypedAnswer";
@@ -121,13 +121,17 @@ export default function IstRunner({ sessionId, token, testName, subtests, items,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, session_id: Number(sessionId), section: code }),
       });
-      const data = (await res.json().catch(() => ({}))) as { starts?: SectionStarts; server_now_ms?: unknown; memorize_list?: unknown };
-      if (data && typeof data.starts === "object" && data.starts) setStarts(data.starts);
-      syncClock(data?.server_now_ms);
-      if (data.memorize_list && typeof data.memorize_list === "object" && !Array.isArray(data.memorize_list)) {
-        setMemorizeList(data.memorize_list as IstMemorizeList);
+      const data = await readApiJson(res);
+      const failure = sectionStartError(res.status, data);
+      // A JSON 409 still carries clocks the server already opened. Access loss does not.
+      if (data && failure !== ACCESS_ENDED_COPY) {
+        if (data.starts && typeof data.starts === "object" && !Array.isArray(data.starts)) setStarts(data.starts as SectionStarts);
+        syncClock(data.server_now_ms);
+        if (data.memorize_list && typeof data.memorize_list === "object" && !Array.isArray(data.memorize_list)) {
+          setMemorizeList(data.memorize_list as IstMemorizeList);
+        }
       }
-      if (!res.ok) setError("Subtes belum bisa dimulai. Muat ulang halaman, lalu coba lagi.");
+      if (failure) setError(failure);
     } catch {
       setError("Gagal terhubung ke server. Periksa koneksi, lalu coba lagi.");
     } finally {
@@ -183,7 +187,8 @@ export default function IstRunner({ sessionId, token, testName, subtests, items,
   async function runOne(itemId: number) {
     const saver = saverRef.current;
     const value = saver.value(itemId) ?? "";
-    let outcome: ReturnType<typeof classifySaveResponse> = "retry";
+    let outcome: ReturnType<typeof classifyFetchedSave>["outcome"] = "retry";
+    let accessEnded = false;
     try {
       const res = await fetch("/api/test-responses", {
         method: "POST",
@@ -191,8 +196,10 @@ export default function IstRunner({ sessionId, token, testName, subtests, items,
         body: JSON.stringify({ token, session_id: Number(sessionId), item_id: Number(itemId), answer_value: value }),
         signal: AbortSignal.timeout(SAVE_ATTEMPT_TIMEOUT_MS),
       });
-      const data = (await res.json().catch(() => ({}))) as { error?: string };
-      outcome = classifySaveResponse(res.status, typeof data.error === "string" ? data.error : undefined);
+      const data = await readApiJson(res);
+      const classified = classifyFetchedSave(res.status, data);
+      outcome = classified.outcome;
+      accessEnded = classified.accessEnded;
     } catch {
       outcome = "retry";
     }
@@ -221,7 +228,9 @@ export default function IstRunner({ sessionId, token, testName, subtests, items,
       timersRef.current.set(itemId, timer);
     }
     publishSave();
-    if (outcome === "retry" && delay === null && saver.intent !== "expire") {
+    if (accessEnded) {
+      setError(ACCESS_ENDED_COPY);
+    } else if (outcome === "retry" && delay === null && saver.intent !== "expire") {
       setError("Jawaban belum tersimpan. Periksa koneksi, lalu pilih jawaban lagi.");
     }
     pumpRef.current();
