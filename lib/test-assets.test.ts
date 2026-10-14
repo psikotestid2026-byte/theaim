@@ -39,7 +39,10 @@ describe("test asset paths", () => {
     assert.equal(sessionMayReadAsset({ isAccess: true, isResult: false, status: "completed", ...own }), false);
     assert.equal(sessionMayReadAsset({ isAccess: true, isResult: false, status: "locked", ...own }), false);
     assert.equal(sessionMayReadAsset({ isAccess: true, isResult: false, status: "in_progress", referencedByOwnTest: false }), false);
-    assert.equal(sessionMayReadAsset({ isAccess: false, isResult: true, status: "completed", ...own }), false);
+    assert.equal(sessionMayReadAsset({ isAccess: false, isResult: true, status: "completed", ...own }), true);
+    assert.equal(sessionMayReadAsset({ isAccess: false, isResult: true, status: "in_progress", ...own }), false);
+    assert.equal(sessionMayReadAsset({ isAccess: false, isResult: true, status: "completed", referencedByOwnTest: false }), false);
+    assert.equal(sessionMayReadAsset({ isAccess: false, isResult: true, status: "revoked", ...own }), false);
   });
 
   it("decodes bytea without the Buffer constructor", () => {
@@ -54,6 +57,7 @@ describe("test asset paths", () => {
     assert.match(query, /status = 'in_progress'|status === "in_progress"/);
     assert.match(query, /test_items/);
     assert.match(query, /HASIL_RENDERS_ITEM_FIGURES/);
+    assert.match(query, /isResult && status === "completed"/);
     assert.match(query, /exampleImage/);
     assert.match(query, /scoring_configs/);
   });

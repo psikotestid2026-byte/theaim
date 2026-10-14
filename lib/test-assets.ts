@@ -45,10 +45,10 @@ export function safeImageContentType(value: string): string | null {
 }
 
 /**
- * /hasil renders scores and narrative, not item figures.
- * Result tokens stay denied until a figure is actually painted on that page.
+ * /hasil paints item figures (presentTakerResult appends the result token).
+ * A result token may read only figures referenced by its own completed test.
  */
-export const HASIL_RENDERS_ITEM_FIGURES = false;
+export const HASIL_RENDERS_ITEM_FIGURES = true;
 
 export function sessionMayReadAsset(input: {
   isAccess: boolean;
@@ -58,7 +58,7 @@ export function sessionMayReadAsset(input: {
 }): boolean {
   if (!input.referencedByOwnTest) return false;
   if (input.isAccess && input.status === "in_progress") return true;
-  if (input.isResult && HASIL_RENDERS_ITEM_FIGURES) return true;
+  if (input.isResult && input.status === "completed" && HASIL_RENDERS_ITEM_FIGURES) return true;
   return false;
 }
 

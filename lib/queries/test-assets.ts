@@ -24,8 +24,9 @@ function asBool(value: unknown): boolean {
  * (`in_progress`), before completion, and only when that session's own
  * test references the path: an item image, an option image, or a
  * scoring_config subtest exampleImage.
- * A result token is allowed only when /hasil actually renders that figure.
- * /hasil does not, so result tokens are denied. Callers respond 404 either way.
+ * A result token may read a figure only once the session is `completed`
+ * and only when that test references the path (the figures /hasil renders).
+ * Callers respond 404 otherwise.
  */
 export async function assetTokenCanRead(token: string, assetPath: string): Promise<boolean> {
   if (!token || token.length > 128 || !safeAssetPath(assetPath)) return false;
@@ -43,7 +44,7 @@ export async function assetTokenCanRead(token: string, assetPath: string): Promi
     const isResult = asBool(row.is_result);
     const status = typeof row.status === "string" ? row.status : "";
     const testCode = typeof row.test_code === "string" ? row.test_code : "";
-    const needsLookup = (isAccess && status === "in_progress") || (isResult && HASIL_RENDERS_ITEM_FIGURES);
+    const needsLookup = (isAccess && status === "in_progress") || (isResult && status === "completed" && HASIL_RENDERS_ITEM_FIGURES);
     const referenced = needsLookup && testCode ? await testReferencesAsset(testCode, assetPath) : false;
     if (sessionMayReadAsset({ isAccess, isResult, status, referencedByOwnTest: referenced })) return true;
   }
